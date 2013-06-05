@@ -3,7 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 require "web_console/version"
 
 Gem::Specification.new do |s|
-  s.name     = "web_console"
+  s.name     = "web-console"
   s.version  = WebConsole::VERSION
   s.authors  = ["Genadi Samokovarov", "Guillermo Iguaran"]
   s.email    = ["gsamokovarov@gmail.com", "guilleiguaran@gmail.com"]
