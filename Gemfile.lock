@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    web_console (0.0.1)
+    web-console (0.0.1)
       rails (~> 4.0.0.rc1)
 
 GEM
@@ -84,5 +84,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  rake
   sqlite3
-  web_console!
+  web-console!
