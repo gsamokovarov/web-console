@@ -3,4 +3,4 @@ WebConsole
 
 Rails development console on the browser.
 
-_(Work In Progress...)_
+[![Build Status](https://travis-ci.org/gsamokovarov/web-console.png)](https://travis-ci.org/gsamokovarov/web-console)
