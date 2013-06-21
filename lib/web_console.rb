@@ -1,9 +1,4 @@
-require 'rails'
-require 'active_support/rails'
-require 'web_console/version'
+require 'web_console/engine'
 
 module WebConsole
-  extend ActiveSupport::Autoload
-
-  autoload :Engine
 end
