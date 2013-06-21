@@ -1,3 +1,3 @@
-Dummy::Application.routes.draw do
-  mount WebConsole::Engine, at: 'console'
+Rails.application.routes.draw do
+  mount WebConsole::Engine => "/console"
 end
