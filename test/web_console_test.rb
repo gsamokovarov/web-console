@@ -25,10 +25,8 @@ class WebConsoleTest < ActiveSupport::TestCase
       app.config.middleware ||= Rails::Configuration::MiddlewareStackProxy.new
       app.config.active_support.deprecation = :notify
 
-      begin
-        yield app
-      ensure
-        Rails.application = old_app
-      end
+      yield app
+    ensure
+      Rails.application = old_app
     end
 end
