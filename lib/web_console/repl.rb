@@ -33,3 +33,7 @@ module WebConsole
     end
   end
 end
+
+Dir["#{File.dirname(__FILE__)}/repl/*.rb"].each do |implementation|
+  require implementation
+end
