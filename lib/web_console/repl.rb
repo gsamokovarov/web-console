@@ -1,10 +1,13 @@
-require 'active_support/core_ext/module/attriute_accessors'
-
 module WebConsole
   module REPL
-    mattr_accessor(:adapters) { Hash.new }
-
     class << self
+      # The adapters registry.
+      #
+      # Don't manually alter the registry, use +WebConsole::REPL.register_adapter+.
+      def adapters
+        @adapters ||= {}
+      end
+
       # Register an adapter into the adapters registry.
       #
       # Registration maps and adapter class to an existing REPL implementation,
