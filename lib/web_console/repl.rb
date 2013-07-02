@@ -17,8 +17,8 @@ module WebConsole
     # that we call an adaptee constant. If the adaptee constant is not given,
     # it is automatically derived from the adapter class name.
     #
-    # For example, adapter named `WebConsole::REPL::IRB` will derive the
-    # adaptee constant to `::IRB`.
+    # For example, adapter named +WebConsole::REPL::IRB+ will derive the
+    # adaptee constant to +::IRB+.
     def register_adapter(adapter_class, adaptee_constant = nil)
       adaptee_constant ||= derive_adaptee_constant_from(adapter_class)
       adapters[adaptee_constant] = adapter_class
