@@ -3,15 +3,14 @@ require 'irb/frame'
 require 'stringio'
 require 'active_support/core_ext/module/delegation'
 
-
 module WebConsole
   module REPL
     # == IRB\ Adapter
     #
     # Adapter for the IRB REPL, which is the default Ruby on Rails console.
     class IRB
-      # Monkey patch the reference Irb class to use it's specified output
-      # method during printing.
+      # Monkey patch the reference Irb class so that the unqualified prints go
+      # to the context's output method.
       class ::IRB::Irb
         def print(*args)
           @context.instance_variable_get(:@output_method).print(*args)
@@ -70,7 +69,7 @@ module WebConsole
         def finalize_irb_session!
           ::IRB.conf[:MAIN_CONTEXT] = @irb.context
           # Require it after the setting of :MAIN_CONTEXT, as there is code
-          # relying on it that is executed during require time.
+          # relying on existing :MAIN_CONTEXT that is executed in require time.
           require 'irb/ext/multi-irb'
         end
 
