@@ -3,12 +3,25 @@ require 'irb/frame'
 require 'stringio'
 require 'active_support/core_ext/module/delegation'
 
+
 module WebConsole
   module REPL
     # == IRB\ Adapter
     #
     # Adapter for the IRB REPL, which is the default Ruby on Rails console.
     class IRB
+      # Monkey patch the reference Irb class to use it's specified output
+      # method during printing.
+      class ::IRB::Irb
+        def print(*args)
+          @context.instance_variable_get(:@output_method).print(*args)
+        end
+
+        def printf(str, *args)
+          @context.instance_variable_get(:@output_method).print(str % args)
+        end
+      end
+
       class StringIOInputMethod < ::IRB::InputMethod
         def initialize(io)
           @io = io
@@ -45,10 +58,8 @@ module WebConsole
 
       def send_input(input)
         replace_input!(input)
-        redirecting_global_output! do
-          @irb.eval_input
-          extract_output!
-        end
+        @irb.eval_input
+        extract_output!
       end
 
       private
@@ -79,16 +90,6 @@ module WebConsole
             @output.truncate(0)
             @output.rewind
           end
-        end
-
-        # The IRB does not respect the context output method and prints
-        # wherever it likes.
-        def redirecting_global_output!
-          original_stdout, original_stderr = $stdout, $stderr
-          $stdout = @output
-          yield
-        ensure
-          $stdout, $stderr = original_stdout, original_stderr
         end
     end
 
