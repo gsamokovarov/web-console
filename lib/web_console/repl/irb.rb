@@ -10,40 +10,65 @@ module WebConsole
     # Adapter for the IRB REPL, which is the default Ruby on Rails console.
     class IRB
       class StringIOInputMethod < ::IRB::InputMethod
-        def inititalize(io)
+        def initialize(io)
           @io = io
         end
 
-        delegate :eof?, :gets, to: :@io
+        delegate :eof?, :gets, to: :@io, allow_nil: true
+
+        def encoding
+          @io.external_encoding
+        end
+      end
+
+      class StringIOOutputMethod < ::IRB::OutputMethod
+        def initialize(io)
+          @io = io
+        end
+
+        def print(*args)
+          @io.write(*args)
+        end
       end
 
       def initialize(binding = ::IRB::Frame.top(1))
         initialize_irb_session!
-        @input = StringIO.new
-        @irb   = ::IRB::Irb.new(::IRB::WorkSpace.new(binding), StringIOInputMethod.new(@input))
+        @io    = StringIO.new
+        input  = StringIOInputMethod.new(@io)
+        output = StringIOOutputMethod.new(@io)
+        @irb   = ::IRB::Irb.new(::IRB::WorkSpace.new(binding), input, output)
+        finalize_irb_session!
       end
+
+      delegate :prompt, to: :@io, allow_nil: true
 
       def send_input(input)
         replace_input!(input)
         @irb.eval_input
+        @io.rewind
+        @io.read
       end
-
-      delegate :prompt, to: :@input
 
       private
         def initialize_irb_session!(ap_path = nil)
           ::IRB.init_config(ap_path)
-          ::IRB.init_error
+        end
+
+        def finalize_irb_session!
+          ::IRB.conf[:MAIN_CONTEXT] = @irb.context
+          # Require it after the setting of :MAIN_CONTEXT, as there is code
+          # relying on it that is executed during require time.
+          require 'irb/ext/multi-irb'
         end
 
         def replace_input!(input)
           # The rewinds are important here. StringIO#truncate will nullify the
           # underlying string, but won't change the current position. Therefore,
           # the next write may be preceeded by leading +\u0000+ characters.
-          @input.truncate(0)
-          @input.rewind
-          @input.write(input)
-          @input.rewind
+          @io.truncate(0)
+          @io.rewind
+          @io.write(input)
+          @io.rewind
         end
     end
 
