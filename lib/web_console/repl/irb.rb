@@ -52,7 +52,7 @@ module WebConsole
       end
 
       def prompt
-        ::IRB.conf[:PROMPT][::IRB.conf[:PROMPT_MODE]][:RETURN]
+        ::IRB.conf[:PROMPT][::IRB.conf[:PROMPT_MODE]][:PROMPT_I]
       end
 
       def send_input(input)
