@@ -33,20 +33,22 @@ module WebConsole
 
       def initialize(binding = ::IRB::Frame.top(1))
         initialize_irb_session!
-        @io    = StringIO.new
-        input  = StringIOInputMethod.new(@io)
-        output = StringIOOutputMethod.new(@io)
+        input  = StringIOInputMethod.new(@input = StringIO.new)
+        output = StringIOOutputMethod.new(@output = StringIO.new)
         @irb   = ::IRB::Irb.new(::IRB::WorkSpace.new(binding), input, output)
         finalize_irb_session!
       end
 
-      delegate :prompt, to: :@io, allow_nil: true
+      def prompt
+        ::IRB.conf[:PROMPT][::IRB.conf[:PROMPT_MODE]][:RETURN]
+      end
 
       def send_input(input)
         replace_input!(input)
-        @irb.eval_input
-        @io.rewind
-        @io.read
+        redirecting_global_output! do
+          @irb.eval_input
+          extract_output!
+        end
       end
 
       private
@@ -65,10 +67,28 @@ module WebConsole
           # The rewinds are important here. StringIO#truncate will nullify the
           # underlying string, but won't change the current position. Therefore,
           # the next write may be preceeded by leading +\u0000+ characters.
-          @io.truncate(0)
-          @io.rewind
-          @io.write(input)
-          @io.rewind
+          @input.truncate(0)
+          @input.rewind
+          @input.write(input)
+          @input.rewind
+        end
+
+        def extract_output!
+          @output.rewind
+          @output.read.lstrip.tap do
+            @output.truncate(0)
+            @output.rewind
+          end
+        end
+
+        # The IRB does not respect the context output method and prints
+        # wherever it likes.
+        def redirecting_global_output!
+          original_stdout, original_stderr = $stdout, $stderr
+          $stdout = @output
+          yield
+        ensure
+          $stdout, $stderr = original_stdout, original_stderr
         end
     end
 
