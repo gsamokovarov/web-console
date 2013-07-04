@@ -12,13 +12,14 @@ module WebConsole
       # Monkey patch the reference Irb class so that the unqualified prints go
       # to the context's output method.
       class ::IRB::Irb
-        def print(*args)
-          @context.instance_variable_get(:@output_method).print(*args)
-        end
+        private
+          def print(*args)
+            @context.instance_variable_get(:@output_method).print(*args)
+          end
 
-        def printf(str, *args)
-          @context.instance_variable_get(:@output_method).print(str % args)
-        end
+          def printf(str, *args)
+            @context.instance_variable_get(:@output_method).print(str % args)
+          end
       end
 
       class StringIOInputMethod < ::IRB::InputMethod
