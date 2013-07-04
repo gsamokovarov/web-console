@@ -11,22 +11,6 @@ module WebConsole
     #
     # Adapter for the IRB REPL, which is the default Ruby on Rails console.
     class IRB
-      # Freedom patch the reference Irb class so that the unqualified prints go
-      # to the context's output method.
-      class ::IRB::Irb
-        private
-          def print(*args)
-            @context.instance_variable_get(:@output_method).print(*args)
-          end
-
-          def printf(str, *args)
-            @context.instance_variable_get(:@output_method).print(str % args)
-          end
-      end
-
-      # Include all of the rails console helpers in the IRB session.
-      ::IRB::ExtendCommandBundle.send :include, Rails::ConsoleMethods
-
       class StringIOInputMethod < ::IRB::InputMethod
         def initialize(io)
           @io = io
@@ -98,6 +82,22 @@ module WebConsole
         end
     end
 
-    register_adapter IRB
+    register_adapter IRB do
+      # Freedom patch the reference Irb class so that the unqualified prints go
+      # to the context's output method.
+      class ::IRB::Irb
+        private
+          def print(*args)
+            @context.instance_variable_get(:@output_method).print(*args)
+          end
+
+          def printf(str, *args)
+            @context.instance_variable_get(:@output_method).print(str % args)
+          end
+      end
+
+      # Include all of the rails console helpers in the IRB session.
+      ::IRB::ExtendCommandBundle.send :include, Rails::ConsoleMethods
+    end
   end
 end
