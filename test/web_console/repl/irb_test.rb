@@ -30,8 +30,21 @@ class IRBTest < ActiveSupport::TestCase
     assert_equal sprintf(return_prompt, "42\n"), irb2.send_input('foo')
   end
 
+  test 'prompt is the globally selected one' do
+    irb = WebConsole::REPL::IRB.new
+    assert_equal input_prompt, irb.prompt
+  end
+
   private
+    def currently_selected_prompt
+      ::IRB.conf[:PROMPT][::IRB.conf[:PROMPT_MODE]]
+    end
+
     def return_prompt
-      ::IRB.conf[:PROMPT][::IRB.conf[:PROMPT_MODE]][:RETURN]
+      currently_selected_prompt[:RETURN]
+    end
+
+    def input_prompt
+      currently_selected_prompt[:PROMPT_I]
     end
 end
