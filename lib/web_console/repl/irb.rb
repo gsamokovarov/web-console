@@ -2,8 +2,6 @@ require 'irb'
 require 'irb/frame'
 require 'stringio'
 require 'active_support/core_ext/module/delegation'
-require 'rails/console/app'
-require 'rails/console/helpers'
 
 module WebConsole
   module REPL
@@ -95,6 +93,9 @@ module WebConsole
             @context.instance_variable_get(:@output_method).print(str % args)
           end
       end
+
+      require 'rails/console/app'
+      require 'rails/console/helpers'
 
       # Include all of the rails console helpers in the IRB session.
       ::IRB::ExtendCommandBundle.send :include, Rails::ConsoleMethods
