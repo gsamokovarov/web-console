@@ -20,7 +20,7 @@ class IRBTest < ActiveSupport::TestCase
     irb1 = WebConsole::REPL::IRB.new(Object.new.instance_eval { binding })
     irb2 = WebConsole::REPL::IRB.new(Object.new.instance_eval { binding })
     assert_equal sprintf(return_prompt, "42\n"), irb1.send_input('foo = 42')
-    assert_match %r{undefined local variable or method `foo'}, irb2.send_input('foo')
+    assert_match undefined_var_or_method('foo'), irb2.send_input('foo')
   end
 
   test 'session preservation requires same bindings' do
@@ -39,6 +39,13 @@ class IRBTest < ActiveSupport::TestCase
     assert_not_nil WebConsole::REPL::IRB.new.prompt
   end
 
+  test 'rails helpers are available in the session' do
+    irb = WebConsole::REPL::IRB.new
+    each_rails_console_method do |meth|
+      assert_no_match undefined_var_or_method(meth), irb.send_input("respond_to? :#{meth}")
+    end
+  end
+
   private
     def currently_selected_prompt
       ::IRB.conf[:PROMPT][::IRB.conf[:PROMPT_MODE]]
@@ -50,5 +57,15 @@ class IRBTest < ActiveSupport::TestCase
 
     def input_prompt
       currently_selected_prompt[:PROMPT_I]
+    end
+
+    def undefined_var_or_method(name)
+      %r{undefined local variable or method `#{name}'}
+    end
+
+    def each_rails_console_method(&block)
+      require 'rails/console/app'
+      require 'rails/console/helpers'
+      Rails::ConsoleMethods.public_instance_methods.each(&block)
     end
 end
