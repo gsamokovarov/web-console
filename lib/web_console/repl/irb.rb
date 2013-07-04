@@ -40,7 +40,7 @@ module WebConsole
         end
 
         def print(*args)
-          @io.write(*args)
+          args.each { |arg| @io.write(arg) }
         end
       end
 

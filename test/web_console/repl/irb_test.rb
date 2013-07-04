@@ -16,6 +16,13 @@ class IRBTest < ActiveSupport::TestCase
     assert_equal sprintf(return_prompt, "50\n"), irb.send_input('foo + 8')
   end
 
+  test 'session isolation' do
+    irb1 = WebConsole::REPL::IRB.new(Object.new.instance_eval { binding })
+    irb2 = WebConsole::REPL::IRB.new(Object.new.instance_eval { binding })
+    assert_equal sprintf(return_prompt, "42\n"), irb1.send_input('foo = 42')
+    assert_match /undefined local variable or method `foo'/, irb2.send_input('foo')
+  end
+
   private
     def return_prompt
       ::IRB.conf[:PROMPT][::IRB.conf[:PROMPT_MODE]][:RETURN]
