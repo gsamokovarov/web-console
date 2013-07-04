@@ -19,9 +19,13 @@ module WebConsole
     #
     # For example, adapter named +WebConsole::REPL::IRB+ will derive the
     # adaptee constant to +::IRB+.
+    #
+    # If a block is given, it would be evaluated right after the adapter
+    # registration.
     def register_adapter(adapter_class, adaptee_constant = nil)
       adaptee_constant ||= derive_adaptee_constant_from(adapter_class)
       adapters[adaptee_constant] = adapter_class
+      yield if block_given?
     end
 
     # Get the default adapter for the given application.
