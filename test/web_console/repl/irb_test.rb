@@ -35,6 +35,10 @@ class IRBTest < ActiveSupport::TestCase
     assert_equal input_prompt, irb.prompt
   end
 
+  test "prompt isn't nil" do
+    assert_not_nil WebConsole::REPL::IRB.new.prompt
+  end
+
   private
     def currently_selected_prompt
       ::IRB.conf[:PROMPT][::IRB.conf[:PROMPT_MODE]]
