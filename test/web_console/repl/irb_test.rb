@@ -1,19 +1,18 @@
 require 'test_helper'
 
 class IRBTest < ActiveSupport::TestCase
-  test 'initialization with default binding' do
-    assert_nothing_raised { WebConsole::REPL::IRB.new }
+  setup do
+    @irb1 = @irb = WebConsole::REPL::IRB.new
+    @irb2 = WebConsole::REPL::IRB.new
   end
 
   test 'sending input returns the result as output' do
-    irb = WebConsole::REPL::IRB.new
-    assert_equal sprintf(return_prompt, "42\n"), irb.send_input('foo = 42')
+    assert_equal sprintf(return_prompt, "42\n"), @irb.send_input('foo = 42')
   end
 
   test 'preserves the session in the binding' do
-    irb = WebConsole::REPL::IRB.new
-    assert_equal sprintf(return_prompt, "42\n"), irb.send_input('foo = 42')
-    assert_equal sprintf(return_prompt, "50\n"), irb.send_input('foo + 8')
+    assert_equal sprintf(return_prompt, "42\n"), @irb.send_input('foo = 42')
+    assert_equal sprintf(return_prompt, "50\n"), @irb.send_input('foo + 8')
   end
 
   test 'session isolation requires own bindings' do
@@ -24,25 +23,21 @@ class IRBTest < ActiveSupport::TestCase
   end
 
   test 'session preservation requires same bindings' do
-    irb1 = WebConsole::REPL::IRB.new
-    irb2 = WebConsole::REPL::IRB.new
-    assert_equal sprintf(return_prompt, "42\n"), irb1.send_input('foo = 42')
-    assert_equal sprintf(return_prompt, "42\n"), irb2.send_input('foo')
+    assert_equal sprintf(return_prompt, "42\n"), @irb1.send_input('foo = 42')
+    assert_equal sprintf(return_prompt, "42\n"), @irb2.send_input('foo')
   end
 
   test 'prompt is the globally selected one' do
-    irb = WebConsole::REPL::IRB.new
-    assert_equal input_prompt, irb.prompt
+    assert_equal input_prompt, @irb.prompt
   end
 
   test "prompt isn't nil" do
-    assert_not_nil WebConsole::REPL::IRB.new.prompt
+    assert_not_nil @irb.prompt
   end
 
   test 'rails helpers are available in the session' do
-    irb = WebConsole::REPL::IRB.new
     each_rails_console_method do |meth|
-      assert_no_match undefined_var_or_method(meth), irb.send_input("respond_to? :#{meth}")
+      assert_no_match undefined_var_or_method(meth), @irb.send_input("respond_to? :#{meth}")
     end
   end
 
