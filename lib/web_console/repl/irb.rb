@@ -9,7 +9,7 @@ module WebConsole
     #
     # Adapter for the IRB REPL, which is the default Ruby on Rails console.
     class IRB
-      # Monkey patch the reference Irb class so that the unqualified prints go
+      # Freedom patch the reference Irb class so that the unqualified prints go
       # to the context's output method.
       class ::IRB::Irb
         private
