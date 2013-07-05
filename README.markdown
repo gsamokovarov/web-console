@@ -1,5 +1,5 @@
-WebConsole
-==========
+Web Console
+===========
 
 Rails development console on the browser.
 
