@@ -27,6 +27,13 @@ class IRBTest < ActiveSupport::TestCase
     assert_equal sprintf(return_prompt, "42\n"), @irb2.send_input('foo')
   end
 
+  test 'multiline sessions' do
+    irb = WebConsole::REPL::IRB.new(Object.new.instance_eval { binding })
+    irb.send('class A')
+    irb.send('end')
+    assert_equal sprintf(return_prompt, "42\n"), irb.send_input('A')
+  end
+
   test 'prompt is the globally selected one' do
     assert_equal input_prompt, @irb.prompt
   end
