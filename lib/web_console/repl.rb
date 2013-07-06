@@ -1,3 +1,5 @@
+require 'active_support/core_ext/string/inflections'
+
 module WebConsole
   module REPL
     extend self
