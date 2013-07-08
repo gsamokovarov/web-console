@@ -41,7 +41,7 @@ module WebConsole
       end
 
       def send_input(input)
-        replace_input!(input)
+        @fiber.resume("#{input}\n")
         extract_output!
       end
 
@@ -55,10 +55,6 @@ module WebConsole
           # Require it after the setting of :MAIN_CONTEXT, as there is code
           # relying on existing :MAIN_CONTEXT that is executed in require time.
           require 'irb/ext/multi-irb'
-        end
-
-        def replace_input!(input)
-          @fiber.resume("#{input}\n")
         end
 
         def extract_output!
