@@ -16,8 +16,8 @@ class IRBTest < ActiveSupport::TestCase
   end
 
   test 'session isolation requires own bindings' do
-    irb1 = WebConsole::REPL::IRB.new(Object.new.instance_eval { binding })
-    irb2 = WebConsole::REPL::IRB.new(Object.new.instance_eval { binding })
+    irb1 = WebConsole::REPL::IRB.new(Object.new.instance_eval('binding'))
+    irb2 = WebConsole::REPL::IRB.new(Object.new.instance_eval('binding'))
     assert_equal sprintf(return_prompt, "42\n"), irb1.send_input('foo = 42')
     assert_match undefined_var_or_method('foo'), irb2.send_input('foo')
   end
