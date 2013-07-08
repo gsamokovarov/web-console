@@ -1,5 +1,4 @@
 require 'irb'
-require 'irb/frame'
 require 'stringio'
 
 module WebConsole
