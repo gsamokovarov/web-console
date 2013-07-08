@@ -1,7 +1,5 @@
 require 'irb'
-require 'irb/frame'
 require 'stringio'
-require 'active_support/core_ext/module/delegation'
 
 module WebConsole
   module REPL
@@ -9,15 +7,13 @@ module WebConsole
     #
     # Adapter for the IRB REPL, which is the default Ruby on Rails console.
     class IRB
-      class StringIOInputMethod < ::IRB::InputMethod
-        def initialize(io)
-          @io = io
+      class FiberInputMethod < ::IRB::InputMethod
+        def gets
+          @previous = Fiber.yield
         end
 
-        delegate :eof?, :gets, to: :@io, allow_nil: true
-
         def encoding
-          @io.external_encoding
+          (@previous || '').encoding
         end
       end
 
@@ -31,11 +27,12 @@ module WebConsole
         end
       end
 
-      def initialize(binding = ::IRB::Frame.top(1))
+      def initialize(binding = TOPLEVEL_BINDING)
         initialize_irb_session!
-        input  = StringIOInputMethod.new(@input = StringIO.new)
+        @input  = FiberInputMethod.new
         output = StringIOOutputMethod.new(@output = StringIO.new)
-        @irb   = ::IRB::Irb.new(::IRB::WorkSpace.new(binding), input, output)
+        @irb   = ::IRB::Irb.new(::IRB::WorkSpace.new(binding), @input, output)
+        @fiber = Fiber.new { @irb.eval_input }.tap(&:resume)
         finalize_irb_session!
       end
 
@@ -44,8 +41,7 @@ module WebConsole
       end
 
       def send_input(input)
-        replace_input!(input)
-        @irb.eval_input
+        @fiber.resume("#{input}\n")
         extract_output!
       end
 
@@ -59,16 +55,6 @@ module WebConsole
           # Require it after the setting of :MAIN_CONTEXT, as there is code
           # relying on existing :MAIN_CONTEXT that is executed in require time.
           require 'irb/ext/multi-irb'
-        end
-
-        def replace_input!(input)
-          # The rewinds are important here. StringIO#truncate will nullify the
-          # underlying string, but won't change the current position. Therefore,
-          # the next write may be preceeded by leading +\u0000+ characters.
-          @input.truncate(0)
-          @input.rewind
-          @input.write(input)
-          @input.rewind
         end
 
         def extract_output!
