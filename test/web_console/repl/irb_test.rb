@@ -29,9 +29,9 @@ class IRBTest < ActiveSupport::TestCase
 
   test 'multiline sessions' do
     irb = WebConsole::REPL::IRB.new(Object.new.instance_eval('binding'))
-    irb.send_input('class A')
-    irb.send_input('end')
-    assert_no_match sprintf(return_prompt, 'A.name'), irb.send_input('A')
+    assert_equal "", irb.send_input('class A')
+    assert_equal sprintf(return_prompt, 'nil'), irb.send_input('end')
+    assert_no_match uninitialized_constant('A'), irb.send_input('A')
   end
 
   test 'prompt is the globally selected one' do
@@ -63,6 +63,10 @@ class IRBTest < ActiveSupport::TestCase
 
     def undefined_var_or_method(name)
       %r{undefined local variable or method `#{name}'}
+    end
+
+    def uninitialized_constant(name)
+      %r{uninitialized constant #{name}}
     end
 
     def each_rails_console_method(&block)
