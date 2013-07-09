@@ -24,7 +24,12 @@ module WebConsole
     #
     # If a block is given, it would be evaluated right after the adapter
     # registration.
-    def register_adapter(adapter_class, adaptee_constant = nil)
+    def register_adapter(adapter_class, adaptee_constant = nil, options = {})
+      if adaptee_constant.is_a?(Hash)
+        options          = adaptee_constant
+        adaptee_constant = nil
+      end
+      adaptee_constant   = adapter_class if options[:standalone]
       adaptee_constant ||= derive_adaptee_constant_from(adapter_class)
       adapters[adaptee_constant] = adapter_class
       yield if block_given?
@@ -34,8 +39,12 @@ module WebConsole
     #
     # By default the application will be Rails.application and the adapter
     # will be chosen from Rails.application.config.console.
+    #
+    # If no suitible adapter is found for the configured Rails console, a dummy
+    # adapter will be used. You can evaluate code in it, but it won't support
+    # any advanced features, like multiline code evaluation.
     def default(app = Rails.application)
-      adapters[app.config.console]
+      adapters[app.config.console] || adapters[Dummy]
     end
 
     private
@@ -47,3 +56,4 @@ end
 
 # Require the builtin adapters.
 require 'web_console/repl/irb'
+require 'web_console/repl/dummy'
