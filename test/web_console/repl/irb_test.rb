@@ -42,6 +42,14 @@ class IRBTest < ActiveSupport::TestCase
     assert_not_nil @irb.prompt
   end
 
+  test 'captures stdout output' do
+    assert_equal "42\n#{sprintf(return_prompt, 'nil')}", @irb.send_input('puts 42')
+  end
+
+  test 'captures stderr output' do
+    assert_equal "42\n#{sprintf(return_prompt, '3')}", @irb.send_input('$stderr.write("42\n")')
+  end
+
   test 'rails helpers are available in the session' do
     each_rails_console_method do |meth|
       assert_no_match undefined_var_or_method(meth), @irb.send_input("respond_to? :#{meth}")

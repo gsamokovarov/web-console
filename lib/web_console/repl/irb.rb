@@ -1,5 +1,5 @@
 require 'irb'
-require 'stringio'
+require 'web_console/stream'
 
 module WebConsole
   module REPL
@@ -17,21 +17,10 @@ module WebConsole
         end
       end
 
-      class StringIOOutputMethod < ::IRB::OutputMethod
-        def initialize(io)
-          @io = io
-        end
-
-        def print(*args)
-          args.each { |arg| @io.write(arg) }
-        end
-      end
-
       def initialize(binding = TOPLEVEL_BINDING)
         initialize_irb_session!
-        @input  = FiberInputMethod.new
-        output = StringIOOutputMethod.new(@output = StringIO.new)
-        @irb   = ::IRB::Irb.new(::IRB::WorkSpace.new(binding), @input, output)
+        @input = FiberInputMethod.new
+        @irb   = ::IRB::Irb.new(::IRB::WorkSpace.new(binding), @input)
         @fiber = Fiber.new { @irb.eval_input }.tap(&:resume)
         finalize_irb_session!
       end
@@ -41,8 +30,7 @@ module WebConsole
       end
 
       def send_input(input)
-        @fiber.resume("#{input}\n")
-        extract_output!
+        Stream.threadsafe_capture! { @fiber.resume("#{input}\n") }
       end
 
       private
@@ -56,30 +44,9 @@ module WebConsole
           # relying on existing :MAIN_CONTEXT that is executed in require time.
           require 'irb/ext/multi-irb'
         end
-
-        def extract_output!
-          @output.rewind
-          @output.read.lstrip.tap do
-            @output.truncate(0)
-            @output.rewind
-          end
-        end
     end
 
     register_adapter IRB do
-      # Freedom patch the reference Irb class so that the unqualified prints go
-      # to the context's output method.
-      class ::IRB::Irb
-        private
-          def print(*args)
-            @context.instance_variable_get(:@output_method).print(*args)
-          end
-
-          def printf(str, *args)
-            @context.instance_variable_get(:@output_method).print(str % args)
-          end
-      end
-
       require 'rails/console/app'
       require 'rails/console/helpers'
 
