@@ -38,7 +38,7 @@ class IRBTest < ActiveSupport::TestCase
     assert_equal input_prompt, @irb.prompt
   end
 
-  test "prompt isn't nil" do
+  test 'prompt is present' do
     assert_not_nil @irb.prompt
   end
 
