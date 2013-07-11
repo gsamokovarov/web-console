@@ -34,20 +34,31 @@ class IRBTest < ActiveSupport::TestCase
     assert_no_match uninitialized_constant('A'), irb.send_input('A')
   end
 
+  test 'captures direct stdout output' do
+    assert_equal "42\n#{sprintf(return_prompt, 'nil')}", @irb.send_input('puts 42')
+  end
+
+  test 'captures direct stderr output' do
+    assert_equal "42\n#{sprintf(return_prompt, '3')}", @irb.send_input('$stderr.write("42\n")')
+  end
+
+  test 'captures direct output from subprocesses' do
+    assert_equal "42\n#{sprintf(return_prompt, 'true')}", @irb.send_input('system "echo 42"')
+  end
+
+  test 'captures direct output from forks' do
+    # This is a bummer, but currently I don't see how we can work around it.
+    # Since we are redirecting the output streams only for the duration of the
+    # send_input execution, childs that print to stdout, may miss this time.
+    assert_equal "42\n#{sprintf(return_prompt, '2')}", @irb.send_input('Process.wait fork { puts 42 };')
+  end
+
   test 'prompt is the globally selected one' do
     assert_equal input_prompt, @irb.prompt
   end
 
   test 'prompt is present' do
     assert_not_nil @irb.prompt
-  end
-
-  test 'captures stdout output' do
-    assert_equal "42\n#{sprintf(return_prompt, 'nil')}", @irb.send_input('puts 42')
-  end
-
-  test 'captures stderr output' do
-    assert_equal "42\n#{sprintf(return_prompt, '3')}", @irb.send_input('$stderr.write("42\n")')
   end
 
   test 'rails helpers are available in the session' do
