@@ -27,13 +27,21 @@ class REPLTest < ActiveSupport::TestCase
     assert_equal "=> 42\n", @dummy2.send_input('foo')
   end
 
-  test "prompt isn't nil" do
+  test 'captures stdout output' do
+    assert_equal "42\n=> nil\n", @dummy.send_input('puts 42')
+  end
+
+  test 'captures stderr output' do
+    assert_equal "42\n=> 3\n", @dummy.send_input('$stderr.write("42\n")')
+  end
+
+  test 'prompt is present' do
     assert_not_nil @dummy.prompt
   end
 
   test 'rails helpers are available in the session' do
     each_rails_console_method do |meth|
-      assert_no_match %r{NameError}, @dummy.send_input("respond_to? :#{meth}")
+      assert_equal "=> true\n", @dummy.send_input("respond_to? :#{meth}")
     end
   end
 

@@ -1,3 +1,5 @@
+require 'web_console/stream'
+
 module WebConsole
   module REPL
     # == Dummy\ Adapter
@@ -16,7 +18,11 @@ module WebConsole
       end
 
       def send_input(input)
-        "=> #{@binding.eval(input).inspect}\n"
+        eval_result = nil
+        streams_output = Stream.threadsafe_capture! do
+          eval_result = @binding.eval(input).inspect
+        end
+        "#{streams_output}=> #{eval_result}\n"
       rescue Exception => exc
         exc.backtrace.join("\n")
       end
