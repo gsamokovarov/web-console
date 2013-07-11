@@ -19,7 +19,7 @@ class IRBTest < ActiveSupport::TestCase
     irb1 = WebConsole::REPL::IRB.new(Object.new.instance_eval('binding'))
     irb2 = WebConsole::REPL::IRB.new(Object.new.instance_eval('binding'))
     assert_equal return_prompt(42), irb1.send_input('foo = 42')
-    assert_match undefined_var_or_method('foo'), irb2.send_input('foo')
+    assert_match %r{NameError}, irb2.send_input('foo')
   end
 
   test 'session preservation requires same bindings' do
@@ -31,7 +31,7 @@ class IRBTest < ActiveSupport::TestCase
     irb = WebConsole::REPL::IRB.new(Object.new.instance_eval('binding'))
     assert_equal "", irb.send_input('class A')
     assert_equal return_prompt('nil'), irb.send_input('end')
-    assert_no_match uninitialized_constant('A'), irb.send_input('A')
+    assert_no_match %r{NameError}, irb.send_input('A')
   end
 
   test 'captures direct stdout output' do
@@ -65,7 +65,7 @@ class IRBTest < ActiveSupport::TestCase
 
   test 'rails helpers are available in the session' do
     each_rails_console_method do |meth|
-      assert_no_match undefined_var_or_method(meth), @irb.send_input("respond_to? :#{meth}")
+      assert_equal return_prompt(true), @irb.send_input("respond_to? :#{meth}")
     end
   end
 
@@ -80,14 +80,6 @@ class IRBTest < ActiveSupport::TestCase
 
     def input_prompt
       currently_selected_prompt[:PROMPT_I]
-    end
-
-    def undefined_var_or_method(name)
-      %r{undefined local variable or method `#{name}'}
-    end
-
-    def uninitialized_constant(name)
-      %r{uninitialized constant #{name}}
     end
 
     def each_rails_console_method(&block)
