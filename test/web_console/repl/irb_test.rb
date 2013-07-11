@@ -7,43 +7,43 @@ class IRBTest < ActiveSupport::TestCase
   end
 
   test 'sending input returns the result as output' do
-    assert_equal sprintf(return_prompt, "42"), @irb.send_input('foo = 42')
+    assert_equal return_prompt(42), @irb.send_input('foo = 42')
   end
 
   test 'preserves the session in the binding' do
-    assert_equal sprintf(return_prompt, "42"), @irb.send_input('foo = 42')
-    assert_equal sprintf(return_prompt, "50"), @irb.send_input('foo + 8')
+    assert_equal return_prompt(42), @irb.send_input('foo = 42')
+    assert_equal return_prompt(50), @irb.send_input('foo + 8')
   end
 
   test 'session isolation requires own bindings' do
     irb1 = WebConsole::REPL::IRB.new(Object.new.instance_eval('binding'))
     irb2 = WebConsole::REPL::IRB.new(Object.new.instance_eval('binding'))
-    assert_equal sprintf(return_prompt, "42"), irb1.send_input('foo = 42')
+    assert_equal return_prompt(42), irb1.send_input('foo = 42')
     assert_match undefined_var_or_method('foo'), irb2.send_input('foo')
   end
 
   test 'session preservation requires same bindings' do
-    assert_equal sprintf(return_prompt, "42"), @irb1.send_input('foo = 42')
-    assert_equal sprintf(return_prompt, "42"), @irb2.send_input('foo')
+    assert_equal return_prompt(42), @irb1.send_input('foo = 42')
+    assert_equal return_prompt(42), @irb2.send_input('foo')
   end
 
   test 'multiline sessions' do
     irb = WebConsole::REPL::IRB.new(Object.new.instance_eval('binding'))
     assert_equal "", irb.send_input('class A')
-    assert_equal sprintf(return_prompt, 'nil'), irb.send_input('end')
+    assert_equal return_prompt('nil'), irb.send_input('end')
     assert_no_match uninitialized_constant('A'), irb.send_input('A')
   end
 
   test 'captures direct stdout output' do
-    assert_equal "42\n#{sprintf(return_prompt, 'nil')}", @irb.send_input('puts 42')
+    assert_equal "42\n#{return_prompt('nil')}", @irb.send_input('puts 42')
   end
 
   test 'captures direct stderr output' do
-    assert_equal "42\n#{sprintf(return_prompt, '3')}", @irb.send_input('$stderr.write("42\n")')
+    assert_equal "42\n#{return_prompt(3)}", @irb.send_input('$stderr.write("42\n")')
   end
 
   test 'captures direct output from subprocesses' do
-    assert_equal "42\n#{sprintf(return_prompt, 'true')}", @irb.send_input('system "echo 42"')
+    assert_equal "42\n#{return_prompt(true)}", @irb.send_input('system "echo 42"')
   end
 
   test 'captures direct output from forks' do
@@ -74,8 +74,8 @@ class IRBTest < ActiveSupport::TestCase
       ::IRB.conf[:PROMPT][::IRB.conf[:PROMPT_MODE]]
     end
 
-    def return_prompt
-      currently_selected_prompt[:RETURN]
+    def return_prompt(*args)
+      sprintf(currently_selected_prompt[:RETURN], *args)
     end
 
     def input_prompt
