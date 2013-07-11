@@ -50,8 +50,8 @@ class IRBTest < ActiveSupport::TestCase
     # This is a bummer, but currently I don't see how we can work around it,
     # without monkey patching fork and the crew to be blocking calls. This
     # won't scale well, but at least fork will show results. Otherwise, we can
-    # document the behaviour and expect the to wait themselves, if they care
-    # about the output.
+    # document the behaviour and expect the user to wait themselves, if they
+    # care about the output.
     assert_match %r{42\n}, @irb.send_input('Process.wait(fork { puts 42 })')
   end
 
