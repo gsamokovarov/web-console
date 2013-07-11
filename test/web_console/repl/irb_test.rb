@@ -47,10 +47,12 @@ class IRBTest < ActiveSupport::TestCase
   end
 
   test 'captures direct output from forks' do
-    # This is a bummer, but currently I don't see how we can work around it.
-    # Since we are redirecting the output streams only for the duration of the
-    # send_input execution, childs that print to stdout, may miss this time.
-    assert_equal "42\n#{sprintf(return_prompt, '2')}", @irb.send_input('Process.wait fork { puts 42 };')
+    # This is a bummer, but currently I don't see how we can work around it,
+    # without monkey patching fork and the crew to be blocking calls. This
+    # won't scale well, but at least fork will show results. Otherwise, we can
+    # document the behaviour and expect the to wait themselves, if they care
+    # about the output.
+    assert_match %r{42\n}, @irb.send_input('Process.wait(fork { puts 42 })')
   end
 
   test 'prompt is the globally selected one' do

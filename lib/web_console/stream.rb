@@ -8,7 +8,10 @@ module WebConsole
         begin
           streams_copy = streams.collect(&:dup)
           replacement  = Tempfile.new(name)
-          streams.each { |stream| stream.reopen(replacement) }
+          streams.each do |stream|
+            stream.reopen(replacement)
+            stream.sync = true
+          end
           yield
           streams.each(&:rewind)
           replacement.read
