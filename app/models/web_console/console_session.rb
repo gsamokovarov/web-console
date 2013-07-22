@@ -25,18 +25,9 @@ module WebConsole
       def find(id)
         INMEMORY_STORAGE[id] or raise Expired
       end
-
-      protected
-        # Generates a consequential id number in a thread-safe manner.
-        def next_id!
-          LOCK.synchronize do
-            @counter ||= 0
-            @counter += 1
-          end
-        end
     end
 
-    def inititalize(attributes = {})
+    def initialize(attributes = {})
       ensure_consequential_id!(attributes)
       super
       @repl = WebConsole::REPL.default.new
@@ -45,6 +36,12 @@ module WebConsole
     # Returns true if the current session is persisted in the in-memory storage.
     def persisted?
       self == INMEMORY_STORAGE[id]
+    end
+
+    # Returns an Enumerable of all key attributes if any is set, regardless if
+    # the object is persisted or not.
+    def to_key
+      super if persisted?
     end
 
     protected
@@ -69,8 +66,15 @@ module WebConsole
 
     private
       def ensure_consequential_id!(attributes)
-        attributes[:id] ||= self.class.next_id!
+        attributes[:id] ||= next_id!
         attributes
+      end
+
+      def next_id!
+        LOCK.synchronize do
+          @@counter ||= 0
+          @@counter += 1
+        end
       end
   end
 end
