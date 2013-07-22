@@ -47,11 +47,6 @@ module WebConsole
       self == INMEMORY_STORAGE[id]
     end
 
-    # Returns true if the console session has expired or hasn't been persisted.
-    def expired?
-      ! persisted?
-    end
-
     protected
       # Returns a hash of the attributes and their values.
       #
