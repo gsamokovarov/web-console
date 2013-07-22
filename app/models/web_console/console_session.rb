@@ -58,7 +58,7 @@ module WebConsole
       # Used by the JSON serializer.
       def attributes
         ATTRIBUTES.each_with_object({}) do |attr, memo|
-          memo[attr] = public_send(attr)
+          memo[attr.to_s] = public_send(attr)
         end
       end
 
