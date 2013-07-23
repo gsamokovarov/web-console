@@ -5,12 +5,9 @@ module WebConsole
     include ActiveModel::Lint::Tests
 
     setup do
+      clear_inmemory_storage!
       @model1 = @model = new_valid_model
       @model2 = new_valid_model
-    end
-
-    teardown do
-      clear_inmemory_storage!
     end
 
     test 'consequential ids in storage' do
@@ -53,6 +50,18 @@ module WebConsole
       assert_raises(ConsoleSession::NotFound) { ConsoleSession.find(:invalid) }
     end
 
+    test 'persisted models knows that they are in memory' do
+      assert_not @model.persisted?
+      @model.save
+      assert @model.persisted?
+    end
+
+    test 'persisted models knows about their keys' do
+      assert_nil @model.to_key
+      @model.save
+      assert_equal [1], @model.to_key
+    end
+
     private
       def new_model(attributes = {})
         ConsoleSession.new(attributes)
@@ -65,6 +74,7 @@ module WebConsole
 
       def clear_inmemory_storage!
         ConsoleSession::INMEMORY_STORAGE.clear
+        ConsoleSession.class_variable_set(:@@counter, 0)
       end
   end
 end
