@@ -60,9 +60,7 @@ module WebConsole
     protected
       # Returns a hash of the attributes and their values.
       def attributes
-        ATTRIBUTES.each_with_object({}) do |attr, memo|
-          memo[attr.to_s] = public_send(attr)
-        end
+        return Hash[ATTRIBUTES.zip([nil])]
       end
 
       # Sets model attributes from a hash.

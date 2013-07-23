@@ -5,7 +5,7 @@ module WebConsole
     include ActiveModel::Lint::Tests
 
     setup do
-      clear_inmemory_storage!
+      reset_persistent_storage!
       @model1 = @model = new_valid_model
       @model2 = new_valid_model
     end
@@ -62,6 +62,17 @@ module WebConsole
       assert_equal [1], @model.to_key
     end
 
+    test 'supports json serialization' do
+      with_dummy_adapter do
+        expected_nil_json = "{\"id\":null,\"input\":\"puts \\\"foo\\\"\",\"output\":null,\"prompt\":null}"
+        assert_equal expected_nil_json, @model.to_json
+
+        @model.save
+        expected_json = "{\"id\":1,\"input\":\"puts \\\"foo\\\"\",\"output\":\"foo\\n=\\u003E nil\\n\",\"prompt\":\"\\u003E\\u003E \"}"
+        assert_equal expected_json, @model.to_json
+      end
+    end
+
     private
       def new_model(attributes = {})
         ConsoleSession.new(attributes)
@@ -72,9 +83,21 @@ module WebConsole
         new_model(attributes)
       end
 
-      def clear_inmemory_storage!
+      def reset_persistent_storage!
         ConsoleSession::INMEMORY_STORAGE.clear
         ConsoleSession.class_variable_set(:@@counter, 0)
+      end
+
+      def with_dummy_adapter
+        previous_method = WebConsole::REPL.method(:default)
+        WebConsole::REPL.module_eval do
+          define_singleton_method(:default) { WebConsole::REPL::Dummy }
+        end
+        yield
+      ensure
+        WebConsole::REPL.module_eval do
+          define_singleton_method(:default, &previous_method)
+        end
       end
   end
 end
