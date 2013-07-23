@@ -59,8 +59,6 @@ module WebConsole
 
     protected
       # Returns a hash of the attributes and their values.
-      #
-      # Used by the JSON serializer.
       def attributes
         ATTRIBUTES.each_with_object({}) do |attr, memo|
           memo[attr.to_s] = public_send(attr)
@@ -68,8 +66,6 @@ module WebConsole
       end
 
       # Sets model attributes from a hash.
-      #
-      # Used by the JSON serializer.
       def attributes=(attributes)
         attributes.each do |attr, value|
           next unless ATTRIBUTES.include?(attr.to_sym)

@@ -13,11 +13,31 @@ module WebConsole
       clear_inmemory_storage!
     end
 
-    test 'storing with consequential ids' do
+    test 'consequential ids in storage' do
       assert @model1.save
       assert @model2.save
       assert_equal 1, @model1.id
       assert_equal 2, @model2.id
+    end
+
+    test 'invalid without input' do
+      assert_not new_model.valid?
+    end
+
+    test 'valid with input' do
+      assert new_valid_model.valid?
+    end
+
+    test 'populates output on save' do
+      assert_nil @model.output
+      @model.save
+      assert_match %r{foo}, @model.output
+    end
+
+    test 'populates prompt on save' do
+      assert_nil @model.prompt
+      @model.save
+      assert_not_nil @model.prompt
     end
 
     private
@@ -26,7 +46,7 @@ module WebConsole
       end
 
       def new_valid_model(attributes = {})
-        attributes.merge!(input: 'foo') unless attributes[:input].present?
+        attributes.merge!(input: 'puts "foo"') unless attributes[:input].present?
         new_model(attributes)
       end
 
