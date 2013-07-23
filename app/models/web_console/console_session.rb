@@ -14,14 +14,14 @@ module WebConsole
 
     # Raised when trying to find a session that is no longer in the in-memory
     # session storage.
-    Expired = Class.new(Exception)
+    NotFound = Class.new(Exception)
 
     class << self
       # Finds a session by its id.
       #
       # Raises WebConsole::ConsoleSession::Expired if there is no such session.
       def find(id)
-        INMEMORY_STORAGE[id] or raise Expired
+        INMEMORY_STORAGE[id] or raise NotFound
       end
     end
 

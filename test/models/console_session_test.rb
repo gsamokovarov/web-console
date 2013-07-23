@@ -40,6 +40,19 @@ module WebConsole
       assert_not_nil @model.prompt
     end
 
+    test 'save fails on invalid models' do
+      assert_equal false, new_model.save
+    end
+
+    test 'preserved models can be found' do
+      id = @model.tap(&:save).id
+      assert_equal @model, ConsoleSession.find(id)
+    end
+
+    test 'trying to find a model fails if not found' do
+      assert_raises(ConsoleSession::NotFound) { ConsoleSession.find(:invalid) }
+    end
+
     private
       def new_model(attributes = {})
         ConsoleSession.new(attributes)
