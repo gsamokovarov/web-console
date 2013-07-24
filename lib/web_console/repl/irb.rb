@@ -45,8 +45,6 @@ module WebConsole
 
         def finalize_irb_session!
           ::IRB.conf[:MAIN_CONTEXT] = @irb.context
-          # Require it after the setting of :MAIN_CONTEXT, as there is code
-          # relying on existing :MAIN_CONTEXT that is executed in require time.
         end
     end
 
