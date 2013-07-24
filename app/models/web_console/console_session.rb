@@ -21,7 +21,7 @@ module WebConsole
       #
       # Raises WebConsole::ConsoleSession::Expired if there is no such session.
       def find(id)
-        INMEMORY_STORAGE[id] or raise NotFound
+        INMEMORY_STORAGE[id.to_i] or raise NotFound
       end
 
       # Creates an already persisted consolse session.

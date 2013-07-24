@@ -44,8 +44,13 @@ module WebConsole
       assert_equal @model, ConsoleSession.find(id)
     end
 
-    test 'trying to find a model fails if not found' do
-      assert_raises(ConsoleSession::NotFound) { ConsoleSession.find(:invalid) }
+    test 'trying to find a model fails if no longer in storage' do
+      assert_raises(ConsoleSession::NotFound) { ConsoleSession.find(0) }
+    end
+
+    test 'find coerces ids' do
+      id = @model.tap(&:save).id
+      assert_equal @model, ConsoleSession.find("#{id}")
     end
 
     test 'persisted models knows that they are in memory' do
