@@ -36,10 +36,11 @@ module WebConsole
     validates :input, presence: true
 
     def initialize(attributes = {})
+      @repl = WebConsole::REPL.default.new
+
       super
       ensure_consequential_id!
-
-      @repl = WebConsole::REPL.default.new
+      populate_repl_attributes!
     end
 
     # Saves the model into the in-memory storage.
@@ -48,7 +49,7 @@ module WebConsole
     def save(attributes = {})
       self.attributes = attributes if attributes.present?
       if valid?
-        process_input!
+        populate_repl_attributes!
         store!
       else
         false
@@ -90,9 +91,9 @@ module WebConsole
         end
       end
 
-      def process_input!
+      def populate_repl_attributes!
         LOCK.synchronize do
-          self.output = @repl.send_input(input)
+          self.output = @repl.send_input(input) if input.present?
           self.prompt = @repl.prompt
         end
       end

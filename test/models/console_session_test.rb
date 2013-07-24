@@ -24,14 +24,13 @@ module WebConsole
     end
 
     test 'populates output on save' do
-      assert_nil @model.output
-      @model.save
-      assert_match %r{foo}, @model.output
+      model = new_model
+      assert_nil model.output
+      model.save(input: 'puts "foo"')
+      assert_match %r{foo}, model.output
     end
 
     test 'populates prompt on save' do
-      assert_nil @model.prompt
-      @model.save
       assert_not_nil @model.prompt
     end
 
@@ -67,12 +66,14 @@ module WebConsole
 
     test 'supports json serialization' do
       with_dummy_adapter do
-        expected_nil_json = "{\"id\":1,\"input\":\"puts \\\"foo\\\"\",\"output\":null,\"prompt\":null}"
-        assert_equal expected_nil_json, @model.to_json
+        model = new_model
 
-        @model.save
-        expected_json = "{\"id\":1,\"input\":\"puts \\\"foo\\\"\",\"output\":\"foo\\n=\\u003E nil\\n\",\"prompt\":\"\\u003E\\u003E \"}"
-        assert_equal expected_json, @model.to_json
+        expected_nil_json = "{\"id\":3,\"input\":null,\"output\":null,\"prompt\":\"\\u003E\\u003E \"}"
+        assert_equal expected_nil_json, model.to_json
+
+        model.save(input: 'puts "foo"')
+        expected_json = "{\"id\":3,\"input\":\"puts \\\"foo\\\"\",\"output\":\"foo\\n=\\u003E nil\\n\",\"prompt\":\"\\u003E\\u003E \"}"
+        assert_equal expected_json, model.to_json
       end
     end
 
