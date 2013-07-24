@@ -205,6 +205,12 @@
 			return n;
 		};
 
+		extern.promptLabel = function(text) {
+			if (typeof text === 'string') {
+				promptLabel = text;
+			}
+		};
+
 		////////////////////////////////////////////////////////////////////////
 		// Make a new prompt box
 		function newPromptBox() {
