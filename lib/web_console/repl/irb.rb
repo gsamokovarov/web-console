@@ -31,6 +31,11 @@ module WebConsole
 
       def send_input(input)
         Stream.threadsafe_capture! { @fiber.resume("#{input}\n") }
+      rescue FiberError
+        # Fiber can't be called across threads. So create a new one in the
+        # current context.
+        @fiber = Fiber.new { @irb.eval_input }.tap(&:resume)
+        retry
       end
 
       private
@@ -42,7 +47,6 @@ module WebConsole
           ::IRB.conf[:MAIN_CONTEXT] = @irb.context
           # Require it after the setting of :MAIN_CONTEXT, as there is code
           # relying on existing :MAIN_CONTEXT that is executed in require time.
-          require 'irb/ext/multi-irb'
         end
     end
 
