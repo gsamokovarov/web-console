@@ -23,12 +23,22 @@ module WebConsole
       def find(id)
         INMEMORY_STORAGE[id] or raise NotFound
       end
+
+      # Creates an already persisted consolse session.
+      #
+      # Use this method if you need to persist a session, without providing it
+      # any input.
+      def create
+        INMEMORY_STORAGE[(model = new).id] = model
+      end
     end
 
     validates :input, presence: true
 
     def initialize(attributes = {})
       super
+      ensure_consequential_id!
+
       @repl = WebConsole::REPL.default.new
     end
 
@@ -38,7 +48,6 @@ module WebConsole
     def save(attributes = {})
       self.attributes = attributes if attributes.present?
       if valid?
-        ensure_consequential_id!
         process_input!
         store!
       else

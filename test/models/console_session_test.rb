@@ -10,9 +10,7 @@ module WebConsole
       @model2 = new_valid_model
     end
 
-    test 'consequential ids in storage' do
-      assert @model1.save
-      assert @model2.save
+    test 'consequential ids on creation' do
       assert_equal 1, @model1.id
       assert_equal 2, @model2.id
     end
@@ -64,13 +62,21 @@ module WebConsole
 
     test 'supports json serialization' do
       with_dummy_adapter do
-        expected_nil_json = "{\"id\":null,\"input\":\"puts \\\"foo\\\"\",\"output\":null,\"prompt\":null}"
+        expected_nil_json = "{\"id\":1,\"input\":\"puts \\\"foo\\\"\",\"output\":null,\"prompt\":null}"
         assert_equal expected_nil_json, @model.to_json
 
         @model.save
         expected_json = "{\"id\":1,\"input\":\"puts \\\"foo\\\"\",\"output\":\"foo\\n=\\u003E nil\\n\",\"prompt\":\"\\u003E\\u003E \"}"
         assert_equal expected_json, @model.to_json
       end
+    end
+
+    test 'create gives already persisted models' do
+      assert ConsoleSession.create.persisted?
+    end
+
+    test 'no gives not persisted models' do
+      assert_not ConsoleSession.new.persisted?
     end
 
     private
