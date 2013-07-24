@@ -8,7 +8,7 @@ class REPLTest < ActiveSupport::TestCase
 
   test 'fallback for unsupported config.console' do
     app_mock = Class.new do
-      define_singleton_method(:config) { OpenStruct.new(console: nil) }
+      define_singleton_method(:config) { OpenStruct.new(console: Class.new) }
     end
     assert_equal WebConsole::REPL::Dummy, WebConsole::REPL.default(app_mock)
   end
