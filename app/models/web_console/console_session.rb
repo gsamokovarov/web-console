@@ -48,7 +48,7 @@ module WebConsole
 
     # Returns true if the current session is persisted in the in-memory storage.
     def persisted?
-      id.present? && self == INMEMORY_STORAGE[id]
+      self == INMEMORY_STORAGE[id]
     end
 
     # Returns an Enumerable of all key attributes if any is set, regardless if
