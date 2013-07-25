@@ -55,12 +55,14 @@ class IRBTest < ActiveSupport::TestCase
     assert_match %r{42\n}, @irb.send_input('Process.wait(fork { puts 42 })')
   end
 
-  test 'prompt is the globally selected one' do
-    assert_equal input_prompt, @irb.prompt
-  end
-
   test 'prompt is present' do
     assert_not_nil @irb.prompt
+  end
+
+  test 'prompt is determined by ::IRB.conf' do
+    with_simple_prompt do
+      assert '>> ', WebConsole::REPL::IRB.new.prompt
+    end
   end
 
   test 'rails helpers are available in the session' do
@@ -80,6 +82,14 @@ class IRBTest < ActiveSupport::TestCase
 
     def input_prompt
       currently_selected_prompt[:PROMPT_I]
+    end
+
+    def with_simple_prompt
+      previous_prompt = ::IRB.conf[:PROMPT]
+      ::IRB.conf[:PROMPT] = :simple
+      yield
+    ensure
+      ::IRB.conf[:PROMPT] = previous_prompt
     end
 
     def each_rails_console_method(&block)

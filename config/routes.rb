@@ -1,3 +1,5 @@
 WebConsole::Engine.routes.draw do
-  root 'console#index'
+  root 'console_sessions#index'
+
+  resources :console_sessions
 end

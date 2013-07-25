@@ -44,7 +44,7 @@ module WebConsole
     # adapter will be used. You can evaluate code in it, but it won't support
     # any advanced features, like multiline code evaluation.
     def default(app = Rails.application)
-      adapters[app.config.console] || adapters[Dummy]
+      adapters[app.config.console || ::IRB] || adapters[Dummy]
     end
 
     private

@@ -1,4 +1,5 @@
 require 'rails/engine'
+require 'jquery-rails'
 
 module WebConsole
   class Engine < ::Rails::Engine

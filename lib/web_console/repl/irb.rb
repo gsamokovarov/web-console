@@ -7,7 +7,13 @@ module WebConsole
     #
     # Adapter for the IRB REPL, which is the default Ruby on Rails console.
     class IRB
-      class FiberInputMethod < ::IRB::InputMethod
+      # For some reason™ we have to be ::IRB::StdioInputMethod subclass to get
+      # #prompt populated.
+      #
+      # Not a pretty OOP, but for now, we just have to deal with it.
+      class FiberInputMethod < ::IRB::StdioInputMethod
+        def initialize; end
+
         def gets
           @previous = Fiber.yield
         end
@@ -26,11 +32,16 @@ module WebConsole
       end
 
       def prompt
-        ::IRB.conf[:PROMPT][::IRB.conf[:PROMPT_MODE]][:PROMPT_I]
+        @input.prompt
       end
 
       def send_input(input)
         Stream.threadsafe_capture! { @fiber.resume("#{input}\n") }
+      rescue FiberError
+        # Fibers can't be called across threads. So create a new one in the
+        # current context.
+        @fiber = Fiber.new { @irb.eval_input }.tap(&:resume)
+        retry
       end
 
       private
@@ -40,9 +51,6 @@ module WebConsole
 
         def finalize_irb_session!
           ::IRB.conf[:MAIN_CONTEXT] = @irb.context
-          # Require it after the setting of :MAIN_CONTEXT, as there is code
-          # relying on existing :MAIN_CONTEXT that is executed in require time.
-          require 'irb/ext/multi-irb'
         end
     end
 
