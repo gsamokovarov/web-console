@@ -1,5 +1,5 @@
 $(function() {
-  var $console= $('#console');
+  var $console = $('#console');
   var instance = $console.console({
     autofocus: true,
     promptLabel: $console.data('initial-prompt'),
