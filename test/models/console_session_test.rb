@@ -40,6 +40,13 @@ module WebConsole
       assert_equal @model, ConsoleSession.find("#{id}")
     end
 
+    test 'not found exceptions are json serializable' do
+      exception = assert_raises(ConsoleSession::NotFound) do
+        ConsoleSession.find(0)
+      end
+      assert_equal '{"error":"Session unavailable"}', exception.to_json
+    end
+
     test 'persisted models knows that they are in memory' do
       assert_not @model.persisted?
       @model.save

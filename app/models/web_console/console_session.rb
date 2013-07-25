@@ -14,14 +14,18 @@ module WebConsole
 
     # Raised when trying to find a session that is no longer in the in-memory
     # session storage.
-    NotFound = Class.new(Exception)
+    class NotFound < Exception
+      def to_json
+        {error: message}.to_json
+      end
+    end
 
     class << self
       # Finds a session by its id.
       #
       # Raises WebConsole::ConsoleSession::Expired if there is no such session.
       def find(id)
-        INMEMORY_STORAGE[id.to_i] or raise NotFound
+        INMEMORY_STORAGE[id.to_i] or raise NotFound.new('Session unavailable')
       end
 
       # Creates an already persisted consolse session.
