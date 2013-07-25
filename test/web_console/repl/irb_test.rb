@@ -59,6 +59,12 @@ class IRBTest < ActiveSupport::TestCase
     assert_not_nil @irb.prompt
   end
 
+  test 'prompt is determined by ::IRB.conf' do
+    with_simple_prompt do
+      assert '>> ', WebConsole::REPL::IRB.new.prompt
+    end
+  end
+
   test 'rails helpers are available in the session' do
     each_rails_console_method do |meth|
       assert_equal return_prompt(true), @irb.send_input("respond_to? :#{meth}")
@@ -76,6 +82,14 @@ class IRBTest < ActiveSupport::TestCase
 
     def input_prompt
       currently_selected_prompt[:PROMPT_I]
+    end
+
+    def with_simple_prompt
+      previous_prompt = ::IRB.conf[:PROMPT]
+      ::IRB.conf[:PROMPT] = :simple
+      yield
+    ensure
+      ::IRB.conf[:PROMPT] = previous_prompt
     end
 
     def each_rails_console_method(&block)
