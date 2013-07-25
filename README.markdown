@@ -11,8 +11,8 @@ Try It
 Install [Docker].
 
 ```shell
-$ docker build -t 'gsamokovarov/web-console-jquery-prototype' .
-$ docker run 'gsamokovarov/web-console-jquery-prototype'
+$ docker build -t 'gsamokovarov/web-console' .
+$ docker run 'gsamokovarov/web-console'
 ```
 
   [Docker]: http://www.docker.io/
