@@ -55,10 +55,6 @@ class IRBTest < ActiveSupport::TestCase
     assert_match %r{42\n}, @irb.send_input('Process.wait(fork { puts 42 })')
   end
 
-  test 'prompt is the globally selected one' do
-    assert_equal input_prompt, @irb.prompt
-  end
-
   test 'prompt is present' do
     assert_not_nil @irb.prompt
   end
