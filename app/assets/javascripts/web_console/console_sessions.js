@@ -1,4 +1,6 @@
 $(function() {
+  var ERROR_CLASS = 'jquery-console-message-error';
+
   var $console = $('#console');
   var instance = $console.console({
     autofocus: true,
@@ -12,6 +14,9 @@ $(function() {
         success: function(response) {
           instance.promptLabel(response.prompt);
           report([{msg: response.output}]);
+        },
+        error: function(xhr) {
+          report([{msg: xhr.responseJSON.error, className: ERROR_CLASS}]);
         }
       });
     }

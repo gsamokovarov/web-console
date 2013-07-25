@@ -15,7 +15,7 @@ module WebConsole
     # Raised when trying to find a session that is no longer in the in-memory
     # session storage.
     class NotFound < Exception
-      def to_json
+      def to_json(*)
         {error: message}.to_json
       end
     end
