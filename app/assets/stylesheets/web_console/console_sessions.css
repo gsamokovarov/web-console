@@ -1,0 +1,7 @@
+body, div, textarea { margin: 0; padding 0 }
+
+#console { font-family: Consolas, "Liberation Mono", Courier, monospace; font-size: 13px; position: fixed; width: 98%; height: 98%; left: 1%; top: 1% }
+#console div.jquery-console-inner { height: 100%; background: #333; color: #fff; overflow: auto }
+#console div.jquery-console-focus span.jquery-console-cursor { font-weight: bold; background: #fff }
+#console div.jquery-console-message-error { font-weight: bold; color: #ff530d }
+#console span.jquery-console-prompt-label { font-weight: bold }

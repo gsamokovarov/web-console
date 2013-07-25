@@ -10,10 +10,11 @@ Gem::Specification.new do |s|
   s.homepage = "https://github.com/gsamokovarov/web-console"
   s.summary  = "Rails Console on the Browser."
 
-  s.files      = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.markdown"]
+  s.files      = Dir["{app,config,db,lib,vendor}/**/*", "MIT-LICENSE", "Rakefile", "README.markdown"]
   s.test_files = Dir["test/**/*"]
 
   s.add_dependency "rails", "~> 4.0.0"
+  s.add_dependency "jquery-rails", "~> 3.0.4"
 
   s.add_development_dependency "sqlite3"
 end
