@@ -33,14 +33,12 @@ module WebConsole
       end
     end
 
-    validates :input, presence: true
-
     def initialize(attributes = {})
       @repl = WebConsole::REPL.default.new
 
       super
       ensure_consequential_id!
-      populate_repl_attributes!
+      populate_repl_attributes!(initial: true)
     end
 
     # Saves the model into the in-memory storage.
@@ -48,12 +46,8 @@ module WebConsole
     # Returns false if the model is not valid (e.g. its missing input).
     def save(attributes = {})
       self.attributes = attributes if attributes.present?
-      if valid?
-        populate_repl_attributes!
-        store!
-      else
-        false
-      end
+      populate_repl_attributes!
+      store!
     end
 
     # Returns true if the current session is persisted in the in-memory storage.
@@ -91,9 +85,11 @@ module WebConsole
         end
       end
 
-      def populate_repl_attributes!
+      def populate_repl_attributes!(options = {})
         LOCK.synchronize do
-          self.output = @repl.send_input(input) if input.present?
+          # Don't send any input on the initial population so we don't bump up
+          # the numbers in the dynamic prompts.
+          self.output = @repl.send_input(input) unless options[:initial]
           self.prompt = @repl.prompt
         end
       end

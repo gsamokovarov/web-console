@@ -15,14 +15,6 @@ module WebConsole
       assert_equal 2, @model2.id
     end
 
-    test 'invalid without input' do
-      assert_not new_model.valid?
-    end
-
-    test 'valid with input' do
-      assert new_valid_model.valid?
-    end
-
     test 'populates output on save' do
       model = new_model
       assert_nil model.output
@@ -32,10 +24,6 @@ module WebConsole
 
     test 'populates prompt on save' do
       assert_not_nil @model.prompt
-    end
-
-    test 'save fails on invalid models' do
-      assert_equal false, new_model.save
     end
 
     test 'preserved models can be found' do
