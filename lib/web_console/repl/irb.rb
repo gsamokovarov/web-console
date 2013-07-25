@@ -46,6 +46,7 @@ module WebConsole
 
       private
         def initialize_irb_session!(ap_path = nil)
+          ::IRB.conf[:PROMPT_MODE] = :DEFAULT if ::IRB.conf[:PROMPT_MODE] == :NULL
           ::IRB.init_config(ap_path)
         end
 
