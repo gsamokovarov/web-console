@@ -55,6 +55,14 @@ class IRBTest < ActiveSupport::TestCase
     assert_match %r{42\n}, @irb.send_input('Process.wait(fork { puts 42 })')
   end
 
+  test 'multiline support between threads' do
+    assert_equal "", @irb.send_input('class A')
+    Thread.new do
+      assert_equal return_prompt('nil'), @irb.send_input('end')
+      assert_no_match %r{NameError}, @irb.send_input('A')
+    end.join
+  end
+
   test 'prompt is present' do
     assert_not_nil @irb.prompt
   end
