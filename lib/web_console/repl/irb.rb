@@ -1,4 +1,5 @@
 require 'irb'
+require 'web_console/fiber'
 require 'web_console/stream'
 
 module WebConsole
@@ -37,11 +38,6 @@ module WebConsole
 
       def send_input(input)
         Stream.threadsafe_capture! { @fiber.resume("#{input}\n") }
-      rescue FiberError
-        # Fibers can't be called across threads. So create a new one in the
-        # current context.
-        @fiber = Fiber.new { @irb.eval_input }.tap(&:resume)
-        retry
       end
 
       private
