@@ -83,9 +83,11 @@ module WebConsole
       LOCK = Mutex.new # :nodoc:
 
       def ensure_consequential_id!
-        self.id ||= LOCK.synchronize do
-          @@counter ||= 0
-          @@counter += 1
+        LOCK.synchronize do
+          self.id = begin
+            @@counter ||= 0
+            @@counter  += 1
+          end
         end
       end
 
