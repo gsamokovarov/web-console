@@ -1,10 +1,10 @@
 module WebConsole
   module Stream
-    LOCK = Mutex.new
+    extend Mutex_m
 
     def self.threadsafe_capture!(*streams)
       streams = [$stdout, $stderr] if streams.empty?
-      LOCK.synchronize do
+      synchronize do
         begin
           streams_copy = streams.collect(&:dup)
           replacement  = Tempfile.new(name)

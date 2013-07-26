@@ -1,5 +1,7 @@
 module WebConsole
   class ConsoleSession
+    include Mutex_m
+
     include ActiveModel::Model
     include ActiveModel::Serializers::JSON
 
@@ -80,10 +82,8 @@ module WebConsole
       end
 
     private
-      LOCK = Mutex.new # :nodoc:
-
       def ensure_consequential_id!
-        LOCK.synchronize do
+        synchronize do
           self.id = begin
             @@counter ||= 0
             @@counter  += 1
@@ -92,7 +92,7 @@ module WebConsole
       end
 
       def populate_repl_attributes!(options = {})
-        LOCK.synchronize do
+        synchronize do
           # Don't send any input on the initial population so we don't bump up
           # the numbers in the dynamic prompts.
           self.output = @repl.send_input(input) unless options[:initial]
@@ -101,7 +101,7 @@ module WebConsole
       end
 
       def store!
-        LOCK.synchronize { INMEMORY_STORAGE[id] = self }
+        synchronize { INMEMORY_STORAGE[id] = self }
       end
   end
 end
