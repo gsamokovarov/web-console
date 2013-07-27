@@ -17,4 +17,4 @@ RUN bash -c 'cd /web-console && bundle install'
 EXPOSE 3000
 
 # Run the Rails built-in server from the dummy directory.
-CMD bash -c 'echo "Listening on $( ip -4 addr | grep inet | grep eth0 | awk "{ print \$2 }" | cut -d/ -f1 ):3000 (allow a few seconds for Rails to start)..." && cd /web-console && git pull && cd test/dummy && rails s'
+CMD bash -c 'echo "Listening on $( ip -4 addr | grep inet | grep eth0 | awk "{ print \$2 }" | cut -d/ -f1 ):3000 (allow a few seconds for Rails to start)..." && cd /web-console && git fetch && git reset --hard origin/master && cd test/dummy && rails s'

@@ -8,11 +8,10 @@ Rails development console on the browser.
 Try It
 ------
 
-Install [Docker].
+Install [Docker] and run the following snippet in the root of the project.
 
 ```shell
-$ docker build -t 'gsamokovarov/web-console' .
-$ docker run 'gsamokovarov/web-console'
+docker build -t gsamokovarov/web-console . && docker run !#:3
 ```
 
   [Docker]: http://www.docker.io/
