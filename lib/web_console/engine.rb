@@ -31,11 +31,7 @@ module WebConsole
       # IPAddr instances can cover whole networks, so simplify the #include?
       # check for the most common case.
       def (config.web_console.whitelisted_ips).include?(ip)
-        if ip.is_a?(IPAddr)
-          super
-        else
-          any? { |net| net.include?(ip.to_s) }
-        end
+        ip.is_a?(IPAddr) ? super : any? { |net| net.include?(ip.to_s) }
       end
     end
   end
