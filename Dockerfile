@@ -16,6 +16,6 @@ RUN bash -c 'cd /web-console && bundle install'
 
 EXPOSE 3000
 
-# Run the docker specific rake task in a bash session! Otherwise, irb may set
-# its prompt to :NULL.
-CMD bash -c 'rake docker:run --rakefile /web-console/Rakefile'
+# Note that if you run the container, without allocating a tty and attaching
+# the STDIN, irb will use :NULL as a :PROMPT_MODE.
+CMD rake docker:run --rakefile /web-console/Rakefile
