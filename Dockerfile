@@ -16,5 +16,6 @@ RUN bash -c 'cd /web-console && bundle install'
 
 EXPOSE 3000
 
-# Run the Rails built-in server from the dummy directory.
-CMD rake docker:run --rakefile /web-console/Rakefile
+# Run the docker specific rake task in a bash session! Otherwise, irb may set
+# its prompt to :NULL.
+CMD bash -c 'rake docker:run --rakefile /web-console/Rakefile'
