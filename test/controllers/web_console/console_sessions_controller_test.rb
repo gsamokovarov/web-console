@@ -3,10 +3,8 @@ require 'test_helper'
 module WebConsole
   class ConsoleSessionsControllerTest < ActionController::TestCase
     setup do
-      # Where does #stubs lives?
-      def (@controller.request).remote_ip
-        '127.0.0.1'
-      end
+      # Where does .stubs lives?
+      def @request.remote_ip; '127.0.0.1' end
     end
 
     test 'index is successful' do
@@ -35,6 +33,12 @@ module WebConsole
       ConsoleSession::INMEMORY_STORAGE.delete(console_session.id)
       put :update, id: console_session.id, input: 42, use_route: 'web_console'
       assert_response :gone
+    end
+
+    test 'blocks requests from non-whitelisted ips' do
+      def @request.remote_ip; '128.0.0.1' end
+      get :index, use_route: 'web_console'
+      assert_response :unauthorized
     end
 
     test 'index generated path' do
