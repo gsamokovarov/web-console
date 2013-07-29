@@ -19,6 +19,15 @@ class WebConsoleTest < ActiveSupport::TestCase
     end
   end
 
+  test 'whitelisted ips are normalized and unique IPAddr' do
+    new_uninitialized_app do |app|
+      app.config.web_console.whitelisted_ips = ['127.0.0.1', '127.0.0.1', nil, '', ' ']
+      app.initialize!
+
+      assert_equal [ IPAddr.new('127.0.0.1') ], app.config.web_console.whitelisted_ips
+    end
+  end
+
   test 'whitelisted_ips.include? coerces to IPAddr' do
     new_uninitialized_app do |app|
       app.config.web_console.whitelisted_ips = '127.0.0.1'
