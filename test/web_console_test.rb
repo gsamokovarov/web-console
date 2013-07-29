@@ -48,7 +48,7 @@ class WebConsoleTest < ActiveSupport::TestCase
 
   test 'whitelist whole networks' do
     new_uninitialized_app do |app|
-      app.config.web_console.whitelisted_ips = '172.16.0.0/8'
+      app.config.web_console.whitelisted_ips = '172.16.0.0/12'
       app.initialize!
 
       1.upto(255).each do |n|
@@ -59,7 +59,7 @@ class WebConsoleTest < ActiveSupport::TestCase
 
   test 'whitelist multiple networks' do
     new_uninitialized_app do |app|
-      app.config.web_console.whitelisted_ips = ['172.16.0.0/8', '192.168.0.0/8']
+      app.config.web_console.whitelisted_ips = ['172.16.0.0/12', '192.168.0.0/16']
       app.initialize!
 
       1.upto(255).each do |n|
