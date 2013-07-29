@@ -7,8 +7,8 @@ require "web_console"
 
 module Dummy
   class Application < Rails::Application
-    # When the Dummy application is ran in a docker container, the address
-    # local computer address is in the 172.16.0.0/12 range. Have it whitelisted.
+    # When the Dummy application is ran in a docker container, the local
+    # computer address is in the 172.16.0.0/12 range. Have it whitelisted.
     config.web_console.whitelisted_ips = %w( 127.0.0.1 172.16.0.0/12 )
   end
 end
