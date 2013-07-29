@@ -10,6 +10,56 @@ class WebConsoleTest < ActiveSupport::TestCase
     end
   end
 
+  test 'whitelisted ips are courced to IPAddr' do
+    new_uninitialized_app do |app|
+      app.config.web_console.whitelisted_ips = '127.0.0.1'
+      app.initialize!
+
+      assert_equal [ IPAddr.new('127.0.0.1') ], app.config.web_console.whitelisted_ips
+    end
+  end
+
+  test 'whitelisted_ips.include? coerces to IPAddr' do
+    new_uninitialized_app do |app|
+      app.config.web_console.whitelisted_ips = '127.0.0.1'
+      app.initialize!
+
+      assert app.config.web_console.whitelisted_ips.include?('127.0.0.1')
+    end
+  end
+
+  test 'whitelisted_ips.include? works with IPAddr' do
+    new_uninitialized_app do |app|
+      app.config.web_console.whitelisted_ips = '127.0.0.1'
+      app.initialize!
+
+      assert app.config.web_console.whitelisted_ips.include?(IPAddr.new('127.0.0.1'))
+    end
+  end
+
+  test 'whitelist whole networks' do
+    new_uninitialized_app do |app|
+      app.config.web_console.whitelisted_ips = '172.16.0.0/8'
+      app.initialize!
+
+      1.upto(255).each do |n|
+        assert_includes app.config.web_console.whitelisted_ips, "172.16.0.#{n}"
+      end
+    end
+  end
+
+  test 'whitelist multiple networks' do
+    new_uninitialized_app do |app|
+      app.config.web_console.whitelisted_ips = ['172.16.0.0/8', '192.168.0.0/8']
+      app.initialize!
+
+      1.upto(255).each do |n|
+        assert_includes app.config.web_console.whitelisted_ips, "172.16.0.#{n}"
+        assert_includes app.config.web_console.whitelisted_ips, "192.168.0.#{n}"
+      end
+    end
+  end
+
   private
 
     def new_uninitialized_app(root = File.expand_path('../dummy', __FILE__))

@@ -2,6 +2,13 @@ require 'test_helper'
 
 module WebConsole
   class ConsoleSessionsControllerTest < ActionController::TestCase
+    setup do
+      # Where does #stubs lives?
+      def (@controller.request).remote_ip
+        '127.0.0.1'
+      end
+    end
+
     test 'index is successful' do
       get :index, use_route: 'web_console'
       assert_response :success
