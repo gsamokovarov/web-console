@@ -10,6 +10,8 @@ Gem::Specification.new do |s|
   s.homepage = "https://github.com/gsamokovarov/web-console"
   s.summary  = "Rails Console on the Browser."
 
+  s.license = 'MIT'
+
   s.files      = Dir["{app,config,db,lib,vendor}/**/*", "MIT-LICENSE", "Rakefile", "README.markdown"]
   s.test_files = Dir["test/**/*"]
 
