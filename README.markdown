@@ -10,8 +10,8 @@ server.
 
 This is where _Web Console_ comes to the rescue. It gives you the same
 `rails console` experience, right in the browser. It's not just a tool that
-let's you evaluate Ruby code, there are a lot of those. It's your IRB session,
-the way you configured it.
+let's you evaluate Ruby code, there are a lot of those. It's your `IRB`
+session, the way you configured it.
 
 ![web-console-demo](http://f.cl.ly/items/1b2E2C052g1v1A233N0g/web-console-demo.png)
 
@@ -104,6 +104,13 @@ end
 
 Restart your server and you are done!
 
+Pry Support
+-----------
+
+If you prefer `Pry` over `IRB`, we have you covered! We support it through the
+[web-console-pry] project. Visit it's [home page][web-console-pry] for
+instructions.
+
 Test Drive
 ----------
 
@@ -118,4 +125,5 @@ the git root directory.
 docker build -t gsamokovarov/web-console . && docker run -i -t !#:3
 ```
 
+  [web-console-pry]: https://github.com/gsamokovarov/web-console-pry
   [Docker]: http://www.docker.io/
