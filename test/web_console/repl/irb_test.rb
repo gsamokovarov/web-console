@@ -73,6 +73,12 @@ class IRBTest < ActiveSupport::TestCase
     end
   end
 
+  test 'clostest .irbrc is executed' do
+    Dir.chdir(File.expand_path('../../../fixtures', __FILE__)) do
+      assert '>> ', WebConsole::REPL::IRB.new.prompt
+    end
+  end
+
   test 'rails helpers are available in the session' do
     each_rails_console_method do |meth|
       assert_equal return_prompt(true), @irb.send_input("respond_to? :#{meth}")

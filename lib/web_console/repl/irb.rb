@@ -43,6 +43,7 @@ module WebConsole
       private
         def initialize_irb_session!(ap_path = nil)
           ::IRB.init_config(ap_path)
+          ::IRB.run_config
         end
 
         def finalize_irb_session!
@@ -55,7 +56,7 @@ module WebConsole
       require 'rails/console/helpers'
 
       # Include all of the rails console helpers in the IRB session.
-      ::IRB::ExtendCommandBundle.send :include, Rails::ConsoleMethods
+      ::IRB::ExtendCommandBundle.send(:include, Rails::ConsoleMethods)
     end
   end
 end
