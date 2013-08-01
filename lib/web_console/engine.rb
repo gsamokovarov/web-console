@@ -7,8 +7,10 @@ module WebConsole
     isolate_namespace WebConsole
 
     config.web_console = ActiveSupport::OrderedOptions.new
-    config.web_console.default_mount_path = '/console'
-    config.web_console.whitelisted_ips = '127.0.0.1'
+
+    config.web_console.default_mount_path      = '/console'
+    config.web_console.whitelisted_ips         = '127.0.0.1'
+    config.web_console.prevent_irbrc_execution = false
 
     initializer 'web_console.add_default_route' do |app|
       # While we don't need the route in the test environment, we define it

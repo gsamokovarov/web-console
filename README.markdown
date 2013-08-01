@@ -87,6 +87,11 @@ Again, note that this network doesn't allow `127.0.0.1`.  If you want to access
 the console, you have to do so from it's external IP or add `127.0.0.1` to the
 mix.
 
+### config.web_console.prevent_irbrc_execution
+
+By default, the `IRB` adapter will execute the contents of the user's `.irbrc`.
+Set this option to `false` if you would like to prevent that.
+
 ### config.web_console.default_mount_path
 
 By default, the console will be mounted on `/console`.

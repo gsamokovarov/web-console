@@ -1,1 +1,1 @@
-IRB.conf[:PROMPT_MODE] = :SIMPLE
+$IRBRC_EXECUTED = true

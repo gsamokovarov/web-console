@@ -43,7 +43,7 @@ module WebConsole
       private
         def initialize_irb_session!(ap_path = nil)
           ::IRB.init_config(ap_path)
-          ::IRB.run_config
+          ::IRB.run_config unless Engine.config.web_console.prevent_irbrc_execution
         end
 
         def finalize_irb_session!

@@ -4,6 +4,22 @@ class IRBTest < ActiveSupport::TestCase
   setup do
     @irb1 = @irb = WebConsole::REPL::IRB.new
     @irb2 = WebConsole::REPL::IRB.new
+
+    # Flag to signalize that the .irbrc was read.
+    $IRBRC_EXECUTED = false
+
+    # Since IRB is kinda funky, it reads the .irbrc in $HOME/.irbrc earlier
+    # that the one in the current working directory, we have to lie to it.
+    @preserved_home, ENV['HOME'] = ENV['HOME'], nil
+
+    # It also caches the procedure used to generate the .irbrc location.
+    IRB.conf[:RC_NAME_GENERATOR] = nil
+  end
+
+  teardown do
+    # Now, bring the working place as we have found it.
+    ENV['HOME'] = @preserved_home
+    WebConsole::Engine.config.web_console.prevent_irbrc_execution = false
   end
 
   test 'sending input returns the result as output' do
@@ -73,9 +89,20 @@ class IRBTest < ActiveSupport::TestCase
     end
   end
 
-  test 'clostest .irbrc is executed' do
+  test 'closest .irbrc is executed by default' do
     Dir.chdir(File.expand_path('../../../fixtures', __FILE__)) do
-      assert '>> ', WebConsole::REPL::IRB.new.prompt
+      WebConsole::REPL::IRB.new.tap do
+        assert $IRBRC_EXECUTED
+      end
+    end
+  end
+
+  test 'closest .irbrc execution can be prevented' do
+    WebConsole::Engine.config.web_console.prevent_irbrc_execution = true
+    Dir.chdir(File.expand_path('../../../fixtures', __FILE__)) do
+      WebConsole::REPL::IRB.new.tap do
+        assert_not $IRBRC_EXECUTED
+      end
     end
   end
 
@@ -110,5 +137,23 @@ class IRBTest < ActiveSupport::TestCase
       require 'rails/console/app'
       require 'rails/console/helpers'
       Rails::ConsoleMethods.public_instance_methods.each(&block)
+    end
+
+    def new_uninitialized_app(root = File.expand_path('../../../dummy', __FILE__))
+      FileUtils.mkdir_p root
+      Dir.chdir root
+
+      old_app = Rails.application
+      Rails.application = nil
+
+      app = Class.new(Rails::Application)
+      app.config.eager_load = false
+      app.config.time_zone = 'UTC'
+      app.config.middleware ||= Rails::Configuration::MiddlewareStackProxy.new
+      app.config.active_support.deprecation = :notify
+
+      yield app
+    ensure
+      Rails.application = old_app
     end
 end
