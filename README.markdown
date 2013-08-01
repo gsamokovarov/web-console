@@ -112,9 +112,9 @@ Restart your server and you are done!
 Pry Support
 -----------
 
-If you prefer `Pry` over `IRB`, we have you covered! We support it through the
-[web-console-pry] project. Visit it's [home page][web-console-pry] for
-instructions.
+_Web Console_ isn't limited to just `IRB`. If you like `Pry` more than `IRB`,
+we provide support for it through the [web-console-pry] project. Visit it's
+[home page][web-console-pry] for more information.
 
 Test Drive
 ----------
