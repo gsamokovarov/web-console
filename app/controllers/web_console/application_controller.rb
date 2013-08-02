@@ -4,7 +4,7 @@ module WebConsole
 
     private
       def prevent_unauthorized_requests!
-        unless request.remote_ip.in?(WebConsole::Engine.config.web_console.whitelisted_ips)
+        unless request.remote_ip.in?(WebConsole.config.whitelisted_ips)
           render nothing: true, status: :unauthorized
         end
       end
