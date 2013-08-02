@@ -16,6 +16,7 @@ module WebConsole
           streams.each(&:rewind)
           replacement.read
         ensure
+          replacement.close
           replacement.unlink
           streams.each_with_index do |stream, i|
             stream.reopen(streams_copy[i])
