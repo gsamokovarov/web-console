@@ -60,14 +60,15 @@ module WebConsole
     end
 
     test 'supports json serialization' do
+      rails3 = Rails::VERSION::MAJOR == 3
+
       with_dummy_adapter do
         model = new_model
-
-        expected_nil_json = "{\"id\":3,\"input\":null,\"output\":null,\"prompt\":\"\\u003E\\u003E \"}"
+        expected_nil_json = "{\"id\":3,\"input\":null,\"output\":null,\"prompt\":\"#{rails3 ? ">>" : "\\u003E\\u003E"} \"}"
         assert_equal expected_nil_json, model.to_json
 
         model.save(input: 'puts "foo"')
-        expected_json = "{\"id\":3,\"input\":\"puts \\\"foo\\\"\",\"output\":\"foo\\n=\\u003E nil\\n\",\"prompt\":\"\\u003E\\u003E \"}"
+        expected_json = "{\"id\":3,\"input\":\"puts \\\"foo\\\"\",\"output\":\"foo\\n=#{rails3 ? ">" : "\\u003E"} nil\\n\",\"prompt\":\"#{rails3 ? ">>" : "\\u003E\\u003E"} \"}"
         assert_equal expected_json, model.to_json
       end
     end
