@@ -1,7 +1,7 @@
-[![Travis](https://travis-ci.org/gsamokovarov/web-console.png)](https://travis-ci.org/gsamokovarov/web-console)
-
 Web Console
 ===========
+
+[![Travis](https://travis-ci.org/gsamokovarov/web-console.png)](https://travis-ci.org/gsamokovarov/web-console) [![Version](https://badge.fury.io/rb/web-console.png)](http://badge.fury.io/rb/web-console)
 
 There is no doubt that `rails console` is one of the most useful commands,
 Rails has to offer. However, sometimes you can't easily access it, or maybe
