@@ -1,3 +1,5 @@
+require 'mutex_m'
+
 module WebConsole
   module Stream
     extend Mutex_m
