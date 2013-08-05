@@ -109,12 +109,18 @@ end
 
 Restart your server and you are done!
 
-Pry Support
------------
+Compatibility
+-------------
+
+### Pry
 
 _Web Console_ isn't limited to just `IRB`. If you like `Pry` more than `IRB`,
 we provide support for it through the [web-console-pry] project. Visit it's
 [home page][web-console-pry] for more information.
+
+### Rails 3
+
+For _Rails 3_ support, check out [web-console-rails3].
 
 Test Drive
 ----------
@@ -131,4 +137,5 @@ docker build -t gsamokovarov/web-console . && docker run -i -t !#:3
 ```
 
   [web-console-pry]: https://github.com/gsamokovarov/web-console-pry
+  [web-console-rails3]: https://github.com/gsamokovarov/web-console-rails3
   [Docker]: http://www.docker.io/
