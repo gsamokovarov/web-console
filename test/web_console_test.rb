@@ -72,6 +72,8 @@ class WebConsoleTest < ActiveSupport::TestCase
   private
 
     def new_uninitialized_app(root = File.expand_path('../dummy', __FILE__))
+      skip if Rails::VERSION::MAJOR == 3
+
       FileUtils.mkdir_p root
       Dir.chdir root
 
