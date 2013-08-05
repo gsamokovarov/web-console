@@ -104,4 +104,7 @@ module WebConsole
         synchronize { INMEMORY_STORAGE[id] = self }
       end
   end
+
+  # Explicitly configue include_root_in_json for Rails 3 compatibility.
+  ConsoleSession.include_root_in_json = false
 end
