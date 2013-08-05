@@ -92,18 +92,14 @@ class IRBTest < ActiveSupport::TestCase
   test 'closest .irbrc is executed by default' do
     skip "I'm special. Travis is special. Who knows?"
     Dir.chdir(File.expand_path('../../../fixtures', __FILE__)) do
-      WebConsole::REPL::IRB.new.tap do
-        assert $IRBRC_EXECUTED
-      end
+      WebConsole::REPL::IRB.new.tap { assert $IRBRC_EXECUTED }
     end
   end
 
   test 'closest .irbrc execution can be prevented' do
     WebConsole::Engine.config.web_console.prevent_irbrc_execution = true
     Dir.chdir(File.expand_path('../../../fixtures', __FILE__)) do
-      WebConsole::REPL::IRB.new.tap do
-        assert_not $IRBRC_EXECUTED
-      end
+      WebConsole::REPL::IRB.new.tap { refute $IRBRC_EXECUTED }
     end
   end
 

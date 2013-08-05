@@ -48,7 +48,7 @@ module WebConsole
     end
 
     test 'persisted models knows that they are in memory' do
-      assert_not @model.persisted?
+      refute @model.persisted?
       @model.save
       assert @model.persisted?
     end
@@ -77,7 +77,7 @@ module WebConsole
     end
 
     test 'no gives not persisted models' do
-      assert_not ConsoleSession.new.persisted?
+      refute ConsoleSession.new.persisted?
     end
 
     private
