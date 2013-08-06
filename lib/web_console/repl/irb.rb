@@ -41,10 +41,9 @@ module WebConsole
       end
 
       def send_interrupt
-        @irb.signal_handle
-      rescue RubyLex::TerminateLineInput
-        # This will be raised when the interrupt is called and @signal_status
-        # is :IN_INPUT. Ignoring it is fine.
+        # Interrupt at :IN_INPUT will cause IRB to print ^C straight to the
+        # STDOUT. Avoid that.
+        @irb.signal_handle unless @irb.instance_variable_get(:@signal_status) == :IN_INPUT
       end
 
       private
