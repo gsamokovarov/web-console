@@ -54,6 +54,7 @@ module WebConsole
         end
 
         def finalize_irb_session!
+          @irb.context.instance_variable_set(:@thread, @fiber.thread)
           ::IRB.conf[:MAIN_CONTEXT] = @irb.context
         end
     end
