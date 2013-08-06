@@ -135,22 +135,4 @@ class IRBTest < ActiveSupport::TestCase
       require 'rails/console/helpers'
       Rails::ConsoleMethods.public_instance_methods.each(&block)
     end
-
-    def new_uninitialized_app(root = File.expand_path('../../../dummy', __FILE__))
-      FileUtils.mkdir_p root
-      Dir.chdir root
-
-      old_app = Rails.application
-      Rails.application = nil
-
-      app = Class.new(Rails::Application)
-      app.config.eager_load = false
-      app.config.time_zone = 'UTC'
-      app.config.middleware ||= Rails::Configuration::MiddlewareStackProxy.new
-      app.config.active_support.deprecation = :notify
-
-      yield app
-    ensure
-      Rails.application = old_app
-    end
 end
