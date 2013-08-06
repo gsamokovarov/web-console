@@ -123,11 +123,11 @@ class IRBTest < ActiveSupport::TestCase
     end
 
     def with_simple_prompt
-      previous_prompt = ::IRB.conf[:PROMPT]
-      ::IRB.conf[:PROMPT] = :simple
+      previous_prompt = ::IRB.conf[:PROMPT_MODE]
+      ::IRB.conf[:PROMPT_MODE] = :simple
       yield
     ensure
-      ::IRB.conf[:PROMPT] = previous_prompt
+      ::IRB.conf[:PROMPT_MODE] = previous_prompt
     end
 
     def each_rails_console_method(&block)
