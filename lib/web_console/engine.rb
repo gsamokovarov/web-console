@@ -6,11 +6,11 @@ module WebConsole
   class Engine < ::Rails::Engine
     isolate_namespace WebConsole
 
-    config.web_console = ActiveSupport::OrderedOptions.new
-
-    config.web_console.default_mount_path      = '/console'
-    config.web_console.whitelisted_ips         = '127.0.0.1'
-    config.web_console.prevent_irbrc_execution = false
+    config.web_console = ActiveSupport::OrderedOptions.new.tap do |c|
+      c.default_mount_path      = '/console'
+      c.whitelisted_ips         = '127.0.0.1'
+      c.prevent_irbrc_execution = false
+    end
 
     initializer 'web_console.add_default_route' do |app|
       # While we don't need the route in the test environment, we define it
