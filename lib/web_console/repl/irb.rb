@@ -40,6 +40,13 @@ module WebConsole
         Stream.threadsafe_capture! { @fiber.resume("#{input}\n") }
       end
 
+      def send_interrupt
+        @irb.signal_handle
+      rescue RubyLex::TerminateLineInput
+        # This will be raised when the interrupt is called and @signal_status
+        # is :IN_INPUT. Ignoring it is fine.
+      end
+
       private
 
         def initialize_irb_session!(ap_path = nil)

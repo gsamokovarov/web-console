@@ -103,6 +103,12 @@ class IRBTest < ActiveSupport::TestCase
     end
   end
 
+  test 'handles interrupts like SIGINT' do
+    thread = Thread.new { @irb.send_input('sleep 2.seconds') } and sleep 1.second
+    @irb.send_interrupt
+    assert_match %r{IRB::Abort}, thread.value
+  end
+
   test 'rails helpers are available in the session' do
     each_rails_console_method do |meth|
       assert_equal return_prompt(true), @irb.send_input("respond_to? :#{meth}")
