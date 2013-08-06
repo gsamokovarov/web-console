@@ -104,7 +104,7 @@ class IRBTest < ActiveSupport::TestCase
   end
 
   test 'handles interrupts like SIGINT' do
-    thread = Thread.new { @irb.send_input('sleep 2.seconds') } and sleep 1.second
+    thread = Thread.new { @irb.send_input('while true; end') } and sleep 1.second
     @irb.send_interrupt
     assert_match %r{IRB::Abort}, thread.value
   end
