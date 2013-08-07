@@ -18,7 +18,7 @@ module WebConsole
     # session storage.
     class NotFound < Exception
       def to_json(*)
-        {error: message}.to_json
+        { error: message }.to_json
       end
     end
 
@@ -27,7 +27,7 @@ module WebConsole
       #
       # Raises WebConsole::ConsoleSession::Expired if there is no such session.
       def find(id)
-        INMEMORY_STORAGE[id.to_i] or raise NotFound.new('Session unavailable')
+        INMEMORY_STORAGE[id.to_i] or raise NotFound, 'Session unavailable'
       end
 
       # Creates an already persisted consolse session.
@@ -68,6 +68,7 @@ module WebConsole
     end
 
     protected
+
       # Returns a hash of the attributes and their values.
       def attributes
         return Hash[ATTRIBUTES.zip([nil])]
@@ -82,6 +83,7 @@ module WebConsole
       end
 
     private
+
       def ensure_consequential_id!
         synchronize do
           self.id = begin

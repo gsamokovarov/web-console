@@ -110,6 +110,7 @@ class IRBTest < ActiveSupport::TestCase
   end
 
   private
+
     def currently_selected_prompt
       ::IRB.conf[:PROMPT][::IRB.conf[:PROMPT_MODE]]
     end

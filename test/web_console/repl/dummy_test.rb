@@ -46,6 +46,7 @@ class REPLTest < ActiveSupport::TestCase
   end
 
   private
+
     def each_rails_console_method(&block)
       require 'rails/console/app'
       require 'rails/console/helpers'

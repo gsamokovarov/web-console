@@ -48,6 +48,7 @@ module WebConsole
     end
 
     private
+
       def derive_adaptee_constant_from(cls, suffix = 'REPL')
         "::#{cls.name.split('::').last.gsub(/#{suffix}$/i, '')}".constantize
       end

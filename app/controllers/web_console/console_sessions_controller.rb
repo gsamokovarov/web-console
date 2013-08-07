@@ -16,6 +16,7 @@ module WebConsole
     end
 
     private
+
       def console_session_params
         params.permit(:input)
       end

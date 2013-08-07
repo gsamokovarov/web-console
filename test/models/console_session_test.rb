@@ -82,6 +82,7 @@ module WebConsole
     end
 
     private
+
       def new_model(attributes = {})
         ConsoleSession.new(attributes)
       end
