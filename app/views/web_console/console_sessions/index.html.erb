@@ -1,4 +1,5 @@
 <div id="console"
-  data-remote-path="<%= web_console.console_session_path(@console_session) %>"
-  data-initial-prompt="<%= @console_session.prompt %>">
+  data-input-path="<%= web_console.input_console_session_path(@console_session) %>"
+  data-pending-output-path="<%= web_console.pending_output_console_session_path(@console_session) %>"
+  data-interrupt-path="<%= web_console.interrupt_console_session_path(@console_session) %>">
 </div>
