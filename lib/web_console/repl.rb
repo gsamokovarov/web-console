@@ -1,60 +1,69 @@
-require 'active_support/core_ext/string/inflections'
+require 'pty'
 
 module WebConsole
-  module REPL
-    extend self
+  # = REPL\ Process\ Wrapper
+  #
+  # Creates and communicates with REPL processses.
+  class REPL
+    # The REPL process id.
+    attr_reader :pid
 
-    # Registry of REPL implementations mapped to their correspondent adapter
-    # classes.
-    #
-    # Don't manually alter the registry. Use WebConsole::REPL.register_adapter
-    # for adding entries.
-    def adapters
-      @adapters ||= {}
-    end
-
-    # Register an adapter into the adapters registry.
-    #
-    # Registration maps and adapter class to an existing REPL implementation,
-    # that we call an adaptee constant. If the adaptee constant is not given,
-    # it is automatically derived from the adapter class name.
-    #
-    # For example, adapter named +WebConsole::REPL::IRB+ will derive the
-    # adaptee constant to +::IRB+.
-    #
-    # If a block is given, it would be evaluated right after the adapter
-    # registration.
-    def register_adapter(adapter_class, adaptee_constant = nil, options = {})
-      if adaptee_constant.is_a?(Hash)
-        options          = adaptee_constant
-        adaptee_constant = nil
+    def initialize(console_command = 'rails console')
+      @output, @input, @pid = Dir.chdir(Rails.root) do
+        PTY.spawn(console_command)
       end
-      adaptee_constant   = adapter_class if options[:standalone]
-      adaptee_constant ||= derive_adaptee_constant_from(adapter_class)
-      adapters[adaptee_constant] = adapter_class
-      yield if block_given?
     end
 
-    # Get the default adapter for the given application.
+    # Sends input to the REPL process STDIN.
     #
-    # By default the application will be Rails.application and the adapter
-    # will be chosen from Rails.application.config.console.
-    #
-    # If no suitible adapter is found for the configured Rails console, a dummy
-    # adapter will be used. You can evaluate code in it, but it won't support
-    # any advanced features, like multiline code evaluation.
-    def default(app = Rails.application)
-      adapters[(app.config.console || ::IRB rescue ::IRB)] || adapters[Dummy]
+    # Returns immediately.
+    def send_input(input)
+      @input.puts(input)
     end
 
-    private
+    # Sends an interrupt signal +(SIGINT)+ to the REPL process.
+    #
+    # Returns immediately.
+    def send_interrupt
+      Process.kill(:SIGINT, @pid)
+    end
 
-      def derive_adaptee_constant_from(cls, suffix = 'REPL')
-        "::#{cls.name.split('::').last.gsub(/#{suffix}$/i, '')}".constantize
+    # Returns whether the REPL process has any pending output at the moment.
+    def pending_output?
+      ! IO.select([@output], [], [], 0).nil?
+    end
+
+    # Gets the pending output of the process.
+    #
+    # The pending output is read in an non blocking way by chunks, in the size
+    # of +chunk_len+. By default, +chunk_line+ is 4096 bytes.
+    #
+    # Returns +nil+ immediately, if there is no pending output at the moment.
+    # Otherwise, returns the pending output.
+    def pending_output(chunk_len = 4096)
+      # Return if the output is not immediately readable.
+      return unless pending_output?
+
+      pending = String.new
+      while chunk = @output.read_nonblock(chunk_len)
+        pending << chunk
       end
+      pending
+    rescue IO::WaitReadable
+      pending
+    end
+
+    # Dispose the underlying process, by sending it termination signal
+    # +(SIGTERM)+.
+    def dispose
+      Process.kill(:SIGTERM, @pid)
+      Process.detach(@pid)
+    end
+
+    # Dispose the underlying process, by sending it kill signal +(SIGKILL)+.
+    def dispose!
+      Process.kill(:SIGKILL, @pid)
+      Process.detach(@pid)
+    end
   end
 end
-
-# Require the builtin adapters.
-require 'web_console/repl/irb'
-require 'web_console/repl/dummy'
