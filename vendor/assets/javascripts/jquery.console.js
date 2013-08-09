@@ -107,8 +107,8 @@
     // Prompt
     var promptBox;
     var prompt;
-    var promptLabel = config && config.promptLabel == null ? config.promptLabel : "> ";
-    var continuedPromptLabel = config && config.continuedPromptLabel == null ? config.continuedPromptLabel : "> ";
+    var promptLabel = config && config.promptLabel != null ? config.promptLabel : "> ";
+    var continuedPromptLabel = config && config.continuedPromptLabel != null ? config.continuedPromptLabel : "> ";
     var column = 0;
     var promptText = '';
     var restoreText = '';
@@ -143,7 +143,7 @@
         setTimeout(function(){
           inner.addClass('jquery-console-focus');
           typer.focus();
-        },100);
+        }, 100);
       }
       extern.inner = inner;
       extern.typer = typer;
@@ -163,7 +163,7 @@
           message(ret.msg, ret.className);
         }
       } else { // Assume it's a DOM node or jQuery object.
-        inner.find('.jquery-console-prompt-box:last').prepend(msg);
+        inner.find('.jquery-console-prompt-box:last').before(msg);
       }
     };
 
@@ -448,8 +448,8 @@
     function message(msg, className) {
       var mesg = $('<div class="jquery-console-message"></div>');
       if (className) mesg.addClass(className);
-      mesg.filledText(msg).hide();
-      inner.find('.jquery-console-prompt-box:last').prepend(mesg);
+      mesg.text(msg).hide();
+      inner.find('.jquery-console-prompt-box:last').before(mesg);
       mesg.show();
     };
 
@@ -604,10 +604,10 @@
         // make it the current cursor.
         var before = line.substring(0, column);
         var current = line.substring(column,column+1);
-        if (current){
+        if (current) {
           current =
             '<span class="jquery-console-cursor">' +
-            htmlEncode(current) +
+              htmlEncode(current) +
             '</span>';
         }
         var after = line.substring(column+1);
@@ -632,12 +632,6 @@
     };
 
     return extern;
-  };
-  // Simple utility for printing messages
-  $.fn.filledText = function(txt){
-    $(this).text(txt);
-    $(this).html($(this).html().replace(/\n/g,'<br/>'));
-    return this;
   };
 
   // Alternative method for focus without scrolling

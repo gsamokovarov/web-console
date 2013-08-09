@@ -27,12 +27,11 @@ $(function() {
       dataType: 'json',
       success: function(response) {
         if (response.output != null) instance.report(response.output);
+        setTimeout(pollForPendingOutput, 500);
       },
       error: function(xhr) {
         instance.report([ { msg: xhr.responseJSON.error, className: ERROR_CLASS } ]);
       }
-    }).always(function() {
-      setTimeout(pollForPendingOutput, 250);
     });
   }).call(this);
 });
