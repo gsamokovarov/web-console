@@ -10,8 +10,8 @@ module WebConsole
     INMEMORY_STORAGE = {}
 
     # Store and define the available attributes.
-    ATTRIBUTES = [ :id, :input, :output, :prompt ].each do |attr|
-      attr_accessor attr
+    ATTRIBUTES = %w( id input output ).each do |attr|
+      attr_accessor attr.to_sym
     end
 
     # Raised when trying to find a session that is no longer in the in-memory
@@ -40,11 +40,10 @@ module WebConsole
     end
 
     def initialize(attributes = {})
-      @repl = WebConsole::REPL.default.new
-
-      super
-      ensure_consequential_id!
-      populate_repl_attributes!(initial: true)
+      super.tap do
+        @repl = WebConsole::REPL.new
+        populate_repl_attributes!
+      end
     end
 
     # Saves the model into the in-memory storage.
@@ -84,21 +83,12 @@ module WebConsole
 
     private
 
-      def ensure_consequential_id!
-        synchronize do
-          self.id = begin
-            @@counter ||= 0
-            @@counter  += 1
-          end
-        end
-      end
-
       def populate_repl_attributes!(options = {})
         synchronize do
-          # Don't send any input on the initial population so we don't bump up
-          # the numbers in the dynamic prompts.
-          self.output = @repl.send_input(input) unless options[:initial]
-          self.prompt = @repl.prompt
+          @repl.send_input(input)
+
+          self.output = @repl.pending_output
+          self.id     = @repl.pid
         end
       end
 
