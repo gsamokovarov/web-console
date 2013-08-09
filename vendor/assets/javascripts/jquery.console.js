@@ -154,7 +154,7 @@
     // Reset the prompt in invalid command
     extern.report = function(msg, className) {
       column = -1;
-      updatePromptDisplay();
+      updatePromptDisplay(true);
       if (typeof msg == 'string') {
         message(msg, className);
       } else if ($.isArray(msg)) {
@@ -165,6 +165,7 @@
       } else { // Assume it's a DOM node or jQuery object.
         inner.find('.jquery-console-prompt-box:last').before(msg);
       }
+      column = 0;
     };
 
     ////////////////////////////////////////////////////////////////////////
@@ -447,6 +448,7 @@
     // Display a message
     function message(msg, className) {
       var mesg = $('<div class="jquery-console-message"></div>');
+      mesg.css({display: 'inline'});
       if (className) mesg.addClass(className);
       mesg.text(msg).hide();
       inner.find('.jquery-console-prompt-box:last').before(mesg);
@@ -589,7 +591,8 @@
 
     ////////////////////////////////////////////////////////////////////////
     // Update the prompt display
-    function updatePromptDisplay(){
+    function updatePromptDisplay(flush){
+      if (flush) promptText = '';
       var line = promptText;
       var html = '';
       if (column > 0 && line == ''){
