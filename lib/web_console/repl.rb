@@ -27,21 +27,29 @@ module WebConsole
     end
 
     # Returns whether the REPL process has any pending output in +wait+
-    # seconds. By default, the wait is 1 second. For immediate return, use a
+    # seconds.
+    #
+    # By default, the wait is 1 second. For immediate return, use a
     # wait of 0.
     def pending_output?(wait = 1)
       ! IO.select([@output], [], [], wait).nil?
     end
 
+    # Returns whether the REPL process is still alive.
+    def alive?
+      PTY.check(@pid).nil?
+    end
+
     # Gets the pending output of the process.
     #
     # The pending output is read in an non blocking way by chunks, in the size
-    # of +chunk_len+. By default, +chunk_line+ is 4096 bytes.
+    # of +chunk_len+. By default, +chunk_len+ is 4096 bytes.
     #
     # Returns +nil+, if there is no pending output at the moment. Otherwise,
-    # returns the pending output.
+    # returns the output that hasn't been read since the last invocation.
     def pending_output(chunk_len = 4096)
-      # Return if the output is not immediately readable.
+      # Return if the process is no longer alive or  if the output is not readable or the process is no longer
+      # running.
       return unless pending_output?
 
       pending = String.new
