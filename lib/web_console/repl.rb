@@ -8,10 +8,8 @@ module WebConsole
     # The REPL process id.
     attr_reader :pid
 
-    def initialize(console_command = 'rails console')
-      @output, @input, @pid = Dir.chdir(Rails.root) do
-        PTY.spawn(console_command)
-      end
+    def initialize(command = 'bin/rails console', cwd = Rails.root)
+      @output, @input, @pid = Dir.chdir(cwd) { PTY.spawn(command) }
     end
 
     # Sends input to the REPL process STDIN.
@@ -40,7 +38,7 @@ module WebConsole
     # The pending output is read in an non blocking way by chunks, in the size
     # of +chunk_len+. By default, +chunk_line+ is 4096 bytes.
     #
-    # Returns +nil+, if there is no pending output at the moment.  Otherwise,
+    # Returns +nil+, if there is no pending output at the moment. Otherwise,
     # returns the pending output.
     def pending_output(chunk_len = 4096)
       # Return if the output is not immediately readable.
