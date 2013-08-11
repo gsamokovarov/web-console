@@ -32,7 +32,7 @@ module WebConsole
     # By default, the wait is 1 second. For immediate return, use a
     # wait of 0.
     def pending_output?(wait = 1)
-      ! IO.select([@output], [], [], wait).nil?
+      !!IO.select([@output], [], [], wait)
     end
 
     # Returns whether the REPL process is still alive.
