@@ -4,6 +4,10 @@ module WebConsole
   # = REPL\ Process\ Wrapper
   #
   # Creates and communicates with REPL processses.
+  #
+  # The communication happens through an input with attached psuedo-terminal.
+  # All of the communication is done in asynchrouns way, meaning that when you
+  # send input to the process, you have get the output by polling for it.
   class REPL
     # The REPL process id.
     attr_reader :pid
@@ -35,11 +39,6 @@ module WebConsole
       !!IO.select([@output], [], [], wait)
     end
 
-    # Returns whether the REPL process is still alive.
-    def alive?
-      PTY.check(@pid).nil?
-    end
-
     # Gets the pending output of the process.
     #
     # The pending output is read in an non blocking way by chunks, in the size
@@ -47,9 +46,12 @@ module WebConsole
     #
     # Returns +nil+, if there is no pending output at the moment. Otherwise,
     # returns the output that hasn't been read since the last invocation.
+    #
+    # Raises Errno:EIO on closed output stream. This can happen if the
+    # underlying process exits.
     def pending_output(chunk_len = 4096)
-      # Return if the process is no longer alive or  if the output is not readable or the process is no longer
-      # running.
+      # Return if the process is no longer alive or if the output is not
+      # readable or the process is no longer running.
       return unless pending_output?
 
       pending = String.new
@@ -61,17 +63,41 @@ module WebConsole
       pending
     end
 
-    # Dispose the underlying process, by sending it termination signal
-    # +(SIGTERM)+.
-    def dispose
-      Process.kill(:SIGTERM, @pid)
-      Process.detach(@pid)
+    # Dispose the underlying process, sending +SIGTERM+.
+    #
+    # After the process is disposed, it is detached from the parent to prevent
+    # zombies.
+    #
+    # If the process is already disposed an Errno::ESRCH will be raised and
+    # handled internally. If you want to handle Errno::ESRCH yourself, pass
+    # +{raise: true}+ as options.
+    #
+    # Returns a thread, which can be used to wait for the process termination.
+    def dispose(options = {})
+      dispose_with(:SIGTERM, options)
     end
 
-    # Dispose the underlying process, by sending it kill signal +(SIGKILL)+.
+    # Dispose the underlying process, sending +SIGKILL+.
+    #
+    # After the process is disposed, it is detached from the parent to prevent
+    # zombies.
+    #
+    # If the process is already disposed an Errno::ESRCH will be raised and
+    # handled internally. If you want to handle Errno::ESRCH yourself, pass
+    # +{raise: true}+ as options.
+    #
+    # Returns a thread, which can be used to wait for the process termination.
     def dispose!
-      Process.kill(:SIGKILL, @pid)
-      Process.detach(@pid)
+      dispose_with(:SIGKILL, options)
     end
+
+    private
+
+      def dispose_with(signal, options = {})
+        Process.kill(signal, @pid)
+        Process.detach(@pid)
+      rescue Errno::ESRCH
+        raise if options[:raise]
+      end
   end
 end
