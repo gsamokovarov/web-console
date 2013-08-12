@@ -18,23 +18,6 @@ module WebConsole
       end
     end
 
-    test 'update updates new console session' do
-      get :index, use_route: 'web_console'
-      assert_not_nil console_session = assigns(:console_session)
-
-      put :update, id: console_session.id, input: 42, use_route: 'web_console'
-      assert_match %r{42}, console_session.output
-    end
-
-    test 'update failes when session is no longer available' do
-      get :index, use_route: 'web_console'
-      assert_not_nil console_session = assigns(:console_session)
-
-      ConsoleSession::INMEMORY_STORAGE.delete(console_session.id)
-      put :update, id: console_session.id, input: 42, use_route: 'web_console'
-      assert_response :gone
-    end
-
     test 'blocks requests from non-whitelisted ips' do
       def @request.remote_ip; '128.0.0.1' end
       get :index, use_route: 'web_console'
