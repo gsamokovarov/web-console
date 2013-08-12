@@ -19,8 +19,8 @@ module WebConsole
       # Finds a session by its pid.
       #
       # Raises WebConsole::ConsoleSession::Expired if there is no such session.
-      def find(id)
-        INMEMORY_STORAGE[id.to_i] or raise NotFound, 'Session unavailable'
+      def find(pid)
+        INMEMORY_STORAGE[pid.to_i] or raise NotFound, 'Session unavailable'
       end
 
       # Creates an already persisted consolse session.
@@ -28,17 +28,17 @@ module WebConsole
       # Use this method if you need to persist a session, without providing it
       # any input.
       def create
-        INMEMORY_STORAGE[(model = new).pid] = model
+        new.persist
       end
     end
 
-    delegate :pid, :send_input, :send_interrupt, :pending_output,
-             to: '@repl', allow_nil: true
-
-    alias :id :pid
-
     def initialize(attributes = {})
       @repl = WebConsole::REPL.new
+    end
+
+    # Explicitly persist the model in the in-memory storage.
+    def persist
+      INMEMORY_STORAGE[pid] = self
     end
 
     # Returns true if the current session is persisted in the in-memory storage.
@@ -49,7 +49,17 @@ module WebConsole
     # Returns an Enumerable of all key attributes if any is set, regardless if
     # the object is persisted or not.
     def to_key
-      super if persisted?
+      [pid] if persisted?
     end
+
+    private
+
+      def method_missing(name, *args, &block)
+        if @repl.respond_to?(name)
+          @repl.send(name, *args, &block)
+        else
+          super
+        end
+      end
   end
 end
