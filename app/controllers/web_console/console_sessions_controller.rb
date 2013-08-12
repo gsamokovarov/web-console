@@ -10,9 +10,25 @@ module WebConsole
       @console_session = ConsoleSession.create
     end
 
-    def update
+    def input
       @console_session = ConsoleSession.find(params[:id])
-      render json: @console_session.save(console_session_params)
+      @console_session.send_input(console_session_params[:input])
+
+      render nothing: true
+    end
+
+    def interrupt
+      @console_session = ConsoleSession.find(params[:id])
+      @console_session.send_interrupt
+
+      render nothing: true
+    end
+
+    def pending_output
+      @console_session = ConsoleSession.find(params[:id])
+      output = @console_session.pending_output
+
+      render json: { output: output }
     end
 
     private
