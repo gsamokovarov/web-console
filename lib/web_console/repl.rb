@@ -87,7 +87,7 @@ module WebConsole
     # +{raise: true}+ as options.
     #
     # Returns a thread, which can be used to wait for the process termination.
-    def dispose!
+    def dispose!(options = {})
       dispose_with(:SIGKILL, options)
     end
 
