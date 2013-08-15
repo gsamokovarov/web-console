@@ -13,8 +13,8 @@ module WebConsole
     # The REPL process id.
     attr_reader :pid
 
-    def initialize(command = 'bin/rails console', cwd = Rails.root)
-      @output, @input, @pid = Dir.chdir(cwd) { PTY.spawn(command) }
+    def initialize(command = File.join(Rails.root, 'bin/rails console'))
+      @output, @input, @pid = PTY.spawn(command)
     end
 
     # Sends input to the REPL process STDIN.
