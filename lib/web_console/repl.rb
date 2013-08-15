@@ -1,4 +1,5 @@
 require 'pty'
+require 'io/console'
 
 module WebConsole
   # = REPL\ Process\ Wrapper
@@ -20,7 +21,7 @@ module WebConsole
     #
     # Returns immediately.
     def send_input(input)
-      @input.puts(input)
+      @input.write(input)
     end
 
     # Sends an interrupt signal +(SIGINT)+ to the REPL process.
