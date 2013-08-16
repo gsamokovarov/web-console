@@ -21,7 +21,7 @@ module WebConsole
     #
     # Returns immediately.
     def send_input(input)
-      @input.write(input)
+      input.each_char { |char| @input.putc(char) }
     end
 
     # Sends an interrupt signal +(SIGINT)+ to the REPL process.
