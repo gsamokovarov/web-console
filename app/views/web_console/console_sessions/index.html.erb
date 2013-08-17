@@ -1,5 +1,8 @@
-<div id="console"
-  data-input-path="<%= web_console.input_console_session_path(@console_session) %>"
-  data-pending-output-path="<%= web_console.pending_output_console_session_path(@console_session) %>"
-  data-interrupt-path="<%= web_console.interrupt_console_session_path(@console_session) %>">
-</div>
+<script>
+  var TerminalSettings = {
+    url: {
+      input: "<%= web_console.input_console_session_path(@console_session) %>",
+      pendingOutput: "<%= web_console.pending_output_console_session_path(@console_session) %>"
+    }
+  };
+</script>
