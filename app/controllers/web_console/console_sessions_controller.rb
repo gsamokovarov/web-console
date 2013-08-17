@@ -17,6 +17,13 @@ module WebConsole
       render nothing: true
     end
 
+    def configuration
+      @console_session = ConsoleSession.find(params[:id])
+      @console_session.configure(console_session_params)
+
+      render nothing: true
+    end
+
     def pending_output
       @console_session = ConsoleSession.find(params[:id])
 
@@ -26,7 +33,7 @@ module WebConsole
     private
 
       def console_session_params
-        params.permit(:input)
+        params.permit(:input, :width, :height)
       end
   end
 end

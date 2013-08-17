@@ -3,8 +3,9 @@ WebConsole::Engine.routes.draw do
 
   resources :console_sessions do
     member do
-      get :pending_output
       put :input
+      get :pending_output
+      put :configuration
     end
   end
 end
