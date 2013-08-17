@@ -43,8 +43,7 @@ module WebConsole
     # Raises Errno:EIO on closed output stream. This can happen if the
     # underlying process exits.
     def pending_output(chunk_len = 4096)
-      # Return if the process is no longer alive or if the output is not
-      # readable or the process is no longer running.
+      # Returns nil if there is no pending output.
       return unless pending_output?
 
       pending = String.new
