@@ -5,7 +5,6 @@ WebConsole::Engine.routes.draw do
     member do
       get :pending_output
       put :input
-      put :interrupt
     end
   end
 end
