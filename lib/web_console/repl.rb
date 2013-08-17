@@ -24,13 +24,6 @@ module WebConsole
       input.each_char { |char| @input.putc(char) }
     end
 
-    # Sends an interrupt signal +(SIGINT)+ to the REPL process.
-    #
-    # Returns immediately.
-    def send_interrupt
-      Process.kill(:SIGINT, @pid)
-    end
-
     # Returns whether the REPL process has any pending output in +wait+
     # seconds.
     #

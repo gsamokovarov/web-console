@@ -25,12 +25,6 @@ class REPLTest < ActiveSupport::TestCase
     end
   end
 
-  test '#send_interrupt sends :SIGINT to the process' do
-    Process.expects(:kill).with(:SIGINT, @repl.pid)
-    @repl.send_interrupt
-    Process.unstub(:kill)
-  end
-
   test '#pid keeps a reference to the process pid' do
     assert_nothing_raised { wait(@repl.pid, WNOHANG) }
   end
