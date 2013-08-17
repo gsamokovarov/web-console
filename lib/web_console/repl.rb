@@ -17,6 +17,21 @@ module WebConsole
       @output, @input, @pid = PTY.spawn(command)
     end
 
+    # Configure the psuedo terminal properties.
+    #
+    # Options:
+    #   :width  The width of the terminal in number of columns.
+    #   :height The height of the terminal in number of rows.
+    #
+    # If any of the width or height is missing (or zero), the termininal size
+    # won't be set.
+    def configure(options = {})
+      dimentions = options.values_at(:width, :height).collect(:to_i)
+      unless dimentions.any(:zero?)
+        @input.winsize = dimentions
+      end
+    end
+
     # Sends input to the REPL process STDIN.
     #
     # Returns immediately.
