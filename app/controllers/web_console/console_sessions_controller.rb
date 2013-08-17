@@ -17,13 +17,6 @@ module WebConsole
       render nothing: true
     end
 
-    def interrupt
-      @console_session = ConsoleSession.find(params[:id])
-      @console_session.send_interrupt
-
-      render nothing: true
-    end
-
     def pending_output
       @console_session = ConsoleSession.find(params[:id])
       output = @console_session.pending_output
