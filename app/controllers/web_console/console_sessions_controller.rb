@@ -19,9 +19,8 @@ module WebConsole
 
     def pending_output
       @console_session = ConsoleSession.find(params[:id])
-      output = @console_session.pending_output
 
-      render json: { output: output }
+      render json: { output: @console_session.pending_output }
     end
 
     private
