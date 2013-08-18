@@ -36,13 +36,6 @@ module WebConsole
       @repl = WebConsole::REPL.new
     end
 
-    # Decode the input and send it to the underlying process.
-    #
-    # Decoding algorhithm by Markus Gutschke from http://shellinabox.com.
-    def send_input(input)
-      @repl.send_input(decode_to_ascii(input))
-    end
-
     # Explicitly persist the model in the in-memory storage.
     def persist
       INMEMORY_STORAGE[pid] = self
@@ -60,18 +53,6 @@ module WebConsole
     end
 
     private
-
-      def decode_to_ascii(input)
-        decoded = []
-        input.bytes.each_slice(2) do |c0, c1 = 0|
-          break if c0 < 48 || (c0 > 57 && c0 < 65) || (c0 > 70 && c0 < 97) || c0 > 102
-          break if c1 < 48 || (c1 > 57 && c1 < 65) || (c1 > 70 && c1 < 97) || c1 > 102
-
-          decoded << 16 * ((c0 & 0xF) + 9 * (c0 > 57 ? 1 : 0)) +
-                          ((c1 & 0xF) + 9 * (c1 > 57 ? 1 : 0))
-        end
-        decoded.pack('C*')
-      end
 
       def method_missing(name, *args, &block)
         if @repl.respond_to?(name)
