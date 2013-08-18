@@ -66,9 +66,9 @@ module WebConsole
       while chunk = @output.read_nonblock(chunk_len)
         pending << chunk
       end
-      pending
+      pending.force_encoding('UTF-8')
     rescue IO::WaitReadable
-      pending
+      pending.force_encoding('UTF-8')
     end
 
     # Dispose the underlying process, sending +SIGTERM+.
