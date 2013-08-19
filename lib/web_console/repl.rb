@@ -28,9 +28,7 @@ module WebConsole
     # won't be set.
     def configure(options = {})
       dimentions = options.values_at(:height, :width).collect(&:to_i)
-      unless dimentions.any?(&:zero?)
-        @input.winsize = dimentions
-      end
+      @input.winsize = dimentions unless dimentions.any?(&:zero?)
     end
 
     # Sends input to the REPL process STDIN.
