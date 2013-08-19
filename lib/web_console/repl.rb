@@ -13,30 +13,36 @@ module WebConsole
     # The REPL process id.
     attr_reader :pid
 
-    def initialize(command = File.join(Rails.root, 'bin/rails console'))
+    def initialize(command = File.join(Rails.root, 'bin/rails console'), options = {})
       @output, @input, @pid = PTY.spawn(command)
+      configure(options)
+    end
+
+    # Configure the psuedo terminal properties.
+    #
+    # Options:
+    #   :width  The width of the terminal in number of columns.
+    #   :height The height of the terminal in number of rows.
+    #
+    # If any of the width or height is missing (or zero), the termininal size
+    # won't be set.
+    def configure(options = {})
+      dimentions = options.values_at(:height, :width).collect(&:to_i)
+      @input.winsize = dimentions unless dimentions.any?(&:zero?)
     end
 
     # Sends input to the REPL process STDIN.
     #
     # Returns immediately.
     def send_input(input)
-      @input.write(input)
-    end
-
-    # Sends an interrupt signal +(SIGINT)+ to the REPL process.
-    #
-    # Returns immediately.
-    def send_interrupt
-      Process.kill(:SIGINT, @pid)
+      input.each_char { |char| @input.putc(char) }
     end
 
     # Returns whether the REPL process has any pending output in +wait+
     # seconds.
     #
-    # By default, the wait is 1 second. For immediate return, use a
-    # wait of 0.
-    def pending_output?(wait = 1)
+    # By default, the +wait+ is 0 second, e.g. the response is immediate.
+    def pending_output?(wait = 0)
       !!IO.select([@output], [], [], wait)
     end
 
@@ -51,17 +57,16 @@ module WebConsole
     # Raises Errno:EIO on closed output stream. This can happen if the
     # underlying process exits.
     def pending_output(chunk_len = 4096)
-      # Return if the process is no longer alive or if the output is not
-      # readable or the process is no longer running.
+      # Returns nil if there is no pending output.
       return unless pending_output?
 
       pending = String.new
       while chunk = @output.read_nonblock(chunk_len)
         pending << chunk
       end
-      pending
+      pending.force_encoding('UTF-8')
     rescue IO::WaitReadable
-      pending
+      pending.force_encoding('UTF-8')
     end
 
     # Dispose the underlying process, sending +SIGTERM+.
