@@ -23,6 +23,11 @@ class REPLTest < ActiveSupport::TestCase
     assert_equal Encoding::UTF_8, @repl.pending_output.encoding
   end
 
+  test '#configure changes @input dimentions' do
+    @repl.configure(height: 32, width: 64)
+    assert_equal @repl.instance_variable_get(:@input).winsize, [32, 64]
+  end
+
   { dispose: :SIGTERM, dispose!: :SIGKILL }.each do |method, signal|
     test "##{method} sends #{signal} to the process and detaches it" do
       waiting_thread = @repl.send(method).join
