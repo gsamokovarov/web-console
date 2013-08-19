@@ -1,4 +1,4 @@
-require_dependency "web_console/application_controller"
+require_dependency 'web_console/application_controller'
 
 module WebConsole
   class ConsoleSessionsController < ApplicationController
@@ -17,24 +17,23 @@ module WebConsole
       render nothing: true
     end
 
-    def interrupt
+    def configuration
       @console_session = ConsoleSession.find(params[:id])
-      @console_session.send_interrupt
+      @console_session.configure(console_session_params)
 
       render nothing: true
     end
 
     def pending_output
       @console_session = ConsoleSession.find(params[:id])
-      output = @console_session.pending_output
 
-      render json: { output: output }
+      render json: { output: @console_session.pending_output }
     end
 
     private
 
       def console_session_params
-        params.permit(:input)
+        params.permit(:input, :width, :height)
       end
   end
 end

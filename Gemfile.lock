@@ -2,7 +2,6 @@ PATH
   remote: .
   specs:
     web-console (0.2.0)
-      jquery-rails (~> 3.0.4)
       rails (~> 4.0.0)
 
 GEM
@@ -38,9 +37,6 @@ GEM
     erubis (2.7.0)
     hike (1.2.3)
     i18n (0.6.4)
-    jquery-rails (3.0.4)
-      railties (>= 3.0, < 5.0)
-      thor (>= 0.14, < 2.0)
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
@@ -49,7 +45,7 @@ GEM
     minitest (4.7.5)
     mocha (0.14.0)
       metaclass (~> 0.0.1)
-    multi_json (1.7.7)
+    multi_json (1.7.8)
     polyglot (0.3.3)
     rack (1.5.2)
     rack-test (0.6.2)

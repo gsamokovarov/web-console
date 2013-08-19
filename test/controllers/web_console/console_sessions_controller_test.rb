@@ -17,15 +17,6 @@ module WebConsole
       end
     end
 
-    test 'PUT interrupt sends interrupts to the REPL' do
-      get :index, use_route: 'web_console'
-
-      assert_not_nil console_session = assigns(:console_session)
-      console_session.expects(:send_interrupt)
-
-      put :interrupt, id: console_session.pid, use_route: 'web_console'
-    end
-
     test 'PUT inputs sends input to the REPL' do
       get :index, use_route: 'web_console'
 
