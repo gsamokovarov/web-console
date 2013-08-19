@@ -1,4 +1,4 @@
-require_dependency "web_console/application_controller"
+require_dependency 'web_console/application_controller'
 
 module WebConsole
   class ConsoleSessionsController < ApplicationController

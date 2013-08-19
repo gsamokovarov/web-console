@@ -280,8 +280,8 @@ VT100.prototype.getUserSettings = function() {
   // looked up in a cookie associated with this page.
   this.signature            = 3;
   this.utfPreferred         = true;
-  this.visualBell           = typeof suppressAllAudio != 'undefined' &&
-                              suppressAllAudio;
+  this.visualBell           = typeof disableAudio != 'undefined' &&
+                              disableAudio;
   this.autoprint            = true;
   this.softKeyboard         = false;
   this.blinkingCursor       = true;
@@ -843,8 +843,7 @@ VT100.prototype.initializeElements = function(container) {
     try {
       if (typeof navigator.mimeTypes["audio/x-wav"].enabledPlugin.name !=
           'undefined') {
-        embed                  = typeof suppressAllAudio != 'undefined' &&
-                                 suppressAllAudio ? "" :
+        embed                  = this.disableAudio ? "" :
         '<embed classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B" ' +
                        'id="beep_embed" ' +
                        'src="beep.wav" ' +
@@ -867,13 +866,15 @@ VT100.prototype.initializeElements = function(container) {
                        '<div id="cursize" style="visibility: hidden">' +
                        '</div>' +
                        '<div id="menu"></div>' +
+                       (!this.softKeyboard ? "" :
                        '<div id="keyboard" unselectable="on">' +
-                       '</div>' +
+                       '</div>') +
                        '<div id="scrollable">' +
+                         (!this.softKeyboard ? "" :
                          '<table id="kbd_button">' +
                            '<tr><td width="100%">&nbsp;</td>' +
                            '<td><img id="kbd_img" src="keyboard.png" /></td>' +
-                           '<td>&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>' +
+                           '<td>&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>') +
                          '</table>' +
                          '<pre id="lineheight">&nbsp;</pre>' +
                          '<pre id="console">' +
@@ -889,15 +890,15 @@ VT100.prototype.initializeElements = function(container) {
                          '<pre><div><span id="space"></span></div></pre>' +
                          '<input type="textfield" id="input" />' +
                          '<input type="textfield" id="cliphelper" />' +
-                         (typeof suppressAllAudio != 'undefined' &&
-                          suppressAllAudio ? "" :
-                         embed + '<bgsound id="beep_bgsound" loop=1 />') +
-                          '<iframe id="layout" src="keyboard.html" />' +
+                         (this.disableAudio ? "" : embed +
+                         '<bgsound id="beep_bgsound" loop=1 />') +
+                         (!this.softKeyboard ? "" :
+                         '<iframe id="layout" src="keyboard.html" />') +
                         '</div>';
   }
 
   // Find the object used for playing the "beep" sound, if any.
-  if (typeof suppressAllAudio != 'undefined' && suppressAllAudio) {
+  if (this.disableAudio) {
     this.beeper                = undefined;
   } else {
     this.beeper                = this.getChildById(this.container,
@@ -996,8 +997,10 @@ VT100.prototype.initializeElements = function(container) {
     try { document.body.oncontextmenu = function() {return false;};} catch(e){}
   }
 
-  // Set up onscreen soft keyboard
-  this.initializeKeyboardButton();
+  if (this.softKeyboard) {
+    // Set up onscreen soft keyboard if it is enabled.
+    this.initializeKeyboardButton();
+  }
 
   // Hide context menu
   this.hideContextMenu();
@@ -2394,7 +2397,9 @@ VT100.prototype.showSoftKeyboard = function() {
 };
 
 VT100.prototype.hideSoftKeyboard = function() {
-  this.keyboard.style.display    = 'none';
+  if (this.softKeyboard) {
+    this.keyboard.style.display  = 'none';
+  }
 };
 
 VT100.prototype.toggleCursorBlinking = function() {
@@ -2648,6 +2653,11 @@ VT100.prototype.handleKey = function(event) {
     }
     if (ch == undefined) {
       switch (key) {
+      // Firefox > 15 changes some of the codes, see
+      // https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent
+      case 163: /* #            */ ch = this.applyModifiers(35, event); break;
+      case 173: /* -            */ ch = this.applyModifiers(45, event); break;
+
       case   8: /* Backspace    */ ch = '\u007f';                       break;
       case   9: /* Tab          */ ch = '\u0009';                       break;
       case  10: /* Return       */ ch = '\u000A';                       break;
@@ -2818,6 +2828,11 @@ VT100.prototype.fixEvent = function(event) {
     var u                   = undefined;
     var s                   = undefined;
     switch (this.lastNormalKeyDownEvent.keyCode) {
+    // Firefox > 15 changes some of the codes, see
+    // https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent
+    case 163: /* # -> ~ */ u = 96; s =  126; break;
+    case 173: /* - -> _ */ u = 45; s =  95;  break;
+
     case  39: /* ' -> " */ u = 39; s =  34; break;
     case  44: /* , -> < */ u = 44; s =  60; break;
     case  45: /* - -> _ */ u = 45; s =  95; break;
@@ -2894,10 +2909,10 @@ VT100.prototype.keyDown = function(event) {
     event.keyCode == 226;
   var normalKey                 =
     alphNumKey                                   ||
-    event.keyCode >=  58 || event.keyCode <=  64 ||
+    event.keyCode ==  59 || event.keyCode ==  61 ||
     event.keyCode == 106 || event.keyCode == 107 ||
     event.keyCode >= 109 && event.keyCode <= 111 ||
-    event.keyCode >= 160 && event.keyCode <= 192 ||
+    event.keyCode >= 186 && event.keyCode <= 192 ||
     event.keyCode >= 219 && event.keyCode <= 223 ||
     event.keyCode == 252;
   try {
@@ -3033,10 +3048,10 @@ VT100.prototype.keyUp = function(event) {
         event.keyCode >=  96 && event.keyCode <= 105;
       var normalKey               =
         alphNumKey                                   ||
-        event.keyCode >=  58 || event.keyCode <=  64 ||
+        event.keyCode ==  59 || event.keyCode ==  61 ||
         event.keyCode == 106 || event.keyCode == 107 ||
         event.keyCode >= 109 && event.keyCode <= 111 ||
-        event.keyCode >= 160 && event.keyCode <= 192 ||
+        event.keyCode >= 186 && event.keyCode <= 192 ||
         event.keyCode >= 219 && event.keyCode <= 223 ||
         event.keyCode == 252;
       var fake                    = [ ];
