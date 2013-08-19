@@ -212,11 +212,11 @@
   left:                 1px;
 }
 
-[if DEFINES_COLORS]
+/* [if DEFINES_COLORS] */
 /* IE cannot properly handle "inherit" properties. So, the monochrome.css/
  * color.css style sheets cannot work, if we define colors in styles.css.
  */
-[else DEFINES_COLORS]
+/* [else DEFINES_COLORS] */
 #vt100 .ansi0               {                            }
 #vt100 .ansi1               { color:            #cd0000; }
 #vt100 .ansi2               { color:            #00cd00; }
@@ -250,7 +250,7 @@
 #vt100 .bgAnsi13            { background-color: #ff00ff; }
 #vt100 .bgAnsi14            { background-color: #00ffff; }
 #vt100 .bgAnsi15            {                            }
-[endif DEFINES_COLORS]
+/* [endif DEFINES_COLORS] */
 
 @media print {
   #vt100 .scrollback {
