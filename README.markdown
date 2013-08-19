@@ -133,7 +133,7 @@ To try it, install [Docker], clone the project and run the following snippet in
 the git root directory.
 
 ```bash
-docker build -t gsamokovarov/web-console . && docker run -i -t !#:3
+sudo docker build -t gsamokovarov/web-console github.com/gsamokovarov/web-console && sudo docker run -i -t !#:3
 ```
 
   [web-console-pry]: https://github.com/gsamokovarov/web-console-pry
