@@ -42,7 +42,7 @@ module WebConsole
     # seconds.
     #
     # By default, the +wait+ is 0 second, e.g. the response is immediate.
-    def pending_output?(wait = 0)
+    def pending_output?(wait = WebConsole.config.pending_output_wait)
       !!IO.select([@output], [], [], wait)
     end
 

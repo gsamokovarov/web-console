@@ -9,6 +9,7 @@ module WebConsole
       c.default_mount_path      = '/console'
       c.whitelisted_ips         = '127.0.0.1'
       c.prevent_irbrc_execution = false
+      c.pending_output_wait     = 0
     end
 
     initializer 'web_console.add_default_route' do |app|
