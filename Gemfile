@@ -5,7 +5,6 @@ gemspec
 group :development do
   gem 'thin'
   gem 'puma'
-  gem 'goliath'
 end
 
 group :test do
