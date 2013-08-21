@@ -5,6 +5,7 @@ gemspec
 group :development do
   gem 'thin'
   gem 'puma'
+  gem 'pry-rails'
 end
 
 group :test do

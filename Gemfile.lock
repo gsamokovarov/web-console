@@ -34,6 +34,7 @@ GEM
     arel (4.0.0)
     atomic (1.1.10)
     builder (3.1.4)
+    coderay (1.0.9)
     daemons (1.1.9)
     erubis (2.7.0)
     eventmachine (1.0.3)
@@ -43,12 +44,19 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     metaclass (0.0.1)
+    method_source (0.8.2)
     mime-types (1.23)
     minitest (4.7.5)
     mocha (0.14.0)
       metaclass (~> 0.0.1)
     multi_json (1.7.8)
     polyglot (0.3.3)
+    pry (0.9.12.2)
+      coderay (~> 1.0.5)
+      method_source (~> 0.8)
+      slop (~> 3.4)
+    pry-rails (0.3.2)
+      pry (>= 0.9.10)
     puma (2.5.1)
       rack (>= 1.1, < 2.0)
     rack (1.5.2)
@@ -68,6 +76,7 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rake (10.0.4)
+    slop (3.4.6)
     sprockets (2.10.0)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -96,6 +105,7 @@ PLATFORMS
 
 DEPENDENCIES
   mocha
+  pry-rails
   puma
   rake
   sqlite3
