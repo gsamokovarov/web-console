@@ -41,8 +41,8 @@ module WebConsole
     # Returns whether the slave process has any pending output in +wait+
     # seconds.
     #
-    # By default, the +wait+ is 0 second, e.g. the response is immediate.
-    def pending_output?(wait = WebConsole.config.pending_output_wait)
+    # By default, the +wait+ is 0 seconds, e.g. the response is immediate.
+    def pending_output?(wait = WebConsole.config.timeout)
       !!IO.select([@output], [], [], wait)
     end
 

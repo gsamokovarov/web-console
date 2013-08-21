@@ -6,10 +6,10 @@ module WebConsole
     isolate_namespace WebConsole
 
     config.web_console = ActiveSupport::OrderedOptions.new.tap do |c|
-      c.automount           = true
-      c.default_mount_path  = '/console'
-      c.whitelisted_ips     = '127.0.0.1'
-      c.pending_output_wait = 0
+      c.automount          = true
+      c.default_mount_path = '/console'
+      c.whitelisted_ips    = '127.0.0.1'
+      c.timeout            = 0.seconds
     end
 
     initializer 'web_console.add_default_route' do |app|

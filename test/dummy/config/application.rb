@@ -24,7 +24,7 @@ module Dummy
       config.allow_concurrency = true
 
       # For long-polling 45 seconds timeout seems reasonable.
-      config.web_console.pending_output_wait = 45.seconds
+      config.web_console.timeout = 45.seconds
     end
   end
 end
