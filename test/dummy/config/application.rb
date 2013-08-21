@@ -5,7 +5,7 @@ require 'rails/all'
 Bundler.require(*Rails.groups)
 require 'web_console'
 
-# Require pry-rails pry shell is explicitly requested.
+# Require pry-rails if the pry shell is explicitly requested.
 require 'pry-rails' if ENV['PRY']
 
 module Dummy
