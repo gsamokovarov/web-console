@@ -7,9 +7,10 @@ module WebConsole
 
     config.web_console = ActiveSupport::OrderedOptions.new.tap do |c|
       c.automount          = true
+      c.command            = nil
       c.default_mount_path = '/console'
-      c.whitelisted_ips    = '127.0.0.1'
       c.timeout            = 0.seconds
+      c.whitelisted_ips    = '127.0.0.1'
     end
 
     initializer 'web_console.add_default_route' do |app|
@@ -34,6 +35,14 @@ module WebConsole
       # check for the most common case.
       def (config.web_console.whitelisted_ips).include?(ip)
         ip.is_a?(IPAddr) ? super : any? { |net| net.include?(ip.to_s) }
+      end
+    end
+
+    initializer 'web_console.process_command' do
+      config.web_console.tap do |c|
+        # +Rails.root+ is not available while we set the default values of the
+        # other options. Default it during initialization.
+        c.command = Rails.root.join('bin/rails console').to_s if c.command.blank?
       end
     end
   end

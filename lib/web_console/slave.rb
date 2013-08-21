@@ -13,8 +13,8 @@ module WebConsole
     # The slave process id.
     attr_reader :pid
 
-    def initialize(command = File.join(Rails.root, 'bin/rails console'), options = {})
-      @output, @input, @pid = PTY.spawn(command)
+    def initialize(command = WebConsole.config.command, options = {})
+      @output, @input, @pid = PTY.spawn(command.to_s)
       configure(options)
     end
 
