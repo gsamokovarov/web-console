@@ -1,5 +1,5 @@
 module WebConsole
-  # Manage and persist (in memory) WebConsole::REPL instances.
+  # Manage and persist (in memory) WebConsole::Slave instances.
   class ConsoleSession
     include ActiveModel::Model
 
@@ -33,7 +33,7 @@ module WebConsole
     end
 
     def initialize(attributes = {})
-      @repl = WebConsole::REPL.new
+      @slave = WebConsole::Slave.new
     end
 
     # Explicitly persist the model in the in-memory storage.
@@ -55,8 +55,8 @@ module WebConsole
     private
 
       def method_missing(name, *args, &block)
-        if @repl.respond_to?(name)
-          @repl.send(name, *args, &block)
+        if @slave.respond_to?(name)
+          @slave.send(name, *args, &block)
         else
           super
         end

@@ -2,15 +2,15 @@ require 'pty'
 require 'io/console'
 
 module WebConsole
-  # = REPL\ Process\ Wrapper
+  # = Slave\ Process\ Wrapper
   #
-  # Creates and communicates with REPL processses.
+  # Creates and communicates with slave processses.
   #
   # The communication happens through an input with attached psuedo-terminal.
   # All of the communication is done in asynchrouns way, meaning that when you
   # send input to the process, you have get the output by polling for it.
-  class REPL
-    # The REPL process id.
+  class Slave
+    # The slave process id.
     attr_reader :pid
 
     def initialize(command = File.join(Rails.root, 'bin/rails console'), options = {})
@@ -31,14 +31,14 @@ module WebConsole
       @input.winsize = dimentions unless dimentions.any?(&:zero?)
     end
 
-    # Sends input to the REPL process STDIN.
+    # Sends input to the slave process STDIN.
     #
     # Returns immediately.
     def send_input(input)
       input.each_char { |char| @input.putc(char) }
     end
 
-    # Returns whether the REPL process has any pending output in +wait+
+    # Returns whether the slave process has any pending output in +wait+
     # seconds.
     #
     # By default, the +wait+ is 0 second, e.g. the response is immediate.

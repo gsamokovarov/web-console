@@ -1,7 +1,7 @@
 require 'rails/version'
 require 'active_support/lazy_load_hooks'
 require 'web_console/engine'
-require 'web_console/repl'
+require 'web_console/slave'
 
 module WebConsole
   # Shortcut the +WebConsole::Engine.config.web_console+.

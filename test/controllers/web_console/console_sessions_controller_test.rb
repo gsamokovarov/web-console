@@ -17,7 +17,7 @@ module WebConsole
       end
     end
 
-    test 'PUT inputs sends input to the REPL' do
+    test 'PUT inputs sends input to the slave' do
       get :index, use_route: 'web_console'
 
       assert_not_nil console_session = assigns(:console_session)
@@ -26,7 +26,7 @@ module WebConsole
       put :input, id: console_session.pid, use_route: 'web_console'
     end
 
-    test 'GET pending_output gives the REPL pending output' do
+    test 'GET pending_output gives the slave pending output' do
       get :index, use_route: 'web_console'
 
       assert_not_nil console_session = assigns(:console_session)
