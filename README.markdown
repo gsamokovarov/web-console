@@ -3,6 +3,8 @@ Web Console
 
 [![Travis](https://travis-ci.org/gsamokovarov/web-console.png)](https://travis-ci.org/gsamokovarov/web-console) [![Version](https://badge.fury.io/rb/web-console.png)](http://badge.fury.io/rb/web-console)
 
+Documentation for: [v0.1.0][] [v0.2.0][]
+
 There is no doubt that `rails console` is one of the most useful commands,
 Rails has to offer. However, sometimes you can't easily access it, or maybe
 you want to share it with a coworker without configuring remote desktop
@@ -135,6 +137,8 @@ To try it, install [Docker] first and then run the following snippet in your she
 sudo docker build -t gsamokovarov/web-console github.com/gsamokovarov/web-console && sudo docker run -i -t !#:3
 ```
 
+  [v0.1.0]: https://github.com/gsamokovarov/web-console/tree/v0.1.0
+  [v0.2.0]: https://github.com/gsamokovarov/web-console/tree/v0.2.0
   [web-console-pry]: https://github.com/gsamokovarov/web-console-pry
   [web-console-rails3]: https://github.com/gsamokovarov/web-console-rails3
   [Docker]: http://www.docker.io/
