@@ -5,7 +5,9 @@ gemspec
 group :development do
   gem 'thin'
   gem 'puma'
-  gem 'pry-rails'
+
+  # Only require this one explicitly.
+  gem 'pry-rails', require: false
 end
 
 group :test do
