@@ -1,12 +1,21 @@
 require 'test_helper'
 
 class WebConsoleTest < ActiveSupport::TestCase
-  test 'different default_mount_path' do
+  test 'custom default_mount_path' do
     new_uninitialized_app do |app|
       app.config.web_console.default_mount_path = '/shell'
       app.initialize!
 
       assert app.routes.named_routes['web_console'].path.match('/shell')
+    end
+  end
+
+  test 'disabling automounting' do
+    new_uninitialized_app do |app|
+      app.config.web_console.automount = false
+      app.initialize!
+
+      refute app.routes.named_routes['web_console']
     end
   end
 
