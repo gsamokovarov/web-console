@@ -5,15 +5,10 @@ module WebConsole
     include ActiveModel::Lint::Tests
 
     setup do
+      PTY.stubs(:spawn).returns([String.new, String.new, Random.rand(20000)])
       reset_persistent_storage!
       @model1 = @model = new_model
       @model2 = new_model
-    end
-
-    teardown do
-      [@model1, @model2].each do |model|
-        model.dispose.try(:join)
-      end
     end
 
     test 'trying to find a model fails if no longer in storage' do

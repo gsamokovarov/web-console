@@ -3,6 +3,7 @@ require 'test_helper'
 module WebConsole
   class ConsoleSessionsControllerTest < ActionController::TestCase
     setup do
+      PTY.stubs(:spawn).returns([StringIO.new, StringIO.new, Random.rand(20000)])
       @request.stubs(:remote_ip).returns('127.0.0.1')
     end
 
