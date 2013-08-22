@@ -44,7 +44,8 @@ module WebConsole
     # By default, the +timeout+ follows +config.web_console.timeout+. Usually,
     # it is zero, making the response immediate.
     def pending_output?(timeout = WebConsole.config.timeout)
-      !!IO.select([@output], [], [], timeout)
+      # JRuby's select won't automatically coerce ActiveSupport::Duration.
+      !!IO.select([@output], [], [], timeout.to_i)
     end
 
     # Gets the pending output of the process.
