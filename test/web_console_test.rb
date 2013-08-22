@@ -113,6 +113,7 @@ class WebConsoleTest < ActiveSupport::TestCase
       app.config.time_zone = 'UTC'
       app.config.middleware ||= Rails::Configuration::MiddlewareStackProxy.new
       app.config.active_support.deprecation = :notify
+      app.config.use_transactional_fixtures = false
 
       yield app
     ensure
