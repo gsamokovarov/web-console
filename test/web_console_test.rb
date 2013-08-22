@@ -102,21 +102,31 @@ class WebConsoleTest < ActiveSupport::TestCase
     def new_uninitialized_app(root = File.expand_path('../dummy', __FILE__))
       skip if Rails::VERSION::MAJOR == 3
 
-      FileUtils.mkdir_p root
-      Dir.chdir root
-
       old_app = Rails.application
-      Rails.application = nil
 
-      app = Class.new(Rails::Application)
-      app.config.eager_load = false
-      app.config.time_zone = 'UTC'
-      app.config.middleware ||= Rails::Configuration::MiddlewareStackProxy.new
-      app.config.active_support.deprecation = :notify
-      app.config.use_transactional_fixtures = false
+      FileUtils.mkdir_p(root)
+      Dir.chdir(root) do
+        Rails.application = nil
 
-      yield app
+        app = Class.new(Rails::Application)
+        app.config.eager_load = false
+        app.config.time_zone = 'UTC'
+        app.config.middleware ||= Rails::Configuration::MiddlewareStackProxy.new
+        app.config.active_support.deprecation = :notify
+
+        yield app
+      end
     ensure
       Rails.application = old_app
+    end
+
+    def teardown_fixtures
+      # This is nasty hack to prevent a connection to the database in JRuby's
+      # activerecord-jdbcsqlite3-adapter. We don't really require a databasec
+      # connection, for the tests to run.
+      #
+      # The sad thing is that I couldn't figure out why does it only happens on
+      # activerecord-jdbcsqlite3-adapter and how to actually prevent it, rather
+      # than work-around it.
     end
 end
