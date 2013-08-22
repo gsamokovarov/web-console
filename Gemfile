@@ -3,7 +3,6 @@ source 'https://rubygems.org'
 gemspec
 
 group :development do
-  gem 'thin'
   gem 'puma'
 
   # Only require this one explicitly.
@@ -14,6 +13,7 @@ group :development do
   end
 
   platforms :ruby do
+    gem 'thin'
     gem 'sqlite3'
   end
 end
