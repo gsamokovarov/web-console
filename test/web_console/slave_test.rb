@@ -29,6 +29,16 @@ class SlaveTest < ActiveSupport::TestCase
     @slave.configure(height: 32, width: 64)
   end
 
+  test '#configure only changes the @input dimentions if width is zero' do
+    @slave.instance_variable_get(:@input).expects(:winsize=).never
+    @slave.configure(height: 32, width: 0)
+  end
+
+  test '#configure only changes the @input dimentions if height is zero' do
+    @slave.instance_variable_get(:@input).expects(:winsize=).never
+    @slave.configure(height: 0, width: 64)
+  end
+
   { dispose: :SIGTERM, dispose!: :SIGKILL }.each do |method, signal|
     test "##{method} sends #{signal} to the process and detaches it" do
       Process.expects(:kill).with(signal, @slave.pid)
