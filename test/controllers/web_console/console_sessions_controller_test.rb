@@ -18,13 +18,24 @@ module WebConsole
       end
     end
 
-    test 'PUT inputs sends input to the slave' do
+    test 'PUT input validates for missing input' do
       get :index, use_route: 'web_console'
 
       assert_not_nil console_session = assigns(:console_session)
-      console_session.expects(:send_input)
 
+      console_session.instance_variable_get(:@slave).stubs(:send_input).raises(ArgumentError)
       put :input, id: console_session.pid, use_route: 'web_console'
+
+      assert_response :unprocessable_entity
+    end
+
+    test 'PUT input sends input to the slave' do
+      get :index, use_route: 'web_console'
+
+      assert_not_nil console_session = assigns(:console_session)
+
+      console_session.expects(:send_input)
+      put :input, input: ' ', id: console_session.pid, use_route: 'web_console'
     end
 
     test 'GET pending_output gives the slave pending output' do
@@ -40,6 +51,12 @@ module WebConsole
       @request.stubs(:remote_ip).returns('128.0.0.1')
       get :index, use_route: 'web_console'
       assert_response :unauthorized
+    end
+
+    test 'allows requests from whitelisted ips' do
+      @request.stubs(:remote_ip).returns('127.0.0.1')
+      get :index, use_route: 'web_console'
+      assert_response :success
     end
 
     test 'index generated path' do

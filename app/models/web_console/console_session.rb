@@ -7,13 +7,22 @@ module WebConsole
     # troubled on servers with multiple workers and threads.
     INMEMORY_STORAGE = {}
 
-    # Raised when trying to find a session that is no longer in the in-memory
-    # session storage.
-    class NotFound < Exception
+    # Base error class for ConsoleSession specific exceptions.
+    #
+    # Provides #to_json implementation, so all subclasses are JSON
+    # serializable.
+    class Error < StandardError
       def to_json(*)
-        { error: message }.to_json
+        { error: to_s }.to_json
       end
     end
+
+    # Raised when trying to find a session that is no longer in the in-memory
+    # session storage.
+    NotFound = Class.new(Error)
+
+    # Raised when an operation transition to an invalid state.
+    Invalid = Class.new(Error)
 
     class << self
       # Finds a session by its pid.
@@ -56,10 +65,12 @@ module WebConsole
 
       def method_missing(name, *args, &block)
         if @slave.respond_to?(name)
-          @slave.send(name, *args, &block)
+          @slave.public_send(name, *args, &block)
         else
           super
         end
+      rescue ArgumentError => exc
+        raise Invalid, exc
       end
 
       def respond_to_missing?(name, include_all = false)

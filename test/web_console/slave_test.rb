@@ -7,6 +7,11 @@ class SlaveTest < ActiveSupport::TestCase
     @slave = WebConsole::Slave.new
   end
 
+  test '#send_input raises ArgumentError on bad input' do
+    assert_raises(ArgumentError) { @slave.send_input(nil) }
+    assert_raises(ArgumentError) { @slave.send_input('') }
+  end
+
   test '#pending_output returns nil on no pending output' do
     @slave.stubs(:pending_output?).returns(false)
     assert_nil @slave.pending_output

@@ -35,6 +35,7 @@ module WebConsole
     #
     # Returns immediately.
     def send_input(input)
+      raise ArgumentError if input.nil? or input.try(:empty?)
       input.each_char { |char| @input.putc(char) }
     end
 

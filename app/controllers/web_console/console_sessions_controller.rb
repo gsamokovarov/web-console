@@ -6,6 +6,10 @@ module WebConsole
       render json: exception, status: :gone
     end
 
+    rescue_from ConsoleSession::Invalid do |exception|
+      render json: exception, status: :unprocessable_entity
+    end
+
     def index
       @console_session = ConsoleSession.create
     end
