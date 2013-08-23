@@ -11,8 +11,8 @@ module WebConsole
       @model2 = ConsoleSession.new
     end
 
-    test 'trying to find a model fails if no longer in storage' do
-      assert_raises(ConsoleSession::NotFound) { ConsoleSession.find(0) }
+    test 'raises ConsoleSession::NotFound on not found sessions' do
+      assert_raises(ConsoleSession::NotFound) { ConsoleSession.find(-1) }
     end
 
     test 'find coerces ids' do
@@ -20,8 +20,13 @@ module WebConsole
     end
 
     test 'not found exceptions are json serializable' do
-      exception = assert_raises(ConsoleSession::NotFound) { ConsoleSession.find(0) }
+      exception = assert_raises(ConsoleSession::NotFound) { ConsoleSession.find(-1) }
       assert_equal '{"error":"Session unavailable"}', exception.to_json
+    end
+
+    test 'can be used as slave as the methods are delegated' do
+      slave_methods = Slave.instance_methods - @model.methods
+      slave_methods.each { |method| assert @model.respond_to?(method) }
     end
 
     test 'persisted models knows that they are in memory' do

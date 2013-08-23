@@ -61,5 +61,9 @@ module WebConsole
           super
         end
       end
+
+      def respond_to_missing?(name, include_all = false)
+        @slave.respond_to?(name) or super
+      end
   end
 end
