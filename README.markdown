@@ -191,7 +191,7 @@ you.
 To try it, install [Docker] first and then run the following snippet in your shell.
 
 ```bash
-sudo docker build -t gsamokovarov/web-console github.com/!#:4 && sudo docker run -i -t !#:4
+sudo docker build -t gsamokovarov/web-console github.com/!#:4 && !#:0-1 run -i -t !#:4
 ```
 
   [Docker]: http://www.docker.io/
