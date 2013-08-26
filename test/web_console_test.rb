@@ -120,9 +120,11 @@ class WebConsoleTest < ActiveSupport::TestCase
       Rails.application = old_app
     end
 
-    def teardown_fixtures
+    def teardown_fixtures(*)
+      super
+    rescue
       # This is nasty hack to prevent a connection to the database in JRuby's
-      # activerecord-jdbcsqlite3-adapter. We don't really require a databasec
+      # activerecord-jdbcsqlite3-adapter. We don't really require a database
       # connection, for the tests to run.
       #
       # The sad thing is that I couldn't figure out why does it only happens on

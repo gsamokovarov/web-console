@@ -1,4 +1,5 @@
 require 'ipaddr'
+require 'active_support/core_ext/numeric/time'
 require 'rails/engine'
 
 module WebConsole
