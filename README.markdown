@@ -13,8 +13,8 @@ you want to share it with a coworker without configuring remote desktop
 server.
 
 This is where _Web Console_ comes to the rescue. It gives you the same
-`rails console` experience, right in the browser. It's not just a tool that
-let's you evaluate Ruby code, there are a lot of those. It's a [VT100]
+`rails console` experience, right in the browser. Its not just a tool that
+let's you evaluate Ruby code, there are a lot of those. Its a [VT100]
 compatible terminal, running `rails console`.
 
 You can see _Web Console_ in action at this [video].
@@ -152,11 +152,8 @@ This option control how much will the server wait on the process output pipe
 for input, before signalling the client to try again.
 
 Maybe some day Web Sockets or SSE can be used for more efficient communication.
-Until that day, you can use long-polling as a more efficient way of
-communication.
-
-To enable long-polling, use [Puma] as your development server and add the
-following to your configuration
+Until that day, you can use long-polling. To enable it, use [Puma] as your
+development server and add the following to your configuration.
 
 ```ruby
 class Application < Rails::Application
@@ -179,8 +176,8 @@ FAQ
 ### I'm running JRuby and the console doesn't load.
 
 While spawning processes is relatively cheap on _MRI_, this is not the case in
-_JRuby_. Spawning another processes in _JRuby_ slow. Spawning another **JRuby**
-process is even slower. Read more at the _JRuby_ [wiki].
+_JRuby_. Spawning another process is slow. Spawning another **JRuby** process
+is even slower. Read more about the problem at the _JRuby_ [wiki].
 
 **TL;DR** Give it a bit of time, it will load.
 
@@ -194,7 +191,7 @@ you.
 To try it, install [Docker] first and then run the following snippet in your shell.
 
 ```bash
-sudo docker build -t gsamokovarov/web-console github.com/gsamokovarov/web-console && sudo docker run -i -t !#:3
+sudo docker build -t gsamokovarov/web-console github.com/!#:4 && sudo docker run -i -t !#:4
 ```
 
   [Docker]: http://www.docker.io/
