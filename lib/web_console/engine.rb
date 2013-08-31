@@ -11,6 +11,7 @@ module WebConsole
       c.command            = nil
       c.default_mount_path = '/console'
       c.timeout            = 0.seconds
+      c.term               = 'xterm-color'
       c.whitelisted_ips    = '127.0.0.1'
     end
 

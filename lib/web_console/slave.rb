@@ -14,7 +14,9 @@ module WebConsole
     attr_reader :pid
 
     def initialize(command = WebConsole.config.command, options = {})
-      @output, @input, @pid = PTY.spawn(command.to_s)
+      using_term(options[:term] || WebConsole.config.term) do
+        @output, @input, @pid = PTY.spawn(command.to_s)
+      end
       configure(options)
     end
 
@@ -101,6 +103,22 @@ module WebConsole
     end
 
     private
+
+      LOCK = Mutex.new
+
+      def using_term(term)
+        if term.nil?
+          yield
+        else
+          LOCK.synchronize do
+            begin
+              (previous_term, ENV['TERM'] = ENV['TERM'], term) and yield
+            ensure
+              ENV['TERM'] = previous_term
+            end
+          end
+        end
+      end
 
       def dispose_with(signal, options = {})
         Process.kill(signal, @pid)
