@@ -1,7 +1,7 @@
 require 'ipaddr'
 require 'active_support/core_ext/numeric/time'
 require 'rails/engine'
-require 'web_console/colors'
+
 
 module WebConsole
   class Engine < ::Rails::Engine
@@ -10,7 +10,7 @@ module WebConsole
     config.web_console = ActiveSupport::OrderedOptions.new.tap do |c|
       c.automount          = true
       c.command            = nil
-      c.colors             = 'solarized_light'
+      c.colors             = 'light'
       c.default_mount_path = '/console'
       c.timeout            = 0.seconds
       c.term               = 'xterm-color'
