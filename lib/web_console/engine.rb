@@ -1,6 +1,7 @@
 require 'ipaddr'
 require 'active_support/core_ext/numeric/time'
 require 'rails/engine'
+require 'web_console/colors'
 
 module WebConsole
   class Engine < ::Rails::Engine
@@ -9,6 +10,7 @@ module WebConsole
     config.web_console = ActiveSupport::OrderedOptions.new.tap do |c|
       c.automount          = true
       c.command            = nil
+      c.colors             = 'solarized_light'
       c.default_mount_path = '/console'
       c.timeout            = 0.seconds
       c.term               = 'xterm-color'
@@ -45,6 +47,17 @@ module WebConsole
         # +Rails.root+ is not available while we set the default values of the
         # other options. Default it during initialization.
         c.command = Rails.root.join('bin/rails console').to_s if c.command.blank?
+      end
+    end
+
+    initializer 'web_console.process_colors' do
+      config.web_console.tap do |c|
+        case colors = c.colors
+        when Symbol, String
+          c.colors = Colors[colors] || Colors.default
+        else
+          c.colors = Colors.new(colors)
+        end
       end
     end
   end

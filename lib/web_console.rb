@@ -1,6 +1,6 @@
-require 'rails/version'
 require 'active_support/lazy_load_hooks'
 require 'web_console/engine'
+require 'web_console/colors'
 require 'web_console/slave'
 
 module WebConsole
