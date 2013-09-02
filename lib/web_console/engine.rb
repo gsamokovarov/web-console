@@ -2,6 +2,7 @@ require 'ipaddr'
 require 'active_support/core_ext/numeric/time'
 require 'rails/engine'
 
+
 module WebConsole
   class Engine < ::Rails::Engine
     isolate_namespace WebConsole
@@ -27,17 +28,19 @@ module WebConsole
     end
 
     initializer 'web_console.process_whitelisted_ips' do
-      # Ensure that it is an array of IPAddr instances and it is defaulted to
-      # 127.0.0.1 if not precent. Only unique entries are left in the end.
-      config.web_console.whitelisted_ips = Array(config.web_console.whitelisted_ips)
-      config.web_console.whitelisted_ips.map! do |ip|
-        ip.is_a?(IPAddr) ? ip : IPAddr.new(ip.presence || '127.0.0.1')
-      end.uniq!
+      config.web_console.tap do |c|
+        # Ensure that it is an array of IPAddr instances and it is defaulted to
+        # 127.0.0.1 if not precent. Only unique entries are left in the end.
+        c.whitelisted_ips = Array(c.whitelisted_ips)
+        c.whitelisted_ips.map! do |ip|
+          ip.is_a?(IPAddr) ? ip : IPAddr.new(ip.presence || '127.0.0.1')
+        end.uniq!
 
-      # IPAddr instances can cover whole networks, so simplify the #include?
-      # check for the most common case.
-      def (config.web_console.whitelisted_ips).include?(ip)
-        ip.is_a?(IPAddr) ? super : any? { |net| net.include?(ip.to_s) }
+        # IPAddr instances can cover whole networks, so simplify the #include?
+        # check for the most common case.
+        def (c.whitelisted_ips).include?(ip)
+          ip.is_a?(IPAddr) ? super : any? { |net| net.include?(ip.to_s) }
+        end
       end
     end
 
