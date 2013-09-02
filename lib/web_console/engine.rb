@@ -31,10 +31,9 @@ module WebConsole
       config.web_console.tap do |c|
         # Ensure that it is an array of IPAddr instances and it is defaulted to
         # 127.0.0.1 if not precent. Only unique entries are left in the end.
-        c.whitelisted_ips = Array(c.whitelisted_ips)
-        c.whitelisted_ips.map! do |ip|
+        c.whitelisted_ips = Array(c.whitelisted_ips).map do |ip|
           ip.is_a?(IPAddr) ? ip : IPAddr.new(ip.presence || '127.0.0.1')
-        end.uniq!
+        end.uniq
 
         # IPAddr instances can cover whole networks, so simplify the #include?
         # check for the most common case.
