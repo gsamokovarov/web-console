@@ -1,6 +1,6 @@
-<% WebConsole.config.colors.tap do |colors| %>
+<% WebConsole.config.instance_eval do %>
   body { color: <%= colors.foreground %>; background: <%= colors.background %>; margin: 0; padding: 0; }
 
-  .terminal { float: left; overflow: hidden; font-family: DejaVu Sans Mono, Liberation Mono, monospace; }
+  .terminal { float: left; overflow: hidden; font: <%= font %>; }
   .terminal-cursor { color: <%= colors.background %>; background: <%= colors.foreground %>; }
 <% end %>

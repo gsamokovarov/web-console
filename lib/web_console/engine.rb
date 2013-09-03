@@ -12,6 +12,7 @@ module WebConsole
       c.command            = nil
       c.colors             = 'light'
       c.default_mount_path = '/console'
+      c.font               = 'large DejaVu Sans Mono, Liberation Mono, monospace'
       c.timeout            = 0.seconds
       c.term               = 'xterm-color'
       c.whitelisted_ips    = '127.0.0.1'
