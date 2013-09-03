@@ -10,12 +10,15 @@ module WebConsole
     config.web_console = ActiveSupport::OrderedOptions.new.tap do |c|
       c.automount          = true
       c.command            = nil
-      c.colors             = 'light'
       c.default_mount_path = '/console'
-      c.font               = 'large DejaVu Sans Mono, Liberation Mono, monospace'
       c.timeout            = 0.seconds
       c.term               = 'xterm-color'
       c.whitelisted_ips    = '127.0.0.1'
+
+      c.style = ActiveSupport::OrderedOptions.new.tap do |s|
+        s.colors = 'light'
+        s.font   = 'large DejaVu Sans Mono, Liberation Mono, monospace'
+      end
     end
 
     initializer 'web_console.add_default_route' do |app|
@@ -53,7 +56,7 @@ module WebConsole
     end
 
     initializer 'web_console.process_colors' do
-      config.web_console.tap do |c|
+      config.web_console.style.tap do |c|
         case colors = c.colors
         when Symbol, String
           c.colors = Colors[colors] || Colors.default

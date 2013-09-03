@@ -27,7 +27,7 @@ module Dummy
       config.web_console.timeout = 45.seconds
     end
 
-    config.web_console.colors =
+    config.web_console.style.colors =
       if ENV['SOLARIZED_LIGHT']
         'solarized_light'
       elsif ENV['SOLARIZED_DARK']
