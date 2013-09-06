@@ -172,7 +172,7 @@ class Application < Rails::Application
   config.allow_concurrency = true
 
   # For long-polling, 45 seconds timeout for the development server seems
-  reasonable.
+  # reasonable.
   config.web_console.timeout = 45.seconds
 end
 ```
