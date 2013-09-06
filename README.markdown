@@ -2,6 +2,7 @@
   Documentation for:
   <a href=https://github.com/gsamokovarov/web-console/tree/v0.1.0>v0.1.0</a>
   <a href=https://github.com/gsamokovarov/web-console/tree/v0.2.0>v0.2.0</a>
+  <a href=https://github.com/gsamokovarov/web-console/tree/v0.3.0>v0.3.0</a>
 </p>
 
 Web Console [![Version](https://badge.fury.io/rb/web-console.png)](http://badge.fury.io/rb/web-console) [![Travis](https://travis-ci.org/gsamokovarov/web-console.png)](https://travis-ci.org/gsamokovarov/web-console)
@@ -141,6 +142,11 @@ _Poor man's solution to SSH._ ![boom](http://f.cl.ly/items/3n2h0p1w0B261u2d201b/
 **If you ever decide to use _Web Console_ that way, use SSL to encrypt the
 traffic, otherwise all the input can be easily sniffed!**
 
+### config.web_console.term
+
+By default, the _Web Console_ terminal will report itself as `xterm-color`. You
+can override this option to change that.
+
 ### config.web_console.timeout
 
 You may have noticed that _Web Console_ client sends a lot of requests to the
@@ -165,21 +171,88 @@ class Application < Rails::Application
   # synchronous.
   config.allow_concurrency = true
 
-  # For long-polling 45 seconds timeout seems reasonable.
+  # For long-polling, 45 seconds timeout for the development server seems
+  reasonable.
   config.web_console.timeout = 45.seconds
 end
 ```
+
+Styling
+-------
+
+If you would like to style the terminal a bit different than the default
+appearance, you can do so with the following options.
+
+### config.web_console.style.colors
+
+_Web Console_ supports up to 256 color themes, though most of the common
+terminal themes are usually just 16 colors.
+
+The default color theme is a white-on-black theme called `light`. For
+different appearance you may want to experiment with the other included color
+themes.
+
+- `xterm` _the standard xterm theme_
+- `tango` _theme based on the tango colors_
+- `solarized_dark` _light version of the common solarized colors_
+- `solarized_light` _dark version of the common solarized colors_
+
+If you would like to use a custom theme, you may do so with the following
+syntax.
+
+```ruby
+class Application < Rails::Application
+  # First, you have to define and register your custom color theme. Each color
+  # theme is mapped to a name.
+  WebConsole::Colors.register_theme(:custom) do |c|
+    # The most common color themes are the 16 colors one. They are built from 3
+    # parts.
+
+    # 8 darker colors.
+    c.add '#000000'
+    c.add '#cd0000'
+    c.add '#00cd00'
+    c.add '#cdcd00'
+    c.add '#0000ee'
+    c.add '#cd00cd'
+    c.add '#00cdcd'
+    c.add '#e5e5e5'
+
+    # 8 lighter colors.
+    c.add '#7f7f7f'
+    c.add '#ff0000'
+    c.add '#00ff00'
+    c.add '#ffff00'
+    c.add '#5c5cff'
+    c.add '#ff00ff'
+    c.add '#00ffff'
+    c.add '#ffffff'
+
+    # Background and foreground colors.
+    c.background '#ffffff'
+    c.foreground '#000000'
+  end
+
+  # Now you have to tell Web Console to actually use it.
+  config.web_console.style.colors = :custom
+end
+```
+
+### config.web_console.style.font
+
+You may also change the font, which is following the CSS font property syntax.
+By default it is `large DejaVu Sans Mono, Liberation Mono, monospace`.
 
 FAQ
 ---
 
 ### I'm running JRuby and the console doesn't load.
 
+**TL;DR** Give it a bit of time, it will load.
+
 While spawning processes is relatively cheap on _MRI_, this is not the case in
 _JRuby_. Spawning another process is slow. Spawning another **JRuby** process
 is even slower. Read more about the problem at the _JRuby_ [wiki].
-
-**TL;DR** Give it a bit of time, it will load.
 
 Test Drive
 ----------
@@ -188,7 +261,8 @@ If you just want to try the web-console, without having to go through the
 trouble of installing it, we provide a [Docker] container that does that for
 you.
 
-To try it, install [Docker] first and then run the following snippet in your shell.
+To try it, install [Docker] first and then paste the following snippet in your
+shell.
 
 ```bash
 sudo docker build -t gsamokovarov/web-console github.com/!#:4 && !#:0-1 run -i -t !#:4
