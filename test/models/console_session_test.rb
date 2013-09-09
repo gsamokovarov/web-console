@@ -5,7 +5,7 @@ module WebConsole
     include ActiveModel::Lint::Tests
 
     setup do
-      PTY.stubs(:spawn).returns([String.new, String.new, Random.rand(20000)])
+      PTY.stubs(:spawn).returns([StringIO.new, StringIO.new, Random.rand(20000)])
       ConsoleSession::INMEMORY_STORAGE.clear
       @model1 = @model = ConsoleSession.new
       @model2 = ConsoleSession.new
@@ -27,6 +27,12 @@ module WebConsole
     test 'can be used as slave as the methods are delegated' do
       slave_methods = Slave.instance_methods - @model.methods
       slave_methods.each { |method| assert @model.respond_to?(method) }
+    end
+
+    test 'slave methods are cached on the singleton' do
+      refute @model.singleton_methods.include?(:pending_output?)
+      @model.pending_output? rescue nil
+      assert @model.singleton_methods.include?(:pending_output?)
     end
 
     test 'persisted models knows that they are in memory' do
