@@ -63,7 +63,9 @@ module WebConsole
 
     private
 
-      def delegate_slave_method(name, *args, &block)
+      def delegate_and_call_slave_method(name, *args, &block)
+        # Cache the delegated method, so we don't have to hit #method_missing
+        # on every call.
         define_singleton_method(name) do |*inner_args, &inner_block|
           begin
             @slave.public_send(name, *inner_args, &inner_block)
@@ -74,12 +76,14 @@ module WebConsole
           end
         end
 
+        # Now call the method, since that's our most common use case. Delegate
+        # the method and than call it.
         public_send(name, *args, &block)
       end
 
       def method_missing(name, *args, &block)
         if @slave.respond_to?(name)
-          delegate_slave_method(name)
+          delegate_and_call_slave_method(name, *args, &block)
         else
           super
         end
