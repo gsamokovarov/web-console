@@ -11,8 +11,8 @@ module WebConsole
       @model2 = ConsoleSession.new
     end
 
-    test 'raises ConsoleSession::NotFound on not found sessions' do
-      assert_raises(ConsoleSession::NotFound) { ConsoleSession.find(-1) }
+    test 'raises ConsoleSession::Unavailable on not found sessions' do
+      assert_raises(ConsoleSession::Unavailable) { ConsoleSession.find(-1) }
     end
 
     test 'find coerces ids' do
@@ -20,7 +20,7 @@ module WebConsole
     end
 
     test 'not found exceptions are json serializable' do
-      exception = assert_raises(ConsoleSession::NotFound) { ConsoleSession.find(-1) }
+      exception = assert_raises(ConsoleSession::Unavailable) { ConsoleSession.find(-1) }
       assert_equal '{"error":"Session unavailable"}', exception.to_json
     end
 

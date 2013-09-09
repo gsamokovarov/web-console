@@ -47,6 +47,17 @@ module WebConsole
       get :pending_output, id: console_session.pid, use_route: 'web_console'
     end
 
+    test 'GET pending_output raises 410 on exitted slave processes' do
+      get :index, use_route: 'web_console'
+
+      assert_not_nil console_session = assigns(:console_session)
+      console_session.stubs(:pending_output).raises(ConsoleSession::Unavailable)
+
+      get :pending_output, id: console_session.pid, use_route: 'web_console'
+      assert_response :gone
+    end
+
+
     test 'blocks requests from non-whitelisted ips' do
       @request.stubs(:remote_ip).returns('128.0.0.1')
       get :index, use_route: 'web_console'

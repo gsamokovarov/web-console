@@ -18,8 +18,8 @@ module WebConsole
     end
 
     # Raised when trying to find a session that is no longer in the in-memory
-    # session storage.
-    NotFound = Class.new(Error)
+    # session storage or when the slave process exited.
+    Unavailable = Class.new(Error)
 
     # Raised when an operation transition to an invalid state.
     Invalid = Class.new(Error)
@@ -29,7 +29,7 @@ module WebConsole
       #
       # Raises WebConsole::ConsoleSession::Expired if there is no such session.
       def find(pid)
-        INMEMORY_STORAGE[pid.to_i] or raise NotFound, 'Session unavailable'
+        INMEMORY_STORAGE[pid.to_i] or raise Unavailable, 'Session unavailable'
       end
 
       # Creates an already persisted consolse session.
@@ -63,14 +63,26 @@ module WebConsole
 
     private
 
+      def delegate_slave_method(name, *args, &block)
+        define_singleton_method(name) do |*inner_args, &inner_block|
+          begin
+            @slave.public_send(name, *inner_args, &inner_block)
+          rescue ArgumentError => exc
+            raise Invalid, exc
+          rescue Slave::Closed => exc
+            raise Unavailable, exc
+          end
+        end
+
+        public_send(name, *args, &block)
+      end
+
       def method_missing(name, *args, &block)
         if @slave.respond_to?(name)
-          @slave.public_send(name, *args, &block)
+          delegate_slave_method(name)
         else
           super
         end
-      rescue ArgumentError => exc
-        raise Invalid, exc
       end
 
       def respond_to_missing?(name, include_all = false)

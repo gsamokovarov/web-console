@@ -10,6 +10,13 @@ module WebConsole
   # All of the communication is done in asynchrouns way, meaning that when you
   # send input to the process, you have get the output by polling for it.
   class Slave
+    # Different OS' and platform raises different errors when trying to read on
+    # output end of a closed process.
+    READING_ON_CLOSED_END_ERRORS = [ Errno::EIO, EOFError ]
+
+    # Raised when trying to read from a closed (exited) process.
+    Closed = Class.new(IOError)
+
     # The slave process id.
     attr_reader :pid
 
@@ -72,6 +79,8 @@ module WebConsole
       pending.force_encoding('UTF-8')
     rescue IO::WaitReadable
       pending.force_encoding('UTF-8')
+    rescue
+      raise Closed if READING_ON_CLOSED_END_ERRORS.any? { |exc| $!.is_a?(exc) }
     end
 
     # Dispose the underlying process, sending +SIGTERM+.

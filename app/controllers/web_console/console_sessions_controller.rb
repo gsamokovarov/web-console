@@ -2,7 +2,7 @@ require_dependency 'web_console/application_controller'
 
 module WebConsole
   class ConsoleSessionsController < ApplicationController
-    rescue_from ConsoleSession::NotFound do |exception|
+    rescue_from ConsoleSession::Unavailable do |exception|
       render json: exception, status: :gone
     end
 
