@@ -1,8 +1,8 @@
 <p align=right>
   Documentation for:
-  <a href=https://github.com/gsamokovarov/web-console/tree/v0.1.0>v0.1.0</a>
-  <a href=https://github.com/gsamokovarov/web-console/tree/v0.2.0>v0.2.0</a>
-  <a href=https://github.com/gsamokovarov/web-console/tree/v0.3.0>v0.3.0</a>
+  <a href=https://github.com/rails/web-console/tree/v0.1.0>v0.1.0</a>
+  <a href=https://github.com/rails/web-console/tree/v0.2.0>v0.2.0</a>
+  <a href=https://github.com/rails/web-console/tree/v0.3.0>v0.3.0</a>
 </p>
 
 Web Console [![Version](https://badge.fury.io/rb/web-console.png)](http://badge.fury.io/rb/web-console) [![Travis](https://travis-ci.org/gsamokovarov/web-console.png)](https://travis-ci.org/gsamokovarov/web-console)
@@ -255,6 +255,11 @@ FAQ
 While spawning processes is relatively cheap on _MRI_, this is not the case in
 _JRuby_. Spawning another process is slow. Spawning another **JRuby** process
 is even slower. Read more about the problem at the _JRuby_ [wiki].
+
+### Changing the colors is broken. I see some of the previous theme colors.
+
+Clear the assets cache with `rake tmp:cache:clear`. Some of the old style sheet
+colors are probably sticking around in the cache.
 
 Test Drive
 ----------

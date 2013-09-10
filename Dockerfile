@@ -1,7 +1,3 @@
-# Try Rails' web-console.
-#
-# VERSION  0.0.1
-
 FROM ubuntu:12.04
 
 # Install Ruby, Bundler and dependencies for building native gems.
@@ -9,7 +5,7 @@ RUN apt-get update && apt-get install -y build-essential curl libsqlite3-dev rub
 RUN gem install --no-ri --no-rdoc bundler
 
 # Clone the repository from GitHub.
-RUN git clone https://github.com/gsamokovarov/web-console.git /web-console
+RUN git clone https://github.com/rails/web-console.git /web-console
 
 # Install application dependencies.
 RUN bash -c 'cd /web-console && bundle install'
