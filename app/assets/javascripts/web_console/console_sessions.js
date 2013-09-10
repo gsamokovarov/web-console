@@ -5,17 +5,6 @@ var AJAXTransport = (function(WebConsole) {
   var inherits = WebConsole.inherits;
   var EventEmitter = WebConsole.EventEmitter;
 
-  // Use an IE friendly implementation of XMLHttpRequest.
-  XHR = (function() {
-    try {
-      return XMLHttpRequest;
-    } catch (e) {
-      return function() {
-        return new ActiveXObject('Microsoft.XMLHTTP');
-      };
-    }
-  }).call(this);
-
   var AJAXTransport = function(options) {
     EventEmitter.call(this);
     options || (options = {});
@@ -42,7 +31,7 @@ var AJAXTransport = (function(WebConsole) {
   AJAXTransport.prototype.createRequest = function(method, url, options) {
     options || (options = {});
 
-    var request = new XHR();
+    var request = new XMLHttpRequest;
     request.open(method, url);
 
     if (typeof options.form === 'object') {
@@ -66,7 +55,7 @@ var AJAXTransport = (function(WebConsole) {
 
     var self = this;
     request.onreadystatechange = function() {
-      if (request.readyState === 4) {
+      if (request.readyState === XMLHttpRequest.DONE) {
         if (request.status === 200) {
           self.emit('pendingOutput', request.responseText);
           self.pollForPendingOutput();
@@ -103,7 +92,7 @@ var AJAXTransport = (function(WebConsole) {
 
     var self = this;
     request.onreadystatechange = function() {
-      if (request.readyState === 4) {
+      if (request.readyState === XMLHttpRequest.DONE) {
         self.sendingInput = false;
         if (self.pendingInput) self.sendInput();
       }
