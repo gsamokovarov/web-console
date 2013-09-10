@@ -10,8 +10,8 @@ module WebConsole
   # All of the communication is done in asynchrouns way, meaning that when you
   # send input to the process, you have get the output by polling for it.
   class Slave
-    # Different OS' and platform raises different errors when trying to read on
-    # output end of a closed process.
+    # Different OS' and platforms raises different errors when trying to read
+    # on output end of a closed process.
     READING_ON_CLOSED_END_ERRORS = [ Errno::EIO, EOFError ]
 
     # Raised when trying to read from a closed (exited) process.
@@ -68,7 +68,7 @@ module WebConsole
     #
     # Raises Errno:EIO on closed output stream. This can happen if the
     # underlying process exits.
-    def pending_output(chunk_len = 4096)
+    def pending_output(chunk_len = 49152)
       # Returns nil if there is no pending output.
       return unless pending_output?
 
