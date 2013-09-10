@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version  = WebConsole::VERSION
   s.authors  = ["Genadi Samokovarov", "Guillermo Iguaran"]
   s.email    = ["gsamokovarov@gmail.com", "guilleiguaran@gmail.com"]
-  s.homepage = "https://github.com/gsamokovarov/web-console"
+  s.homepage = "https://github.com/rails/web-console"
   s.summary  = "Rails Console on the Browser."
   s.license  = 'MIT'
 
