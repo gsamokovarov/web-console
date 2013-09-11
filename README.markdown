@@ -3,6 +3,7 @@
   <a href=https://github.com/rails/web-console/tree/v0.1.0>v0.1.0</a>
   <a href=https://github.com/rails/web-console/tree/v0.2.0>v0.2.0</a>
   <a href=https://github.com/rails/web-console/tree/v0.3.0>v0.3.0</a>
+  <a href=https://github.com/rails/web-console/tree/v0.4.0>v0.4.0</a>
 </p>
 
 Web Console [![Version](https://badge.fury.io/rb/web-console.png)](http://badge.fury.io/rb/web-console) [![Travis](https://travis-ci.org/gsamokovarov/web-console.png)](https://travis-ci.org/gsamokovarov/web-console)
