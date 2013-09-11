@@ -258,10 +258,10 @@ While spawning processes is relatively cheap on _MRI_, this is not the case in
 _JRuby_. Spawning another process is slow. Spawning another **JRuby** process
 is even slower. Read more about the problem at the _JRuby_ [wiki].
 
-### Changing the colors is broken. I see some of the previous theme colors.
+### Changing the colors is broken.
 
-Clear the assets cache with `rake tmp:cache:clear`. Some of the old style sheet
-colors are probably sticking around in there.
+Some of the style sheets may be cached. Run `rake tmp:cache:clear` to clear it
+up.
 
 Test Drive
 ----------

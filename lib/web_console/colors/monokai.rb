@@ -8,6 +8,7 @@ module WebConsole
     c.add '#695abb'
     c.add '#d53864'
     c.add '#fefffe'
+
     c.add '#1c1d19'
     c.add '#d12a24'
     c.add '#a7d32c'
