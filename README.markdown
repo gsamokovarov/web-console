@@ -6,7 +6,7 @@
   <a href=https://github.com/rails/web-console/tree/v0.4.0>v0.4.0</a>
 </p>
 
-Web Console [![Version](https://badge.fury.io/rb/web-console.png)](http://badge.fury.io/rb/web-console) [![Travis](https://travis-ci.org/gsamokovarov/web-console.png)](https://travis-ci.org/gsamokovarov/web-console)
+Web Console [![Version](https://badge.fury.io/rb/web-console.png)](http://badge.fury.io/rb/web-console) [![Travis](https://travis-ci.org/rails/web-console.png)](https://travis-ci.org/rails/web-console)
 ===========
 
 There is no doubt that `rails console` is one of the most useful commands,
