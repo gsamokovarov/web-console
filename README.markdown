@@ -194,10 +194,11 @@ The default color theme is a white-on-black theme called `light`. For
 different appearance you may want to experiment with the other included color
 themes.
 
-- `xterm` _the standard xterm theme_
-- `tango` _theme based on the tango colors_
+- `monokai` _the default Sublime Text colors_
 - `solarized_dark` _light version of the common solarized colors_
 - `solarized_light` _dark version of the common solarized colors_
+- `tango` _theme based on the tango colors_
+- `xterm` _the standard xterm theme_
 
 If you would like to use a custom theme, you may do so with the following
 syntax.
@@ -259,7 +260,7 @@ is even slower. Read more about the problem at the _JRuby_ [wiki].
 ### Changing the colors is broken. I see some of the previous theme colors.
 
 Clear the assets cache with `rake tmp:cache:clear`. Some of the old style sheet
-colors are probably sticking around in the cache.
+colors are probably sticking around in there.
 
 Test Drive
 ----------

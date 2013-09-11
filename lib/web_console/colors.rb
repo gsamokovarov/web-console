@@ -81,6 +81,7 @@ module WebConsole
 end
 
 require 'web_console/colors/light'
-require 'web_console/colors/xterm'
-require 'web_console/colors/tango'
+require 'web_console/colors/monokai'
 require 'web_console/colors/solarized'
+require 'web_console/colors/tango'
+require 'web_console/colors/xterm'
