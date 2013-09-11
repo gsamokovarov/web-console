@@ -5,6 +5,8 @@ var AJAXTransport = (function(WebConsole) {
   var inherits = WebConsole.inherits;
   var EventEmitter = WebConsole.EventEmitter;
 
+  var FORM_MIME_TYPE = 'application/x-www-form-urlencoded; charset=utf-8';
+
   var AJAXTransport = function(options) {
     EventEmitter.call(this);
     options || (options = {});
@@ -17,6 +19,13 @@ var AJAXTransport = (function(WebConsole) {
 
     this.pendingInput  = '';
 
+    this.initializeEventHandlers();
+  };
+
+  inherits(AJAXTransport, EventEmitter);
+
+  // Initializes the default event handlers.
+  AJAXTransport.prototype.initializeEventHandlers = function() {
     this.on('input', this.sendInput);
     this.on('configuration', this.sendConfiguration);
     this.once('initialization', function(cols, rows) {
@@ -24,8 +33,6 @@ var AJAXTransport = (function(WebConsole) {
       this.pollForPendingOutput();
     });
   };
-
-  inherits(AJAXTransport, EventEmitter);
 
   // Shorthand for creating XHR requests.
   AJAXTransport.prototype.createRequest = function(method, url, options) {
@@ -42,8 +49,7 @@ var AJAXTransport = (function(WebConsole) {
         content.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
       }
 
-      var formMimeType = 'application/x-www-form-urlencoded; charset=utf-8';
-      request.setRequestHeader('Content-Type', formMimeType);
+      request.setRequestHeader('Content-Type', FORM_MIME_TYPE);
       request.data = content.join('&');
     }
 
