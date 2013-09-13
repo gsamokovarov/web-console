@@ -1,7 +1,7 @@
 require 'test_helper'
 
 module WebConsole
-  class WebConsoleTest < ActiveSupport::TestCase
+  class EngineTest < ActiveSupport::TestCase
     test 'custom default_mount_path' do
       new_uninitialized_app do |app|
         app.config.web_console.default_mount_path = '/shell'
@@ -100,7 +100,7 @@ module WebConsole
 
     private
 
-      def new_uninitialized_app(root = File.expand_path('../dummy', __FILE__))
+      def new_uninitialized_app(root = File.expand_path('../../dummy', __FILE__))
         skip if Rails::VERSION::MAJOR == 3
 
         old_app = Rails.application
