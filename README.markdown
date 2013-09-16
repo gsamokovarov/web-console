@@ -250,8 +250,8 @@ end
 You may also change the font, which is following the CSS font property syntax.
 By default it is `large DejaVu Sans Mono, Liberation Mono, monospace`.
 
-Try
----
+Trial
+-----
 
 If you just want to try the web-console, without having to go through the
 trouble of installing it, we provide a [Docker] container that does that for
