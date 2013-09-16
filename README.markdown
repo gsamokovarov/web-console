@@ -19,7 +19,7 @@ This is where _Web Console_ comes to the rescue. It gives you the same
 let's you evaluate Ruby code, there are a lot of those. Its a [VT100]
 compatible terminal, running `rails console`.
 
-![demo](http://f.cl.ly/items/3N3K412T381u2w360F2M/Screen%20Shot%202013-09-06%20at%208.24.57%20PM.png)
+![demo](http://f.cl.ly/items/1C1x1e0F1u3h3a260V3A/web-console-demo.png)
 
 You can see _Web Console_ in action at this [video].
 
@@ -44,7 +44,7 @@ To install it in your current application, add the following to your `Gemfile`.
 
 ```ruby
 group :development do
-  gem 'web-console', '~> 0.4.0'
+  gem 'web-console', '~> 1.0.0
 end
 ```
 
@@ -136,6 +136,8 @@ run [`login`][login] instead to let users sign into the host system.
 
 ```ruby
 class Application < Rails::Application
+  # You have to run /bin/login as root. That should worry you and you may work
+  # around it by running ssh connecting to the same machine.
   config.web_console.command = 'sudo /bin/login'
 end
 ```
@@ -143,7 +145,8 @@ end
 _Poor man's solution to SSH._ ![boom](http://f.cl.ly/items/3n2h0p1w0B261u2d201b/boom.png)
 
 **If you ever decide to use _Web Console_ that way, use SSL to encrypt the
-traffic, otherwise all the input can be easily sniffed!**
+traffic, otherwise all the input (including the negotiated username and
+password) can be easily sniffed!**
 
 ### config.web_console.term
 
@@ -247,6 +250,20 @@ end
 You may also change the font, which is following the CSS font property syntax.
 By default it is `large DejaVu Sans Mono, Liberation Mono, monospace`.
 
+Try
+---
+
+If you just want to try the web-console, without having to go through the
+trouble of installing it, we provide a [Docker] container that does that for
+you.
+
+To try it, install [Docker] first and then paste the following snippet in your
+shell.
+
+```bash
+sudo docker build -t rails/web-console github.com/!#:4 && !#:0-1 run -i -t !#:4
+```
+
 FAQ
 ---
 
@@ -262,20 +279,6 @@ is even slower. Read more about the problem at the _JRuby_ [wiki].
 
 Some of the style sheets may be cached. Run `rake tmp:cache:clear` to clear it
 up.
-
-Test Drive
-----------
-
-If you just want to try the web-console, without having to go through the
-trouble of installing it, we provide a [Docker] container that does that for
-you.
-
-To try it, install [Docker] first and then paste the following snippet in your
-shell.
-
-```bash
-sudo docker build -t rails/web-console github.com/!#:4 && !#:0-1 run -i -t !#:4
-```
 
   [Docker]: http://www.docker.io/
   [Puma]: http://puma.io/

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    web-console (0.4.0)
+    web-console (1.0.0)
       rails (~> 4.0.0)
 
 GEM
@@ -36,8 +36,7 @@ GEM
       thread_safe (~> 0.1)
       tzinfo (~> 0.3.37)
     arel (4.0.0)
-    atomic (1.1.10)
-    atomic (1.1.10-java)
+    atomic (1.1.13)
     builder (3.1.4)
     coderay (1.0.9)
     daemons (1.1.9)
@@ -45,14 +44,14 @@ GEM
     eventmachine (1.0.3)
     ffi (1.9.0-java)
     hike (1.2.3)
-    i18n (0.6.4)
+    i18n (0.6.5)
     jdbc-sqlite3 (3.7.2.1)
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     metaclass (0.0.1)
     method_source (0.8.2)
-    mime-types (1.23)
+    mime-types (1.24)
     minitest (4.7.5)
     mocha (0.14.0)
       metaclass (~> 0.0.1)
@@ -114,10 +113,8 @@ GEM
     thor (0.18.1)
     thread_safe (0.1.2)
       atomic
-    thread_safe (0.1.2-java)
-      atomic
     tilt (1.4.1)
-    treetop (1.4.14)
+    treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
     tzinfo (0.3.37)
