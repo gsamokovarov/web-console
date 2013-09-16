@@ -50,6 +50,13 @@ module WebConsole
         Process.expects(:kill).with(signal, @slave.pid)
         @slave.send(method)
       end
+
+      test "##{method} can reraise Errno::ESRCH if requested" do
+        Process.expects(:kill).with(signal, @slave.pid)
+        Process.stubs(:detach).raises(Errno::ESRCH)
+
+        assert_raises(Errno::ESRCH) { @slave.send(method, raise: true) }
+      end
     end
   end
 end
