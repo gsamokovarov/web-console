@@ -30,13 +30,13 @@ module WebConsole
     end
 
     test 'slave methods are cached on the singleton' do
-      refute @model.singleton_methods.include?(:pending_output?)
+      assert_not @model.singleton_methods.include?(:pending_output?)
       @model.pending_output? rescue nil
       assert @model.singleton_methods.include?(:pending_output?)
     end
 
     test 'persisted models knows that they are in memory' do
-      refute @model.persisted?
+      assert_not @model.persisted?
       @model.persist
       assert @model.persisted?
     end
@@ -52,7 +52,7 @@ module WebConsole
     end
 
     test 'no gives not persisted models' do
-      refute ConsoleSession.new.persisted?
+      assert_not ConsoleSession.new.persisted?
     end
   end
 end

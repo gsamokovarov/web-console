@@ -16,7 +16,7 @@ module WebConsole
         app.config.web_console.automount = false
         app.initialize!
 
-        refute app.routes.named_routes['web_console']
+        assert_not app.routes.named_routes['web_console']
       end
     end
 
