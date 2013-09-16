@@ -30,6 +30,15 @@ module WebConsole
       assert_equal Encoding::UTF_8, @slave.pending_output.encoding
     end
 
+    Slave::READING_ON_CLOSED_END_ERRORS.each do |exception|
+      test "#pending_output raises Slave::Closed when the end raises #{exception}" do
+        @slave.stubs(:pending_output?).returns(true)
+        @slave.instance_variable_get(:@output).stubs(:read_nonblock).raises(exception)
+
+        assert_raises(Slave::Closed) { @slave.pending_output }
+      end
+    end
+
     test '#configure changes @input dimentions' do
       @slave.instance_variable_get(:@input).expects(:winsize=).with([32, 64])
       @slave.configure(height: 32, width: 64)
