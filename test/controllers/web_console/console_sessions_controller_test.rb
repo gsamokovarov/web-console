@@ -57,6 +57,15 @@ module WebConsole
       assert_response :gone
     end
 
+    test 'PUT configuration adjust the terminal size' do
+      get :index, use_route: 'web_console'
+
+      assert_not_nil console_session = assigns(:console_session)
+      console_session.expects(:configure).with('width' => '80', 'height' => '24')
+
+      put :configuration, id: console_session.pid, width: 80, height: 24, use_route: 'web_console'
+      assert_response :success
+    end
 
     test 'blocks requests from non-whitelisted ips' do
       @request.stubs(:remote_ip).returns('128.0.0.1')
