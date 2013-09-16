@@ -19,7 +19,7 @@ This is where _Web Console_ comes to the rescue. It gives you the same
 let's you evaluate Ruby code, there are a lot of those. Its a [VT100]
 compatible terminal, running `rails console`.
 
-![demo](http://f.cl.ly/items/1C1x1e0F1u3h3a260V3A/web-console-demo.png)
+![demo](http://f.cl.ly/items/3N3K412T381u2w360F2M/Screen%20Shot%202013-09-06%20at%208.24.57%20PM.png)
 
 You can see _Web Console_ in action at this [video].
 

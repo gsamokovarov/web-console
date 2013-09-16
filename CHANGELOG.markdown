@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.0.0 (September 16, 2013)
+
+* Don't throw server errors on finished slave processes.
+* Add the a monokai color theme.
+
 ## 0.4.0 (September 6, 2013)
 
 * Drop the GPL dependency of vt100.js.
