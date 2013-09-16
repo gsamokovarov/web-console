@@ -21,4 +21,5 @@ end
 group :test do
   gem 'rake'
   gem 'mocha', require: false
+  gem 'simplecov', require: false
 end
