@@ -1,5 +1,3 @@
-require 'active_model'
-
 module WebConsole
   # Manage and persist (in memory) WebConsole::Slave instances.
   class ConsoleSession
