@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    web-console (1.0.0)
+    web-console (1.0.1)
       activemodel (~> 4.0.0)
       railties (~> 4.0.0)
       sprockets-rails (~> 2.0.0)

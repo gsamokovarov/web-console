@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.0.1 (September 20, 2013
+
+* Break the rails meta-package dependency. [[#5](https://github.com/rails/web-console/pull/5)]
+* Fix activemodel load error happening on some setups. [[#4](https://github.com/rails/web-console/pull/4)]
+
 ## 1.0.0 (September 16, 2013)
 
 * Don't throw server errors on finished slave processes.
