@@ -2,6 +2,9 @@ require 'ipaddr'
 require 'active_support/core_ext/numeric/time'
 require 'rails/engine'
 
+require 'active_model'
+require 'sprockets/rails'
+
 module WebConsole
   class Engine < ::Rails::Engine
     isolate_namespace WebConsole
