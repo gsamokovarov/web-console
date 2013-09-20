@@ -261,7 +261,7 @@ To try it, install [Docker] first and then paste the following snippet in your
 shell.
 
 ```bash
-sudo docker build -t rails/web-console github.com/!#:4 && !#:0-1 run -i -t !#:4
+docker build -t rails/web-console github.com/rails/web-console && docker run -i -t rails/web-console
 ```
 
 FAQ
