@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.0.2 (September 24, 2013)
+
+* Depend on Rails 4.\* instead of 4.0.\*.
+
 ## 1.0.1 (September 20, 2013
 
 * Break the rails meta-package dependency. [[#5](https://github.com/rails/web-console/pull/5)]

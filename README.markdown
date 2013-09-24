@@ -44,7 +44,7 @@ To install it in your current application, add the following to your `Gemfile`.
 
 ```ruby
 group :development do
-  gem 'web-console', '~> 1.0.1'
+  gem 'web-console', '~> 1.0.2'
 end
 ```
 
