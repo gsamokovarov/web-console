@@ -25,7 +25,7 @@ Bundler::GemHelper.install_tasks if defined? Bundler::GemHelper
 namespace :docker do
   task :sync do
     Dir.chdir(EXPANDED_CWD) do
-     sh 'git fetch && git reset --hard origin/master', verbose: false
+      sh 'git fetch && git reset --hard origin/master', verbose: false
     end
   end
 
