@@ -53,7 +53,13 @@ module WebConsole
       config.web_console.tap do |c|
         # +Rails.root+ is not available while we set the default values of the
         # other options. Default it during initialization.
-        c.command = Rails.root.join('bin/rails console').to_s if c.command.blank?
+
+        # Not all people created their Rails 4 applications with the Rails 4
+        # generator, so bin/rails may not be available.
+        if c.command.blank?
+          local_rails = Rails.root.join('bin/rails')
+          c.command = "#{local_rails.executable? ? local_rails : 'rails'} console"
+        end
       end
     end
 

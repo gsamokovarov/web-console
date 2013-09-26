@@ -126,7 +126,8 @@ automatic mount by setting this option to `false`.
 ### config.web_console.command
 
 By default, _Web Console_ will run `Rails.root.join('bin/rails console)` to
-spawn you a fresh Rails console.
+spawn you a fresh Rails console. If the relative `bin/rails` does not exist, it
+doesn't exist, `rails console` will be run.
 
 One of the advantages of being a [VT100] emulator is that _Web Console_ can run
 most of your terminal applications.

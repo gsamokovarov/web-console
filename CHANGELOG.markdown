@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Master
+
+* Fallback to `rails console` if relative `bin/rails` isn't available.
+
 ## 1.0.2 (September 24, 2013)
 
 * Depend on Rails 4.\* instead of 4.0.\*.
