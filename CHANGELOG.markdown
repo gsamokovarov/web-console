@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Master
+## 1.0.3 (September 27, 2013)
 
 * Fallback to `rails console` if relative `bin/rails` isn't available.
 
