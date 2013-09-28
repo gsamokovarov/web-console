@@ -14,7 +14,7 @@ Rails has to offer. However, sometimes you can't easily access it, or maybe
 you want to share it with a coworker without configuring remote desktop
 server.
 
-This is where _Web Console_ comes to the rescue. It gives you the same
+This is where _Web Console_ comes to play. It gives you the same
 `rails console` experience, right in the browser. Its not just a tool that
 let's you evaluate Ruby code, there are a lot of those. Its a [VT100]
 compatible terminal, running `rails console`.
@@ -34,8 +34,8 @@ _Web Console_ has been tested on the following rubies.
 
 _Rubunius_ in 1.9 mode may work, but it hasn't been tested.
 
-_Web Console_ has been built explicitly for _Rails 4_. For a _Rails 3_
-compatible build, check out the [web-console-rails3] project.
+_Web Console_ has been built explicitly for _Rails 4_. Check out the
+[web-console-rails3] project for a _Rails 3_ compatible build
 
 Installation
 ------------
@@ -179,7 +179,7 @@ class Application < Rails::Application
   config.allow_concurrency = true
 
   # For long-polling, 45 seconds timeout for the development server seems
-  # reasonable.
+  # reasonable. You may want to experiment with the value.
   config.web_console.timeout = 45.seconds
 end
 ```
@@ -278,8 +278,8 @@ is even slower. Read more about the problem at the _JRuby_ [wiki].
 
 ### Changing the colors is broken.
 
-Some of the style sheets may be cached. Run `rake tmp:cache:clear` to clear it
-up.
+Some of the style sheets may be cached on the file system. Run
+`rake tmp:cache:clear` to clear those up.
 
   [Docker]: http://www.docker.io/
   [Puma]: http://puma.io/
