@@ -37,7 +37,7 @@ module WebConsole
     private
 
       def console_session_params
-        params.permit(:input, :width, :height)
+        params.permit(:id, :input, :width, :height)
       end
   end
 end
