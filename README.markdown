@@ -9,10 +9,9 @@
 Web Console [![Version](https://badge.fury.io/rb/web-console.png)](http://badge.fury.io/rb/web-console) [![Travis](https://travis-ci.org/rails/web-console.png)](https://travis-ci.org/rails/web-console)
 ===========
 
-There is no doubt that `rails console` is one of the most useful commands,
-Rails has to offer. However, sometimes you can't easily access it, or maybe
-you want to share it with a coworker without configuring remote desktop
-server.
+No doubt, `rails console` is one of the most useful commands, Rails has to
+offer. However, sometimes you can't easily access it, or maybe you want to
+share it with a coworker without configuring remote desktop server.
 
 This is where _Web Console_ comes to play. It gives you the same
 `rails console` experience, right in the browser. Its not just a tool that
@@ -35,7 +34,7 @@ _Web Console_ has been tested on the following rubies.
 _Rubunius_ in 1.9 mode may work, but it hasn't been tested.
 
 _Web Console_ has been built explicitly for _Rails 4_. Check out the
-[web-console-rails3] project for a _Rails 3_ compatible build
+[web-console-rails3] project for a _Rails 3_ compatible build.
 
 Installation
 ------------
@@ -44,7 +43,7 @@ To install it in your current application, add the following to your `Gemfile`.
 
 ```ruby
 group :development do
-  gem 'web-console', '~> 1.0.3'
+  gem 'web-console'
 end
 ```
 
@@ -99,7 +98,7 @@ end
 You can see that `config.web_console.whitelisted_ips` accepts plains strings
 too. More than that, they can cover whole networks.
 
-Again, note that this network doesn't allow `127.0.0.1`.  If you want to access
+Again, note that this network doesn't allow `127.0.0.1`. If you want to access
 the console, you have to do so from it's external IP or add `127.0.0.1` to the
 mix.
 
