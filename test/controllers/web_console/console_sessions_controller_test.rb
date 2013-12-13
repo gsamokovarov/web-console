@@ -61,7 +61,7 @@ module WebConsole
       get :index, use_route: 'web_console'
 
       assert_not_nil console_session = assigns(:console_session)
-      console_session.expects(:configure).with('width' => '80', 'height' => '24')
+      console_session.expects(:configure).with('id' => console_session.pid.to_s, 'width' => '80', 'height' => '24')
 
       put :configuration, id: console_session.pid, width: 80, height: 24, use_route: 'web_console'
       assert_response :success
