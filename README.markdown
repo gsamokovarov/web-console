@@ -9,14 +9,15 @@
 Web Console [![Version](https://badge.fury.io/rb/web-console.png)](http://badge.fury.io/rb/web-console) [![Travis](https://travis-ci.org/rails/web-console.png)](https://travis-ci.org/rails/web-console)
 ===========
 
-No doubt, `rails console` is one of the most useful commands, Rails has to
-offer. However, sometimes you can't easily access it, or maybe you want to
-share it with a coworker without configuring remote desktop server.
+Running `rails console` is quite handy. Having your Rails application loaded in
+an interactive session is a great debugging tool. Sometimes, though, you can't
+easily access it, or maybe you want to easily share your session with a friend
+without configuring a remote desktop server.
 
 This is where _Web Console_ comes to play. It gives you the same
-`rails console` experience, right in the browser. Its not just a tool that
+`rails console` experience, but in the browser. Its not just a tool that
 let's you evaluate Ruby code, there are a lot of those. Its a [VT100]
-compatible terminal, running `rails console`.
+compatible terminal.
 
 ![demo](http://f.cl.ly/items/3N3K412T381u2w360F2M/Screen%20Shot%202013-09-06%20at%208.24.57%20PM.png)
 
@@ -48,7 +49,7 @@ end
 ```
 
 After you save the `Gemfile` changes, make sure to run `bundle install` and
-restart your server for the _Web Console_ to take affect.
+restart your server for the _Web Console_ to kick in.
 
 By default, it should be available in your development environment under
 `/console`. The route is not automatically mounted in a production environment
@@ -192,7 +193,7 @@ appearance, you can do so with the following options.
 ### config.web_console.style.colors
 
 _Web Console_ supports up to 256 color themes, though most of the common
-terminal themes are usually just 16 colors.
+terminal themes are usually 16 colors.
 
 The default color theme is a white-on-black theme called `light`. For
 different appearance you may want to experiment with the other included color
@@ -253,9 +254,8 @@ By default it is `large DejaVu Sans Mono, Liberation Mono, monospace`.
 Trial
 -----
 
-If you just want to try the web-console, without having to go through the
-trouble of installing it, we provide a [Docker] container that does that for
-you.
+If you want to try the web-console, without having to go through the trouble of
+installing it, we provide a [Docker] container that does that for you.
 
 To try it, install [Docker] first and then paste the following snippet in your
 shell.
