@@ -41,7 +41,7 @@ module WebConsole
       end
     end
 
-    def initialize(attributes = {})
+    def initialize
       @slave = WebConsole::Slave.new
     end
 
