@@ -19,7 +19,7 @@ module WebConsole
       assert_equal @model.persist, ConsoleSession.find("#{@model.pid}")
     end
 
-    test 'not found exceptions are json serializable' do
+    test 'not found exceptions are JSON serializable' do
       exception = assert_raises(ConsoleSession::Unavailable) { ConsoleSession.find(-1) }
       assert_equal '{"error":"Session unavailable"}', exception.to_json
     end
