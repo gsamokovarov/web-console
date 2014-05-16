@@ -1,1 +1,1 @@
-//= require_tree .
+//= require web_console/console_sessions
