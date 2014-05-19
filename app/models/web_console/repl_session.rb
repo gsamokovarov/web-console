@@ -1,5 +1,5 @@
 module WebConsole
-  class ConsoleSessionREPL
+  class REPLSession
     include Mutex_m
 
     include ActiveModel::Model

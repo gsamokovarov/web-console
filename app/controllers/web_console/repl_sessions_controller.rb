@@ -1,13 +1,13 @@
 require_dependency "web_console/application_controller"
 
 module WebConsole
-  class ConsoleSessionsReplController < ApplicationController
-    rescue_from ConsoleSessionREPL::NotFound do |exception|
+  class ReplSessionsController < ApplicationController
+    rescue_from REPLSession::NotFound do |exception|
       render json: exception, status: :gone
     end
 
     def update
-      @console_session = ConsoleSessionREPL.find(params[:id])
+      @console_session = REPLSession.find(params[:id])
       render json: @console_session.save(console_session_params)
     end
 
