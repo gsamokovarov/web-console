@@ -8,4 +8,6 @@ WebConsole::Engine.routes.draw do
       put :configuration
     end
   end
+
+  resources :repl_sessions
 end
