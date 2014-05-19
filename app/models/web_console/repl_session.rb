@@ -7,7 +7,7 @@ module WebConsole
 
     INMEMORY_STORAGE = {}
 
-    ATTRIBUTES = [ :id, :input, :output, :prompt ].each do |attr|
+    ATTRIBUTES = [ :id, :input, :output, :prompt, :binding ].each do |attr|
       attr_accessor attr
     end
 
@@ -28,12 +28,13 @@ module WebConsole
       # Use this method if you need to persist a session, without providing it
       # any input.
       def create(binding)
-        INMEMORY_STORAGE[(model = new({}, binding)).id] = model
+        INMEMORY_STORAGE[(model = new({ binding: binding })).id] = model
       end
     end
 
-    def initialize(attributes = {}, binding)
-      @repl = WebConsole::REPL.default.new binding
+    def initialize(attributes = {})
+      attributes[:binding] = attributes[:binding] || TOPLEVEL_BINDING
+      @repl = WebConsole::REPL.default.new attributes[:binding]
 
       super(attributes)
       ensure_consequential_id!
