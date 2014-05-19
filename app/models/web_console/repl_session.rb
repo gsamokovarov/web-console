@@ -11,7 +11,7 @@ module WebConsole
       attr_accessor attr
     end
 
-    class NotFound < Exception
+    class NotFound < StandardError
       def to_json(*)
         {error: message}.to_json
       end
