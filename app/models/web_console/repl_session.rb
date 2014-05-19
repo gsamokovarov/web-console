@@ -13,7 +13,7 @@ module WebConsole
 
     class NotFound < StandardError
       def to_json(*)
-        {error: message}.to_json
+        { error: message }.to_json
       end
     end
 
@@ -33,7 +33,7 @@ module WebConsole
     end
 
     def initialize(attributes = {})
-      attributes[:binding] = attributes[:binding] || TOPLEVEL_BINDING
+      attributes[:binding] ||= TOPLEVEL_BINDING
       @repl = WebConsole::REPL.default.new attributes[:binding]
 
       super(attributes)
