@@ -19,10 +19,11 @@ module WebConsole
     end
 
     def call(env)
-      if allow_ip? env
-        web_console_call env
+      # Only show the error page when the IP is allowed and the request is not XHR
+      if allow_ip?(env) && ! xhr?(env)
+        web_console_call(env)
       else
-        @app.call env
+        @app.call(env)
       end
     end
 
@@ -44,11 +45,7 @@ module WebConsole
 
     def show_error_page(env, exception=nil)
       type, content = if @error_page
-        if text?(env)
-          [ 'plain', @error_page.render('text') ]
-        else
-          [ 'html', @error_page.render ]
-        end
+        [ 'html', @error_page.render ]
       else
         [ 'html', no_errors_page ]
       end
@@ -61,9 +58,8 @@ module WebConsole
       [status_code, { "Content-Type" => "text/#{type}; charset=utf-8" }, [content]]
     end
 
-    def text?(env)
-      env["HTTP_X_REQUESTED_WITH"] == "XMLHttpRequest" ||
-      !env["HTTP_ACCEPT"].to_s.include?('html')
+    def xhr?(env)
+      env['HTTP_X_REQUESTED_WITH'] =~ /XMLHttpRequest/i
     end
 
     def no_errors_page
