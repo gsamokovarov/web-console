@@ -1,0 +1,29 @@
+<head>
+  <link href="/assets/web_console/application.css?body=1" media="all" rel="stylesheet" />
+  <link href="/assets/web_console/console_sessions.css?body=1" media="all" rel="stylesheet" />
+  <link href="/assets/web_console/bootstrap.min.css?body=1" media="all" rel="stylesheet" />
+  <link href="/assets/web_console/error_page.css?body=1" media="all" rel="stylesheet" />
+  <script src="/assets/jquery.js?body=1"></script>
+  <script src="/assets/jquery_ujs.js?body=1"></script>
+  <script src="/assets/jquery.console.js?body=1"></script>
+  <script src="/assets/web_console/repl_sessions.js?body=1"></script>
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <h1><%= @exception.class %></h1>
+    </div>
+
+    <div class="row">
+      <p>This is just a demo. More awesomeness will come this summer!</p>
+    </div>
+
+    <div class="row">
+      <div id="console"
+        data-remote-path='<%= "console/repl_sessions/#{@console_session.id}" %>'
+        data-initial-prompt='<%= @console_session.prompt %>'>
+      </div>
+    </div>
+  </div>
+</body>
