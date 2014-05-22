@@ -1,7 +1,5 @@
 <head>
-  <link href="/assets/web_console/application.css?body=1" media="all" rel="stylesheet" />
   <link href="/assets/web_console/console_sessions.css?body=1" media="all" rel="stylesheet" />
-  <link href="/assets/web_console/bootstrap.min.css?body=1" media="all" rel="stylesheet" />
   <link href="/assets/web_console/error_page.css?body=1" media="all" rel="stylesheet" />
   <script src="/assets/jquery.js?body=1"></script>
   <script src="/assets/jquery_ujs.js?body=1"></script>
@@ -10,14 +8,17 @@
 </head>
 
 <body>
-  <div class="container">
-    <div class="row">
-      <h1><%= @exception.class %></h1>
-    </div>
+  <header>
+    <h1>
+      <%= @exception.class.to_s %>
+      <% if @request.parameters['controller'] %>
+        in <%= @request.parameters['controller'].camelize %>Controller<% if @request.parameters['action'] %>#<%= @request.parameters['action'] %><% end %>
+      <% end %>
+    </h1>
+  </header>
 
-    <div class="row">
-      <p>This is just a demo. More awesomeness will come this summer!</p>
-    </div>
+  <div id="container">
+    <h2><%= h @exception.message %></h2>
 
     <div class="row">
       <div id="console"

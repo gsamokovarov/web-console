@@ -1,5 +1,7 @@
 require "cgi"
 require "json"
+require "action_dispatch/http/request"
+require "action_dispatch/middleware/exception_wrapper"
 
 module WebConsole
   class ErrorPage
@@ -9,14 +11,17 @@ module WebConsole
 
     def initialize(exception, env)
       @exception = real_exception(exception)
+      @request = ActionDispatch::Request.new(env)
+      @wrapper = ActionDispatch::ExceptionWrapper.new(env, @exception)
       @console_session = REPLSession.create binding_from_exception
-      @env = env
     end
 
     def template
       @template ||= ActionView::Base.new([TEMPLATE_PATH],
+        wrapper: @wrapper,
         exception: @exception,
-        console_session: @console_session
+        console_session: @console_session,
+        request: @request,
       )
     end
 
