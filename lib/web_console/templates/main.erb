@@ -20,11 +20,9 @@
   <div id="container">
     <h2><%= h @exception.message %></h2>
 
-    <div class="row">
-      <div id="console"
-        data-remote-path='<%= "console/repl_sessions/#{@console_session.id}" %>'
-        data-initial-prompt='<%= @console_session.prompt %>'>
-      </div>
-    </div>
+  </div>
+  <div id="console"
+    data-remote-path='<%= "console/repl_sessions/#{@console_session.id}" %>'
+    data-initial-prompt='<%= @console_session.prompt %>'>
   </div>
 </body>

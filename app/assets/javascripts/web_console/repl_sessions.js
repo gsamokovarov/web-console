@@ -5,6 +5,7 @@ $(function() {
   var instance = $console.console({
     autofocus: true,
     promptLabel: $console.data('initial-prompt'),
+    animateScroll: true,
     commandHandle: function(line, report) {
       $.ajax({
         url: $console.data('remote-path'),

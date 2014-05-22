@@ -45,6 +45,34 @@ h2 {
   padding: 0 1.5em;
 }
 
+#console {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  border: 1px solid;
+}
+
+#console div.jquery-console-inner {
+  height: 200px;
+  overflow: auto;
+  background: #333;
+  padding: 10px;
+}
+
+#console div.jquery-console-prompt-box {
+  color: #fff;
+}
+
+#console div.jquery-console-message {
+  color: #1ad027;
+}
+
+#console div.jquery-console-focus span.jquery-console-cursor {
+  background:#fefefe;
+  color:#333;
+  font-weight:bold;
+}
+
 a { color: #980905; }
 a:visited { color: #666; }
 a:hover { color: #C52F24; }
