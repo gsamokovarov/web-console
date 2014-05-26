@@ -1,5 +1,3 @@
-require 'web_console/error_page'
-require 'web_console/middleware'
 require 'active_support/lazy_load_hooks'
 require 'web_console/repl'
 require 'web_console/engine'
@@ -22,4 +20,4 @@ end
 
 require "binding_of_caller"
 require "web_console/exception_extension"
-require 'web_console/rails' if defined? Rails::Railtie
+require "action_dispatch/debug_exceptions"
