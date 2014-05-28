@@ -9,6 +9,8 @@ module WebConsole
     # It provides only the most basic code evaluation with no multiline code
     # support.
     class Dummy
+      attr_accessor :binding
+
       def initialize(binding = TOPLEVEL_BINDING)
         @binding = binding
       end
@@ -19,10 +21,8 @@ module WebConsole
 
       def send_input(input)
         eval_result = nil
-        streams_output = Stream.threadsafe_capture! do
-          eval_result = @binding.eval(input).inspect
-        end
-        "#{streams_output}=> #{eval_result}\n"
+        eval_result = @binding.eval(input).inspect
+        "=> #{eval_result}\n"
       rescue Exception => exc
         exc.backtrace.join("\n")
       end
