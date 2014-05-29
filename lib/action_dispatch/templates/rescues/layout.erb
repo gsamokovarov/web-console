@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link href="/assets/web_console/console_sessions.css?body=1" media="all" rel="stylesheet" />
-  <script src="/assets/jquery.js?body=1"></script>
-  <script src="/assets/jquery_ujs.js?body=1"></script>
-  <script src="/assets/jquery.console.js?body=1"></script>
-  <script src="/assets/web_console/repl_sessions.js?body=1"></script>
-
   <meta charset="utf-8" />
   <title>Action Controller: Exception caught</title>
+
+  <%= stylesheet_link_tag "web_console/console_sessions" %>
+
   <style>
     body {
       background-color: #FAFAFA;
@@ -159,6 +156,11 @@
 
     <%= yield :style %>
   </style>
+
+  <%= javascript_include_tag "jquery" %>
+  <%= javascript_include_tag "jquery_ujs" %>
+  <%= javascript_include_tag "jquery.console" %>
+  <%= javascript_include_tag "web_console/repl_sessions" %>
 
   <script>
     var toggle = function(id) {
