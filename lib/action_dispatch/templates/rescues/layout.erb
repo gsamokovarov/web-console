@@ -131,22 +131,22 @@
       padding-bottom: 20px;
     }
 
-    #console div.jquery-console-inner {
+    #console div.console-inner {
       height: 100%;
       overflow: auto;
       background: #333;
       padding: 10px;
     }
 
-    #console div.jquery-console-prompt-box {
+    #console div.console-prompt-box {
       color: #fff;
     }
 
-    #console div.jquery-console-message {
+    #console div.console-message {
       color: #1ad027;
     }
 
-    #console div.jquery-console-focus span.jquery-console-cursor {
+    #console div.console-focus span.console-cursor {
       background:#fefefe;
       color:#333;
       font-weight:bold;
@@ -157,8 +157,8 @@
 
   <%= javascript_include_tag "jquery" %>
   <%= javascript_include_tag "jquery_ujs" %>
-  <%= javascript_include_tag "web_console/jquery.console" %>
-  <%= javascript_include_tag "web_console/repl_sessions" %>
+  <%= javascript_include_tag "jquery.console" %>
+  <%= javascript_include_tag "web_console/repl_console" %>
 
   <script>
     var toggle = function(id) {
@@ -187,5 +187,6 @@
 
 <%= yield %>
 
+  <%= javascript_include_tag "web_console/repl_sessions" %>
 </body>
 </html>
