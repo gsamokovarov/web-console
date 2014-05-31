@@ -155,10 +155,6 @@
     <%= yield :style %>
   </style>
 
-  <%= javascript_include_tag "jquery" %>
-  <%= javascript_include_tag "jquery_ujs" %>
-  <%= javascript_include_tag "jquery.console" %>
-  <%= javascript_include_tag "web_console/repl_console" %>
 
   <script>
     var toggle = function(id) {
@@ -186,7 +182,7 @@
 <body>
 
 <%= yield %>
-
+  <%= javascript_include_tag "web_console/repl_console" %>
   <%= javascript_include_tag "web_console/repl_sessions" %>
 </body>
 </html>

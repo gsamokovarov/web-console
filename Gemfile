@@ -15,8 +15,6 @@ group :development do
   platforms :ruby do
     gem 'thin'
     gem 'sqlite3'
-    gem 'jquery-rails'
-    gem 'jquery-ui-rails'
   end
 end
 
