@@ -1,4 +1,26 @@
 (function() {
+  // DOM helpers
+  function hasClass(el, className) {
+    var regex = new RegExp('(?:^|\\s)' + className + '(?!\\S)', 'g');
+    return el.className.match(regex);
+  }
+
+  function addClass(el, className) {
+    el.className += " " + className;
+  }
+
+  function removeClass(el, className) {
+    var regex = new RegExp('(?:^|\\s)' + className + '(?!\\S)', 'g');
+    el.className = el.className.replace(regex, '');
+  }
+
+  function removeAllChildren(el) {
+    while (el.firstChild) {
+      el.removeChild(el.firstChild);
+    }
+  }
+
+  // REPLConsole Constructor
   function REPLConsole(index) {
     var previousCommands = JSON.parse(localStorage.getItem("web_console_previous_commands"));
     if(previousCommands === null) {
@@ -10,12 +32,8 @@
   }
 
   REPLConsole.prototype.install = function(container, config) {
-    this.focused = false;
-    this._prompt = config && config.promptLabel ? config.promptLabel : ' >>';
+    this.prompt = config && config.promptLabel ? config.promptLabel : ' >>';
     this.commandHandle = config && config.commandHandle ? config.commandHandle : function() { return this; }
-    this.inner = document.createElement('div');
-    this.inner.className = "console-inner";
-    this.newPromptBox();
 
     var _this = this;
     document.onkeydown = function(ev) {
@@ -45,44 +63,99 @@
     });
 
     // Render the console.
+    this.inner = document.createElement('div');
+    this.inner.className = "console-inner";
+    this.newPromptBox();
     container.appendChild(this.inner);
   };
 
   REPLConsole.prototype.focus = function() {
     this.focused = true;
+    if (! hasClass(this.inner, "console-focus")) {
+      addClass(this.inner, "console-focus");
+    }
   };
 
   REPLConsole.prototype.blur = function() {
     this.focused = false;
+    removeClass(this.inner, "console-focus");
   };
 
+  /**
+   * Add a new empty prompt box to the console.
+   */
   REPLConsole.prototype.newPromptBox = function() {
+    // Remove the caret from previous prompt box if any.
+    if (this.promptInput) {
+      this.removeCaretFromPrompt();
+    }
+
     var promptBox = document.createElement('div');
     promptBox.className = "console-prompt-box";
     var promptLabel = document.createElement('span');
     promptLabel.className ="console-prompt-label";
     promptLabel.style.display = "inline";
-    var promptEl = document.createElement('span');
-    promptEl.className = "console-prompt";
+    promptLabel.innerHTML = this.prompt;
+    var promptInput = document.createElement('span');
+    promptInput.className = "console-prompt";
     promptBox.appendChild(promptLabel);
-    promptBox.appendChild(promptEl);
+    promptBox.appendChild(promptInput);
     this.inner.appendChild(promptBox);
+
     this.promptLabel = promptLabel;
-    this.promptEl = promptEl;
-    this.setPrompt(this._prompt);
+    this.promptInput = promptInput;
+    this.setInput("");
   };
 
-  REPLConsole.prototype.setPrompt = function(prompt) {
-    this._prompt = prompt;
-    this.promptLabel.innerHTML = prompt;
+  /**
+   * Remove the caret from the prompt box,
+   * mainly before adding a new prompt box.
+   * For simplicity, just re-render the prompt box
+   * with caret position -1.
+   */
+  REPLConsole.prototype.removeCaretFromPrompt = function() {
+    this.setInput(this._input, -1);
   };
 
-  REPLConsole.prototype.getInput = function() {
-    return this.promptEl.innerHTML;
-  };
+  REPLConsole.prototype.setInput = function(input, caretPos) {
+    if (typeof caretPos === 'undefined') {
+      this._caretPos = input.length;
+    } else {
+      this._caretPos = caretPos;
+    }
+    this._input = input;
+    this.renderInput();
+  }
 
-  REPLConsole.prototype.setInput = function(text) {
-    this.promptEl.innerHTML = text;
+  /**
+   * Render the input prompt. This is called whenever
+   * the user input changes, sometimes not very efficient.
+   */
+  REPLConsole.prototype.renderInput = function() {
+    // Clear the current input.
+    removeAllChildren(this.promptInput);
+
+    var promptCursor = document.createElement('span');
+    promptCursor.className = "console-cursor";
+    var before, current, master;
+
+    if (this._caretPos < 0) {
+      before = this._input;
+      current = after = "";
+    } else if (this._caretPos === this._input.length) {
+      before = this._input;
+      current = "\u00A0";
+      after = "";
+    } else {
+      before = this._input.substring(0, this._caretPos);
+      current = this._input.charAt(this._caretPos);
+      after = this._input.substring(this._caretPos + 1, this._input.length);
+    }
+
+    this.promptInput.appendChild(document.createTextNode(before));
+    promptCursor.appendChild(document.createTextNode(current));
+    this.promptInput.appendChild(promptCursor);
+    this.promptInput.appendChild(document.createTextNode(after));
   };
 
   REPLConsole.prototype.writeOutput = function(output) {
@@ -94,17 +167,17 @@
   };
 
   REPLConsole.prototype.onEnterKey = function() {
-    var text = this.getInput();
-    if(text != "" && text !== undefined) {
+    var input = this._input;
+    if(input != "" && input !== undefined) {
       var previousCommands = JSON.parse(localStorage.getItem("web_console_previous_commands"));
-      this.previousCommandOffset = previousCommands.push(text);
+      this.previousCommandOffset = previousCommands.push(input);
       if(previousCommands.length > 100) {
         previousCommands.splice(0, 1);
       }
       localStorage.setItem("web_console_previous_commands", JSON.stringify(previousCommands));
     }
 
-    this.commandHandle(text);
+    this.commandHandle(input);
   };
 
   REPLConsole.prototype.onNavigateHistory = function(direction) {
@@ -139,11 +212,24 @@
       case 38:
         // Up arrow
         this.onNavigateHistory(-1);
-        ev.preventDefault()
+        ev.preventDefault();
         break;
       case 40:
         // Down arrow
         this.onNavigateHistory(1);
+        ev.preventDefault();
+        break;
+      case 37:
+        // Left arrow
+        var caretPos = this._caretPos > 0 ? this._caretPos - 1 : this._caretPos;
+        this.setInput(this._input, caretPos);
+        ev.preventDefault();
+        break;
+      case 39:
+        // Right arrow
+        var length = this._input.length;
+        var caretPos = this._caretPos < length ? this._caretPos + 1 : this._caretPos;
+        this.setInput(this._input, caretPos);
         ev.preventDefault();
         break;
       case 8:
@@ -162,8 +248,21 @@
    * Delete a character at the current position.
    */
   REPLConsole.prototype.deleteAtCurrent = function() {
-    var text = this.getInput().slice(0, -1);
-    this.setInput(text);
+    if (this._caretPos > 0) {
+      var caretPos = this._caretPos - 1;
+      var before = this._input.substring(0, caretPos);
+      var after = this._input.substring(this._caretPos, this._input.length);
+      this.setInput(before + after, caretPos);
+    }
+  };
+
+  /**
+   * Insert a character at the current position.
+   */
+  REPLConsole.prototype.insertAtCurrent = function(char) {
+    var before = this._input.substring(0, this._caretPos);
+    var after = this._input.substring(this._caretPos, this._input.length);
+    this.setInput(before + char + after, this._caretPos + 1);
   };
 
   /**
@@ -171,9 +270,7 @@
    */
   REPLConsole.prototype.onKeyPress = function(ev) {
     var keyCode = ev.keyCode || e.which;
-    var text = this.getInput() + String.fromCharCode(keyCode);
-    this.setInput(text);
-
+    this.insertAtCurrent(String.fromCharCode(keyCode));
     ev.stopPropagation();
     ev.preventDefault();
   };
