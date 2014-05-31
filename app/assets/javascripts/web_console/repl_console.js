@@ -74,6 +74,7 @@
     if (! hasClass(this.inner, "console-focus")) {
       addClass(this.inner, "console-focus");
     }
+    this.scrollToBottom();
   };
 
   REPLConsole.prototype.blur = function() {
@@ -105,6 +106,7 @@
     this.promptLabel = promptLabel;
     this.promptInput = promptInput;
     this.setInput("");
+    this.scrollToBottom();
   };
 
   /**
@@ -245,6 +247,16 @@
   };
 
   /**
+   * Handle input key press.
+   */
+  REPLConsole.prototype.onKeyPress = function(ev) {
+    var keyCode = ev.keyCode || e.which;
+    this.insertAtCurrent(String.fromCharCode(keyCode));
+    ev.stopPropagation();
+    ev.preventDefault();
+  };
+
+  /**
    * Delete a character at the current position.
    */
   REPLConsole.prototype.deleteAtCurrent = function() {
@@ -265,14 +277,8 @@
     this.setInput(before + char + after, this._caretPos + 1);
   };
 
-  /**
-   * Handle input key press.
-   */
-  REPLConsole.prototype.onKeyPress = function(ev) {
-    var keyCode = ev.keyCode || e.which;
-    this.insertAtCurrent(String.fromCharCode(keyCode));
-    ev.stopPropagation();
-    ev.preventDefault();
+  REPLConsole.prototype.scrollToBottom = function() {
+    this.inner.scrollTop = this.inner.scrollHeight;
   };
 
   window.REPLConsole = REPLConsole;
