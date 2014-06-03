@@ -1,5 +1,3 @@
-require 'web_console/stream'
-
 module WebConsole
   module REPL
     # == Dummy\ Adapter

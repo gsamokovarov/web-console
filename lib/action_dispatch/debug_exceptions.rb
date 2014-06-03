@@ -67,6 +67,7 @@ module ActionDispatch
     end
 
     def binding_from_exception(exception)
+      p "asdf"
       exception.__web_console_bindings_stack[0]
     end
   end

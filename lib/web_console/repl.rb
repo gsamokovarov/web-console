@@ -56,5 +56,4 @@ module WebConsole
 end
 
 # Require the builtin adapters.
-require 'web_console/repl/irb'
 require 'web_console/repl/dummy'
