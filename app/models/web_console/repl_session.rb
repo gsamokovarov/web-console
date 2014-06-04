@@ -34,7 +34,7 @@ module WebConsole
 
     def initialize(attributes = {})
       attributes[:binding] ||= TOPLEVEL_BINDING
-      @repl = WebConsole::REPL::Dummy.new attributes[:binding]
+      @repl = WebConsole::REPL.new attributes[:binding]
 
       super(attributes)
       ensure_consequential_id!
