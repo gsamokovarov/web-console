@@ -287,3 +287,12 @@ Some of the style sheets may be cached on the file system. Run
   [video]: http://www.youtube.com/watch?v=zjuJRXCLkHk
   [web-console-rails3]: https://github.com/gsamokovarov/web-console-rails3
   [wiki]: https://github.com/jruby/jruby/wiki/Improving-startup-time#avoid-spawning-sub-rubies
+
+Error Page with Web Console
+===
+
+Web Console can now be launched by default on the Rails error page. The result is something like this:
+
+![](https://photos-3.dropbox.com/t/0/AAAM2U6lj0N4AaGhvraIP0pk9ECl0P8IP1xXHi7hUD9H_g/12/39287717/png/1024x768/3/1401372000/0/2/error-page-screenshot.png/RkXDjd6BVm7afz5HgmD38vmfxwlERJ4Nq10wmQGUaQU)
+
+The error page demo is available in the Dummy test app under `test/dummy`. Just run the server to see it in action!

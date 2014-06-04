@@ -1,0 +1,30 @@
+<div id="console"
+  data-remote-path='<%= "console/repl_sessions/#{@console_session.id}" %>'
+  data-initial-prompt='<%= @console_session.prompt %>'>
+  <div id="resizer" style="width:100%; height: 3px; cursor: ns-resize;"></div>
+</div>
+
+<script type="text/javascript">
+  // Make the console resizable (not sure if works in all browser)
+  var consoleDiv = document.getElementById('console');
+  var resizer = document.getElementById('resizer');
+
+  var initDrag = function(e) {
+    var startY = e.clientY;
+    var startHeight = parseInt(document.defaultView.getComputedStyle(consoleDiv).height, 10);
+
+    var doDrag = function(e) {
+      consoleDiv.style.height = (startHeight + startY - e.clientY) + 'px';
+    };
+
+    var stopDrag = function(e) {
+      document.documentElement.removeEventListener('mousemove', doDrag, false);
+      document.documentElement.removeEventListener('mouseup', stopDrag, false);
+    };
+
+    document.documentElement.addEventListener('mousemove', doDrag, false);
+    document.documentElement.addEventListener('mouseup', stopDrag, false);
+  }
+
+  resizer.addEventListener('mousedown', initDrag, false);
+</script>

@@ -1,0 +1,53 @@
+<%
+   traces = { "Application Trace" => @application_trace,
+              "Framework Trace"   => @framework_trace,
+              "Full Trace"        => @full_trace }
+   names = traces.keys
+%>
+
+<p><code>Rails.root: <%= defined?(Rails) && Rails.respond_to?(:root) ? Rails.root : "unset" %></code></p>
+
+<div id="traces">
+  <% names.each do |name| %>
+    <%
+      show = "show('#{name.gsub(/\s/, '-')}');"
+      hide = (names - [name]).collect {|hide_name| "hide('#{hide_name.gsub(/\s/, '-')}');"}
+    %>
+    <a href="#" onclick="<%= hide.join %><%= show %>; return false;"><%= name %></a> <%= '|' unless names.last == name %>
+  <% end %>
+
+  <% traces.each do |name, trace| %>
+    <div id="<%= name.gsub(/\s/, '-') %>" style="display: <%= (name == "Application Trace") ? 'block' : 'none' %>;">
+      <pre><code><% trace.each do |frame| %><a class="trace-frames" data-frame-id="<%= frame[:id] %>" href="#"><%= frame[:trace] %></a><br><% end %></code></pre>
+    </div>
+  <% end %>
+
+  <script type="text/javascript">
+    var traceFrames = document.getElementsByClassName('trace-frames');
+    var selectedFrame;
+    for (var i = 0; i < traceFrames.length; i++) {
+      traceFrames[i].addEventListener('click', function(e) {
+        var target = e.target;
+        var frame_id = target.dataset.frameId;
+        var xhr = new XMLHttpRequest();
+        var url = document.getElementById('console').dataset.remotePath + "/trace";
+        var params = "frame_id=" + frame_id;
+
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.send(params);
+
+        xhr.onreadystatechange = function() {
+          if(xhr.readyState == 4 && xhr.status == 200) {
+            if (selectedFrame) {
+              selectedFrame.className = selectedFrame.className.replace("selected", "");
+            }
+
+            target.className += " selected";
+            selectedFrame = target;
+          }
+        }
+      });
+    }
+  </script>
+</div>

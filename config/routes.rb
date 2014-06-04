@@ -9,5 +9,9 @@ WebConsole::Engine.routes.draw do
     end
   end
 
-  resources :repl_sessions
+  resources :repl_sessions do
+    member do
+      post 'trace'
+    end
+  end
 end

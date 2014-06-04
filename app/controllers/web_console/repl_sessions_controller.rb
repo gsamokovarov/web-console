@@ -11,6 +11,13 @@ module WebConsole
       render json: @console_session.save(console_session_params)
     end
 
+    def trace
+      @console_session = REPLSession.find(params[:id])
+      binding = @console_session.binding_stack[Integer(params[:frame_id])]
+      @console_session.new_binding(binding)
+      render json: "success"
+    end
+
     private
       def console_session_params
         params.permit(:input, :id)
