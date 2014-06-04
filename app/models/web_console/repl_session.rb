@@ -1,8 +1,5 @@
 module WebConsole
   class REPLSession
-    include Mutex_m
-
-    include ActiveModel::Model
     include ActiveModel::Serializers::JSON
 
     INMEMORY_STORAGE = {}
@@ -33,17 +30,14 @@ module WebConsole
     end
 
     def initialize(attributes = {})
-      attributes[:binding] ||= TOPLEVEL_BINDING
-      @repl = WebConsole::REPL.new attributes[:binding]
-
-      super(attributes)
+      self.attributes = attributes
       ensure_consequential_id!
       populate_repl_attributes!(initial: true)
     end
 
-    def new_binding(binding)
-      binding = binding
-      @repl.binding = binding
+    def binding=(binding)
+      @binding = binding
+      @repl = WebConsole::REPL.new binding
     end
 
     # Saves the model into the in-memory storage.
@@ -82,25 +76,21 @@ module WebConsole
 
     private
       def ensure_consequential_id!
-        synchronize do
-          self.id = begin
-            @@counter ||= 0
-            @@counter  += 1
-          end
+        self.id = begin
+          @@counter ||= 0
+          @@counter  += 1
         end
       end
 
       def populate_repl_attributes!(options = {})
-        synchronize do
-          # Don't send any input on the initial population so we don't bump up
-          # the numbers in the dynamic prompts.
-          self.output = @repl.send_input(input) unless options[:initial]
-          self.prompt = @repl.prompt
-        end
+        # Don't send any input on the initial population so we don't bump up
+        # the numbers in the dynamic prompts.
+        self.output = @repl.send_input(input) unless options[:initial]
+        self.prompt = @repl.prompt
       end
 
       def store!
-        synchronize { INMEMORY_STORAGE[id] = self }
+        INMEMORY_STORAGE[id] = self
       end
   end
 end

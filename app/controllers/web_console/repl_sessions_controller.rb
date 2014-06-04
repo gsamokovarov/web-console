@@ -14,7 +14,7 @@ module WebConsole
     def trace
       @console_session = REPLSession.find(params[:id])
       binding = @console_session.binding_stack[Integer(params[:frame_id])]
-      @console_session.new_binding(binding)
+      @console_session.binding = binding
       render json: "success"
     end
 
