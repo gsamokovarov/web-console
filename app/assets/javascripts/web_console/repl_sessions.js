@@ -1,5 +1,5 @@
 var consoleEl = document.getElementById('console');
-new REPLConsole().install(consoleEl, {
+var replConsole = new REPLConsole({
   promptLabel: consoleEl.dataset.initialPrompt,
   commandHandle: function(line) {
     var _this = this;
@@ -19,3 +19,5 @@ new REPLConsole().install(consoleEl, {
     }
   }
 });
+
+replConsole.install(consoleEl);
