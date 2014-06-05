@@ -1,6 +1,6 @@
 module ActionDispatch
   class ExceptionWrapper
-    def sources_extract
+    def extract_sources
       res = [];
 
       exception.backtrace.each do |trace|
