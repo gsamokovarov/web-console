@@ -211,11 +211,17 @@
         this.onEnterKey();
         ev.preventDefault();
         break;
+      case 80:
+        // Ctrl-P
+        if (! ev.ctrlKey) break;
       case 38:
         // Up arrow
         this.onNavigateHistory(-1);
         ev.preventDefault();
         break;
+      case 78:
+        // Ctrl-N
+        if (! ev.ctrlKey) break;
       case 40:
         // Down arrow
         this.onNavigateHistory(1);
