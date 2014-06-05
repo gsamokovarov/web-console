@@ -1,19 +1,15 @@
 module ActionDispatch
   class ExceptionWrapper
     def extract_sources
-      res = [];
-
-      exception.backtrace.each do |trace|
+      exception.backtrace.map do |trace|
         file, line, _ = trace.split(":")
         line_number = line.to_i
-        res << {
+        {
           code: source_fragment(file, line_number),
           file: file,
           line_number: line_number
         }
       end
-
-      res
     end
   end
 end
