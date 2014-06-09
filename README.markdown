@@ -8,8 +8,8 @@
 </p>
 
 <p align=center>
-  _Web Console is going through an overhaul, if you are looking for a stable
-  version documentation, checkout the links above._
+  <em>Web Console is going through an overhaul, if you are looking for a stable
+  version documentation, checkout the links above.</em>
 </p>
 
 Web Console [![Version](https://badge.fury.io/rb/web-console.png)](http://badge.fury.io/rb/web-console) [![Travis](https://travis-ci.org/rails/web-console.png)](https://travis-ci.org/rails/web-console)
