@@ -1,20 +1,26 @@
 require 'test_helper'
-require 'mocha'
 
-class REPLTest < ActiveSupport::TestCase
-  def test_extract_sources
-    ex = StandardError.new
-    wrapper = ActionDispatch::ExceptionWrapper.new({}, ex)
-    ex.stubs(:backtrace).returns(["/test/controller.rb:9 in 'index'"])
+module ActionDispatch
+  class ExceptionWrapperTest < ActiveSupport::TestCase
+    class TestError < StandardError
+      attr_reader :backtrace
 
-    wrapper.expects(:source_fragment)
-      .with('/test/controller.rb', 9)
-      .returns('some code')
+      def initialize(*backtrace)
+        @backtrace = backtrace
+      end
+    end
 
-    assert_equal([{
-      code: 'some code',
-      file: '/test/controller.rb',
-      line_number: 9
-    }], wrapper.extract_sources)
+    test '#extract_sources fetches source fragments for every backtrace' do
+      exc = TestError.new("/test/controller.rb:9 in 'index'")
+
+      wrapper = ExceptionWrapper.new({}, exc)
+      wrapper.expects(:source_fragment).with('/test/controller.rb', 9).returns('some code')
+
+      assert_equal [{
+        code: 'some code',
+        file: '/test/controller.rb',
+        line_number: 9
+      }], wrapper.extract_sources
+    end
   end
 end
