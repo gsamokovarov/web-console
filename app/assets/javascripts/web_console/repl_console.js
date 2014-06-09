@@ -103,6 +103,7 @@
     this.inner.className = "console-inner";
     this.newPromptBox();
     container.appendChild(this.inner);
+    this.focus();
   };
 
   REPLConsole.prototype.focus = function() {
