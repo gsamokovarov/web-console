@@ -2,7 +2,46 @@ module ActionDispatch
   class DebugExceptions
     RESCUES_TEMPLATE_PATH = File.expand_path('../templates', __FILE__)
 
+    def call(env)
+      request = Request.new(env)
+
+      if request.put? && m = env["PATH_INFO"].match(%r{/repl_sessions/(?<id>.+?)\z})
+        update_repl_session(m[:id], request.params[:input])
+      elsif request.post? && m = env["PATH_INFO"].match(%r{/repl_sessions/(?<id>.+?)/trace\z})
+        change_stack_trace(m[:id], request.params[:frame_id])
+      else
+        middleware_call(env)
+      end
+    end
+
+    def middleware_call(env)
+      _, headers, body = response = @app.call(env)
+
+      if headers['X-Cascade'] == 'pass'
+        body.close if body.respond_to?(:close)
+        raise ActionController::RoutingError, "No route matches [#{env['REQUEST_METHOD']}] #{env['PATH_INFO'].inspect}"
+      end
+
+      response
+    rescue Exception => exception
+      raise exception if env['action_dispatch.show_exceptions'] == false
+      render_exception(env, exception)
+    end
+
     private
+
+    def update_repl_session(id, input)
+      console_session = WebConsole::REPLSession.find(id)
+      response = console_session.save({ input: input })
+      [200, { "Content-Type" => "text/plain; charset=utf-8" }, [response.to_json]]
+    end
+
+    def change_stack_trace(id, frame_id)
+      console_session = WebConsole::REPLSession.find(id)
+      binding = console_session.binding_stack[frame_id.to_i]
+      console_session.binding = binding
+      [200, { "Content-Type" => "text/plain; charset=utf-8" }, [JSON.dump("success")]]
+    end
 
     def render_exception(env, exception)
       wrapper = ExceptionWrapper.new(env, exception)
