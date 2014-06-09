@@ -46,6 +46,7 @@ module ActionDispatch
     def render_exception(env, exception)
       wrapper = ExceptionWrapper.new(env, exception)
       traces = traces_from_wrapper(wrapper)
+      extract_sources = wrapper.extract_sources
       console_session = WebConsole::REPLSession.create(
         binding: binding_from_exception(exception),
         binding_stack: exception.__web_console_bindings_stack
@@ -61,9 +62,7 @@ module ActionDispatch
           framework_trace: traces[:framework_trace],
           full_trace: traces[:full_trace],
           routes_inspector: routes_inspector(exception),
-          source_extract: wrapper.source_extract,
-          line_number: wrapper.line_number,
-          file: wrapper.file,
+          extract_sources: extract_sources,
           console_session: console_session
         )
         file = "rescues/#{wrapper.rescue_template}"

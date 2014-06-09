@@ -24,30 +24,50 @@
 
   <script type="text/javascript">
     var traceFrames = document.getElementsByClassName('trace-frames');
-    var selectedFrame;
+    var selectedFrame, currentSource = document.getElementById('frame-source-0');
+
     for (var i = 0; i < traceFrames.length; i++) {
       traceFrames[i].addEventListener('click', function(e) {
+        e.preventDefault();
         var target = e.target;
         var frame_id = target.dataset.frameId;
-        var xhr = new XMLHttpRequest();
+
+        // Change the binding of the console.
+        changeBinding(frame_id, function() {
+          if (selectedFrame) {
+            selectedFrame.className = selectedFrame.className.replace("selected", "");
+          }
+
+          target.className += " selected";
+          selectedFrame = target;
+        });
+
+        // Change the extracted source code
+        changeSourceExtract(frame_id);
+      });
+
+      function changeBinding(frame_id, callback) {
         var url = document.getElementById('console').dataset.remotePath + "/trace";
         var params = "frame_id=" + frame_id;
-
+        var xhr = new XMLHttpRequest();
         xhr.open("POST", url, true);
         xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhr.send(params);
-
         xhr.onreadystatechange = function() {
           if(xhr.readyState == 4 && xhr.status == 200) {
-            if (selectedFrame) {
-              selectedFrame.className = selectedFrame.className.replace("selected", "");
-            }
-
-            target.className += " selected";
-            selectedFrame = target;
+            callback();
           }
         }
-      });
+      }
+
+      function changeSourceExtract(frame_id) {
+        var el = document.getElementById('frame-source-' + frame_id);
+        if (currentSource && el) {
+          currentSource.className += " hidden";
+          el.className = el.className.replace(" hidden", "");
+          currentSource = el;
+        }
+      }
     }
   </script>
 </div>
