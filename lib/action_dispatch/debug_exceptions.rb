@@ -1,6 +1,6 @@
 module ActionDispatch
   class DebugExceptions
-    RESCUES_TEMPLATE_PATH = File.expand_path('../templates', __FILE__)
+    RESCUES_TEMPLATE_PATH.replace(File.expand_path('../templates', __FILE__))
 
     def call(env)
       request = Request.new(env)

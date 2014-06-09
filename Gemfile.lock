@@ -53,11 +53,6 @@ GEM
     hike (1.2.3)
     i18n (0.6.5)
     jdbc-sqlite3 (3.7.2.1)
-    jquery-rails (3.0.4)
-      railties (>= 3.0, < 5.0)
-      thor (>= 0.14, < 2.0)
-    jquery-ui-rails (4.2.0)
-      railties (>= 3.2.16)
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
@@ -133,8 +128,6 @@ DEPENDENCIES
   actionmailer (~> 4.0)
   activerecord (~> 4.0)
   activerecord-jdbcsqlite3-adapter
-  jquery-rails
-  jquery-ui-rails
   mocha
   pry-rails
   puma
