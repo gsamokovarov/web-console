@@ -54,12 +54,6 @@ module WebConsole
       self == INMEMORY_STORAGE[id]
     end
 
-    # Returns an Enumerable of all key attributes if any is set, regardless if
-    # the object is persisted or not.
-    def to_key
-      super if persisted?
-    end
-
     protected
       # Returns a hash of the attributes and their values.
       def attributes
