@@ -4,6 +4,12 @@
   <a href=https://github.com/rails/web-console/tree/v0.2.0>v0.2.0</a>
   <a href=https://github.com/rails/web-console/tree/v0.3.0>v0.3.0</a>
   <a href=https://github.com/rails/web-console/tree/v0.4.0>v0.4.0</a>
+  <a href=https://github.com/rails/web-console/tree/v1.0.4>v1.0.4</a>
+</p>
+
+<p align=center>
+  _Web Console is going through an overhaul, if you are looking for a stable
+  version documentation, checkout the links above._
 </p>
 
 Web Console [![Version](https://badge.fury.io/rb/web-console.png)](http://badge.fury.io/rb/web-console) [![Travis](https://travis-ci.org/rails/web-console.png)](https://travis-ci.org/rails/web-console)
@@ -288,8 +294,8 @@ Some of the style sheets may be cached on the file system. Run
   [web-console-rails3]: https://github.com/gsamokovarov/web-console-rails3
   [wiki]: https://github.com/jruby/jruby/wiki/Improving-startup-time#avoid-spawning-sub-rubies
 
-Error Page with Web Console
-===
+Spoilers
+--------
 
 Web Console can now be launched by default on the Rails error page. The result is something like this:
 
