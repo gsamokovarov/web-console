@@ -26,6 +26,7 @@
     var traceFrames = document.getElementsByClassName('trace-frames');
     var selectedFrame, currentSource = document.getElementById('frame-source-0');
 
+    // Add click listeners for all stack frames
     for (var i = 0; i < traceFrames.length; i++) {
       traceFrames[i].addEventListener('click', function(e) {
         e.preventDefault();

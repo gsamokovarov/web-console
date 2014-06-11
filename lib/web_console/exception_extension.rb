@@ -1,5 +1,6 @@
 module WebConsole
   module ExceptionExtension
+    # TODO: remove prepend_features
     prepend_features Exception
 
     def set_backtrace(*)
