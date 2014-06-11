@@ -1,5 +1,4 @@
 require 'active_support/lazy_load_hooks'
-require 'web_console/engine'
 require 'web_console/repl'
 require 'web_console/repl_session'
 require 'binding_of_caller'
