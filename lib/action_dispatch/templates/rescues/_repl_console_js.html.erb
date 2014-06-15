@@ -21,6 +21,10 @@
       }
     }
 
+    function escapeHTML(html) {
+      return html.replace(/&/, "&amp;").replace(/</g, "&lt;");
+    }
+
     /**
      * Constructor for command storage.
      * It uses localStorage if available. Otherwise fallback to normal JS array.
@@ -198,7 +202,7 @@
     REPLConsole.prototype.writeOutput = function(output) {
       var consoleMessage = document.createElement('div');
       consoleMessage.className = "console-message";
-      consoleMessage.innerHTML = output;
+      consoleMessage.innerHTML = escapeHTML(output);
       this.inner.appendChild(consoleMessage);
       this.newPromptBox();
     };

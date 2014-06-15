@@ -18,7 +18,8 @@ module WebConsole
       eval_result = @binding.eval(input).inspect
       "=> #{eval_result}\n"
     rescue Exception => exc
-      exc.backtrace.join("\n")
+      p exc.inspect
+      "!! #{exc.inspect rescue exc.class.to_s rescue "Exception"}\n"
     end
   end
 end
