@@ -277,7 +277,7 @@
      * Handle input key press.
      */
     REPLConsole.prototype.onKeyPress = function(ev) {
-      var keyCode = ev.keyCode || e.which;
+      var keyCode = ev.keyCode || ev.which;
       this.insertAtCurrent(String.fromCharCode(keyCode));
       ev.stopPropagation();
       ev.preventDefault();
