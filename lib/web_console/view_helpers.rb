@@ -1,16 +1,15 @@
 module WebConsole
   module ViewHelpers
     def console
-      p binding.callers
-      @should_render = true if @should_render.nil?
+      @_should_render_console = true if @_should_render_console.nil?
 
-      if @should_render
+      if @_should_render_console
         @console_session = WebConsole::REPLSession.create(
           binding: binding.callers[1]
         )
 
-        @should_render = false
-        render('rescues/repl_console_js') + render('rescues/web_console')
+        @_should_render_console = false
+        render('rescues/web_console')
       end
     end
   end
