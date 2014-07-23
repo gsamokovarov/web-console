@@ -1,11 +1,12 @@
 module WebConsole
   module ViewHelpers
     def console
+      p binding.callers
       @should_render = true if @should_render.nil?
 
       if @should_render
         @console_session = WebConsole::REPLSession.create(
-          binding: binding.callers[0]
+          binding: binding.callers[1]
         )
 
         @should_render = false
