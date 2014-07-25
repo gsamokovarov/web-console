@@ -1,4 +1,4 @@
-class HomeController < ApplicationController
+class ExceptionTestController < ApplicationController
   def index
     test = "Test"
     test_method

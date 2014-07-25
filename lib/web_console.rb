@@ -18,3 +18,4 @@ rescue LoadError => e
 end
 
 require 'web_console/exception_extension'
+require 'web_console/railtie'
