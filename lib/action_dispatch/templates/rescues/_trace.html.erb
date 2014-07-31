@@ -46,28 +46,30 @@
         // Change the extracted source code
         changeSourceExtract(frame_id);
       });
+    }
 
-      function changeBinding(frame_id, callback) {
-        var url = document.getElementById('console').dataset.remotePath + "/trace";
-        var params = "frame_id=" + frame_id;
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", url, true);
-        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhr.send(params);
-        xhr.onreadystatechange = function() {
-          if(xhr.readyState == 4 && xhr.status == 200) {
-            callback();
-          }
+    function changeBinding(frame_id, callback) {
+      var consoleEl = document.getElementById('console');
+      if (! consoleEl) { return; }
+      var url = consoleEl.dataset.remotePath + "/trace";
+      var params = "frame_id=" + frame_id;
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", url, true);
+      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhr.send(params);
+      xhr.onreadystatechange = function() {
+        if(xhr.readyState == 4 && xhr.status == 200) {
+          callback();
         }
       }
+    }
 
-      function changeSourceExtract(frame_id) {
-        var el = document.getElementById('frame-source-' + frame_id);
-        if (currentSource && el) {
-          currentSource.className += " hidden";
-          el.className = el.className.replace(" hidden", "");
-          currentSource = el;
-        }
+    function changeSourceExtract(frame_id) {
+      var el = document.getElementById('frame-source-' + frame_id);
+      if (currentSource && el) {
+        currentSource.className += " hidden";
+        el.className = el.className.replace(" hidden", "");
+        currentSource = el;
       }
     }
   </script>
