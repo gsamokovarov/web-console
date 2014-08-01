@@ -44,6 +44,10 @@ module ActionDispatch
     end
 
     def render_exception(env, exception)
+      if exception.respond_to?(:original_exception) && exception.original_exception
+        exception = exception.original_exception
+      end
+
       wrapper = ExceptionWrapper.new(env, exception)
       traces = traces_from_wrapper(wrapper)
       extract_sources = wrapper.extract_sources
