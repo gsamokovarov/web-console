@@ -62,8 +62,9 @@
         this.addCommand = function(command) {
           previousCommandOffset = this.previousCommands.push(command);
 
-          if (this.previousCommands.length > MAX_STORAGE) {
+          if (previousCommandOffset > MAX_STORAGE) {
             this.previousCommands.splice(0, 1);
+            previousCommandOffset = MAX_STORAGE;
           }
 
           if (hasLocalStorage) {
