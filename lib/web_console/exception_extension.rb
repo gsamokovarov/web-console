@@ -1,7 +1,7 @@
 class Exception
   original_set_backtrace = instance_method(:set_backtrace)
 
-  if WebConsole.binding_of_caller_available
+  if WebConsole.binding_of_caller_available?
     define_method :set_backtrace do |*args|
       unless Thread.current[:__web_console_exception_lock]
         Thread.current[:__web_console_exception_lock] = true

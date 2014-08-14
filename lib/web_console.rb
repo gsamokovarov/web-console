@@ -7,6 +7,8 @@ require 'action_dispatch/debug_exceptions'
 module WebConsole
   class << self
     attr_accessor :binding_of_caller_available
+
+    alias_method :binding_of_caller_available?, :binding_of_caller_available
   end
 end
 
