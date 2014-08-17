@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    web-console (1.0.4)
+    web-console (2.0.0.beta1)
       activemodel (~> 4.0)
       binding_of_caller
       railties (~> 4.0)
