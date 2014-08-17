@@ -1,0 +1,15 @@
+<script>
+  var config = {
+    terminal: {
+      colors: <%= raw WebConsole.config.style.colors.to_json %>
+    },
+
+    transport: {
+      url: {
+        input: "<%= web_console.input_console_session_path(@console_session) %>",
+        pendingOutput: "<%= web_console.pending_output_console_session_path(@console_session) %>",
+        configuration: "<%= web_console.configuration_console_session_path(@console_session) %>"
+      }
+    }
+  };
+</script>
