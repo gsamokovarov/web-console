@@ -19,7 +19,7 @@ module WebConsole
     # to prepare for console rendering.
     def console(console_binding = nil)
       if WebConsole.binding_of_caller_available?
-        console_binding ||= binding.callers[1]
+        console_binding ||= binding.of_caller(1)
       end
 
       @_console_binding = console_binding
