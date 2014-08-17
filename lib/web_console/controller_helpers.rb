@@ -2,8 +2,17 @@ module WebConsole
   module ControllerHelpers
     extend ActiveSupport::Concern
 
+    # This makes sure the console is rendered once
+    # in a controller session.
+    attr_internal_accessor :should_render_console
+
     included do
       prepend_after_action :render_console
+    end
+
+    def initialize
+      super
+      @_should_render_console = true
     end
 
     # Helper for capturing a controller binding
@@ -21,7 +30,7 @@ module WebConsole
     # Attempt to render a web console if a console binding is set.
     # Should only be called as an after_action.
     def render_console
-      return unless @_console_binding
+      return unless @_console_binding && @_should_render_console
 
       console_html = ActionView::Base.new(ActionController::Base.view_paths,
         console_session: REPLSession.create(binding: @_console_binding)
