@@ -5,7 +5,7 @@ module ActionDispatch
         file, line = trace.split(":")
         line_number = line.to_i
         {
-          code: source_fragment(file, line_number),
+          code: source_fragment(file, line_number) || {},
           file: file,
           line_number: line_number
         }
