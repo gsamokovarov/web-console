@@ -8,14 +8,14 @@
 </p>
 
 <p align=center>
-  <em>Web Console is going through an overhaul, if you are looking for a stable
+  <em>Web Console is going through an overhaul. If you are looking for a stable
   version documentation, checkout the links above.</em>
 </p>
 
 Web Console [![Travis](https://travis-ci.org/rails/web-console.png)](https://travis-ci.org/rails/web-console)
 ===========
 
-Web Console is a debugging console for you Rails application. It is launched whenever an error occurs or manually by using the console helper.
+Web Console is a debugging console for your Rails application. It is launched whenever an error occurs or manually by using the console helper.
 
 
 Requirements
@@ -38,7 +38,7 @@ Installation
 
 Add the `web-console` gem to your Gemfile. Be sure to use the master branch version for now:
 
-    gem 'web-console', git: 'git://github.com/rails/web-console
+    gem 'web-console', git: 'git://github.com/rails/web-console'
 
 
 Use Cases
