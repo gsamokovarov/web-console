@@ -4,6 +4,10 @@ class ExceptionTestController < ApplicationController
     test_method
   end
 
+  def xhr
+    raise "asda" if request.xhr?
+  end
+
   def test_method
     test2 = "Test2"
     raise
