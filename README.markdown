@@ -31,7 +31,7 @@ _Web Console_ is built explicitly for _Rails 4_.
 Dependencies
 ------------
 
-Web Console is bundled with `bindings_of_caller`. Because of the dependency, the gem only works on MRI Ruby at the moment.
+Web Console is bundled with [`binding_of_caller`](https://github.com/banister/binding_of_caller). Because of the dependency, the gem only works on MRI Ruby at the moment.
 
 Installation
 ------------
@@ -61,7 +61,7 @@ FAQ
 
 ### Is there any plan to support JRuby and Rubinius?
 
-`bindings_of_caller` only works on MRI Ruby at the moment. There's a plan to make Web Console work with JRuby and Rubinius, but most likely without the ability to navigate exception backtrace.
+[`binding_of_caller`](https://github.com/banister/binding_of_caller) only works on MRI Ruby at the moment. There's a plan to make Web Console work with JRuby and Rubinius, but most likely without the ability to navigate exception backtrace.
 
 ### How to get local and instance variables of a binding in the console?
 
