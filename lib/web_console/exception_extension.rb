@@ -1,24 +1,18 @@
 class Exception
-  attr_accessor :__web_console_bindings_stack
+  original_set_backtrace = instance_method(:set_backtrace)
 
-  class << self
-    alias :original_new :new
-
-    def new(*args)
-      obj = original_new(*args)
-
-      if WebConsole.binding_of_caller_available?
-        unless Thread.current[:__web_console_exception_lock]
-          Thread.current[:__web_console_exception_lock] = true
-          begin
-            obj.__web_console_bindings_stack = binding.callers.drop(1)
-          ensure
-            Thread.current[:__web_console_exception_lock] = false
-          end
+  if WebConsole.binding_of_caller_available?
+    define_method :set_backtrace do |*args|
+      unless Thread.current[:__web_console_exception_lock]
+        Thread.current[:__web_console_exception_lock] = true
+        begin
+          @__web_console_bindings_stack = binding.callers.drop(1)
+        ensure
+          Thread.current[:__web_console_exception_lock] = false
         end
       end
 
-      obj
+      original_set_backtrace.bind(self).call(*args)
     end
   end
 
