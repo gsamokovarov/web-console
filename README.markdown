@@ -69,17 +69,7 @@ To install it in your current application, add the following to your `Gemfile`.
 
 ```ruby
 group :development do
-  gem 'web-console', '2.0.0.beta2'
-end
-```
-
-For _JRuby_ support, you need to add an unreleased version of
-`binding_of_caller`.
-
-```ruby
-group :development do
-  gem 'web-console', '2.0.0.beta2'
-  gem 'binding_of_caller', github: 'banister/binding_of_caller'
+  gem 'web-console', '2.0.0.beta3'
 end
 ```
 
@@ -307,18 +297,6 @@ is even slower. Read more about the problem at the _JRuby_ [wiki].
 
 ### I'm running JRuby and there's no console on the default error page.
 
-_JRuby_ support in the default error page requires the latest is experimental
-and requires an unreleased version of `web-console` and `binding_of_caller`.
-
-To try it out, put this in your Gemfile.
-
-```ruby
-group :development do
-  gem 'web-console', github: 'rails/web-console'
-  gem 'binding_of_caller', github: 'banister/binding_of_caller'
-end
-```
-
 You would also have to run you Rails server in JRuby's interpreted mode. Enable
 it with code snippet below, then start your development Rails server with
 `rails server`, as usual.
@@ -329,9 +307,6 @@ export JRUBY_OPTS=-J-Djruby.compile.mode=OFF
 # If you run JRuby 1.7.12 and above, you can use:
 # export JRUBY_OPTS=--dev
 ```
-
-_(Please, note that we don't guarantee master to be stable and we
-will appreciate any issue reports!)_
 
 ### Changing the colors is broken.
 
