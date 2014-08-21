@@ -8,7 +8,7 @@
 </p>
 
 <p align=center>
-  <em>Web Console is currently in beta for `2.0.0`. If you're searching for a stable
+  <em>Web Console is currently in beta for <code>2.0.0</code>. If you're searching for a stable
   version documentation, checkout the links above.</em>
 </p>
 
@@ -33,8 +33,6 @@ Drop `<%= console %>` anywhere in a view to launch an interactive console sessio
 execute code in it.
 
 ![image](https://cloud.githubusercontent.com/assets/705116/3825939/7e284de0-1d5a-11e4-9896-81465a38da76.gif)
-
-https://github.com/gsamokovarov/web-console-pry/tree/v0.2.0
 
 **A [VT100] compatible terminal.**
 
