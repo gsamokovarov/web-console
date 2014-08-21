@@ -38,7 +38,7 @@ https://github.com/gsamokovarov/web-console-pry/tree/v0.2.0
 
 **A [VT100] compatible terminal.**
 
-Running `rails console` is quite handy. Sometimes, through, you can't easily
+Running `rails console` is quite handy. Sometimes, though, you can't easily
 access it, or maybe you want to easily share your session with a friend without
 configuring a remote desktop server.
 
