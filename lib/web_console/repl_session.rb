@@ -17,10 +17,10 @@ module WebConsole
     class << self
       # Finds a session by its id.
       def find(id)
-        INMEMORY_STORAGE[id.to_i] or raise NotFound.new('Session unavailable')
+        INMEMORY_STORAGE[id.to_i] or raise NotFound, 'Session unavailable'
       end
 
-      # Creates an already persisted consolse session.
+      # Creates an already persisted console session.
       #
       # Use this method if you need to persist a session, without providing it
       # any input.
@@ -37,7 +37,7 @@ module WebConsole
 
     def binding=(binding)
       @binding = binding
-      @repl = WebConsole::REPL.new binding
+      @repl = WebConsole::REPL.new(binding)
     end
 
     # Saves the model into the in-memory storage.
@@ -55,6 +55,7 @@ module WebConsole
     end
 
     protected
+
       # Returns a hash of the attributes and their values.
       def attributes
         return Hash[ATTRIBUTES.zip([nil])]
@@ -69,6 +70,7 @@ module WebConsole
       end
 
     private
+
       def ensure_consequential_id!
         self.id = begin
           @@counter ||= 0
