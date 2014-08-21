@@ -16,10 +16,10 @@ Gem::Specification.new do |s|
 
   rails_version = "~> 4.0"
 
-  s.add_dependency "railties",        rails_version
-  s.add_dependency "activemodel",     rails_version
-  s.add_dependency "sprockets-rails", ">= 2.0", "< 4.0"
-  s.add_dependency "binding_of_caller"
+  s.add_dependency "railties",          rails_version
+  s.add_dependency "activemodel",       rails_version
+  s.add_dependency "sprockets-rails",   ">= 2.0", "< 4.0"
+  s.add_dependency "binding_of_caller", "0.7.3.pre1"
 
   # We need those for the testing application to run.
   s.add_development_dependency "actionmailer", rails_version
