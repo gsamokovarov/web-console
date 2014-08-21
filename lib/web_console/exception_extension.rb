@@ -1,3 +1,4 @@
+# Thanks to @charliesome who wrote this bit for better_errors.
 class Exception
   original_set_backtrace = instance_method(:set_backtrace)
 
