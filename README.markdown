@@ -278,11 +278,15 @@ end
 You may also change the font, which is following the CSS font property syntax.
 By default it is `large DejaVu Sans Mono, Liberation Mono, monospace`.
 
-Shout-out
----------
+Credits
+-------
 
-Great thanks to [Charlie Somerville] for [better_errors]! Most of the exception
-binding code is coming straight out of the [better_errors] project.
+* Shoutout to [Charlie Somerville] for [better_errors]! Most of the exception
+  binding code is coming straight out of the [better_errors] project.
+
+* _Web Console_ wouldn't be possible without the work [John Mair] put in
+  [binding_of_caller]. This is the technology that let us execute a console
+  right where an error occured.
 
 FAQ
 ---
@@ -325,4 +329,6 @@ The interactive console executes Ruby code. Invoking `instance_variables` and
   [web-console-rails3]: https://github.com/gsamokovarov/web-console-rails3
   [wiki]: https://github.com/jruby/jruby/wiki/Improving-startup-time#avoid-spawning-sub-rubies
   [better_errors]: https://github.com/charliesome/better_errors
+  [binding_of_caller]: https://github.com/banister/binding_of_caller
   [Charlie Somerville]: https://github.com/charliesome
+  [John Mair]: https://github.com/banister
