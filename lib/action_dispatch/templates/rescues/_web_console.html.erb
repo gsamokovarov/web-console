@@ -36,11 +36,12 @@
       // Add CSS styles dynamically. This probably doesnt work for IE <8.
       var style = document.createElement('style');
       style.type = 'text/css';
-      style.innerHTML = "#console { position: fixed; bottom: 0; width: 100%; height: 150px; border: 1px solid; padding-bottom: 20px; } " +
-        "#console div.console-inner { height: 100%; overflow: auto; background: #333; padding: 10px; } " +
-        "#console div.console-prompt-box { color: #fff; } " +
-        "#console div.console-message { color: #1ad027; } " +
-        "#console div.console-focus span.console-cursor { background:#fefefe; color:#333; font-weight:bold; }";
+      style.innerHTML =
+        "#console { position: fixed; bottom: 0; width: 100%; height: 150px; border: 1px solid; padding-bottom: 20px; } " +
+        "#console div.console-inner { font-family: monospace; font-size: 11px; height: 100%; overflow: auto; background: #333; padding: 10px; } " +
+        "#console div.console-prompt-box { color: #FFF; } " +
+        "#console div.console-message { color: #1AD027; } " +
+        "#console div.console-focus span.console-cursor { background: #FEFEFE; color: #333; font-weight: bold; }";
       document.getElementsByTagName('head')[0].appendChild(style);
 
       /**
