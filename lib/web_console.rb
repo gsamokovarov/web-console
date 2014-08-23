@@ -4,7 +4,7 @@ require 'active_support/lazy_load_hooks'
 require 'action_dispatch/exception_wrapper'
 require 'action_dispatch/debug_exceptions'
 
-require 'web_console/exception_extension'
+require 'web_console/core_ext/exception'
 require "web_console/view_helpers"
 require "web_console/controller_helpers"
 require 'web_console/colors'
