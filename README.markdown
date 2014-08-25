@@ -57,7 +57,7 @@ _Web Console_ has been tested on the following rubies.
 There is an experimental _JRuby_ 1.7 support. See Installation section for more
 information.
 
-_Rubunius_ in 1.9 mode may work, but it hasn't been explicitly tested.
+_Rubinius_ in 1.9 mode may work, but it hasn't been explicitly tested.
 
 _Web Console_ is built explicitly for _Rails 4_. Check out the
 [web-console-rails3] project for a _Rails 3_ compatible build.
