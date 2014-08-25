@@ -2,41 +2,39 @@ module WebConsole
   module ControllerHelpers
     extend ActiveSupport::Concern
 
-    # This makes sure the console is rendered once
-    # in a controller session.
-    attr_internal_accessor :should_render_console
-
     included do
-      prepend_after_action :render_console
+      # Flag to decide whether the console should be rendered.
+      attr_internal :should_render_console
+
+      # Storage of a binding the console to be rendered in.
+      attr_internal :console_binding
+
+      prepend_after_action :inject_console_into_view
     end
 
-    def initialize
+    def initialize(*)
       super
+
       @_should_render_console = true
     end
 
-    # Helper for capturing a controller binding
-    # to prepare for console rendering.
-    def console(console_binding = nil)
-      if WebConsole.binding_of_caller_available?
-        console_binding ||= binding.of_caller(1)
-      end
-
-      @_console_binding = console_binding
+    # Helper for capturing a controller binding to prepare for console
+    # rendering.
+    def console(binding = nil)
+      @_console_binding = binding || ::Kernel.binding.of_caller(1)
     end
 
     private
 
-    # Attempt to render a web console if a console binding is set.
-    # Should only be called as an after_action.
-    def render_console
-      return unless @_console_binding && @_should_render_console
+      # Attempt to inject an interactive console to a view.
+      def inject_console_into_view
+        return unless console_binding && should_render_console
 
-      console_html = ActionView::Base.new(ActionController::Base.view_paths,
-        console_session: REPLSession.create(binding: @_console_binding)
-      ).render(partial: 'rescues/web_console')
+        console_html = ActionView::Base.new(ActionController::Base.view_paths,
+          console_session: REPLSession.create(binding: @_console_binding)
+        ).render(partial: 'rescues/web_console')
 
-      response.body = response.body + console_html
-    end
+        response.body = response.body + console_html
+      end
   end
 end
