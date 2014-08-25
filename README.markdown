@@ -288,6 +288,9 @@ Credits
   [binding_of_caller]. This is the technology that let us execute a console
   right where an error occured.
 
+* Thanks to [Charles Oliver Nutter] for all the JRuby feedback and support he
+  has given us.
+
 FAQ
 ---
 
@@ -332,3 +335,4 @@ The interactive console executes Ruby code. Invoking `instance_variables` and
   [binding_of_caller]: https://github.com/banister/binding_of_caller
   [Charlie Somerville]: https://github.com/charliesome
   [John Mair]: https://github.com/banister
+  [Charles Oliver Nutter]: https://github.com/headius
