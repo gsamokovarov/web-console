@@ -30,6 +30,7 @@ module WebConsole
 
       ActiveSupport.on_load :action_controller do
         prepend_view_path File.dirname(__FILE__) + '/../action_dispatch/templates'
+        include WebConsole::ControllerHelpers
       end
     end
 

@@ -6,6 +6,7 @@ require 'action_dispatch/debug_exceptions'
 
 require 'web_console/exception_extension'
 require "web_console/view_helpers"
+require "web_console/controller_helpers"
 require 'web_console/colors'
 require 'web_console/engine'
 require 'web_console/repl'
