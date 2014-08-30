@@ -8,6 +8,11 @@ module WebConsole
         console
       end
 
+      def renders_console_only_once
+        render text: '<h1 id="greeting">Hello World</h1>'
+        2.times { console }
+      end
+
       def doesnt_render_console_on_non_html_requests
         render json: {}
         console
@@ -20,6 +25,12 @@ module WebConsole
       get :render_console_ontop_of_text
 
       assert_select "#console"
+    end
+
+    test "renders console only once" do
+      get :renders_console_only_once
+
+      assert_select "#console", 1
     end
 
     test "keeps the original content" do
