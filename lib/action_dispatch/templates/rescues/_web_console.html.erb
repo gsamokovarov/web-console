@@ -362,7 +362,7 @@
         var _this = this;
         var xhr = new XMLHttpRequest();
         var url = consoleDiv.dataset.remotePath;
-        var params = "input=" + line;
+        var params = "input=" + encodeURIComponent(line);
 
         xhr.open("PUT", url, true);
         xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -371,7 +371,6 @@
         xhr.onreadystatechange = function() {
           if(xhr.readyState == 4 && xhr.status == 200) {
             var response = JSON.parse(xhr.responseText);
-            console.log(response.output);
             _this.writeOutput(response.output);
           }
         }
