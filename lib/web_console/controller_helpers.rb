@@ -28,13 +28,17 @@ module WebConsole
 
       # Attempt to inject an interactive console to a view.
       def inject_console_into_view
-        return unless console_binding && should_render_console
+        return unless can_render_console?
 
         console_html = ActionView::Base.new(ActionController::Base.view_paths,
           console_session: REPLSession.create(binding: @_console_binding)
         ).render(partial: 'rescues/web_console')
 
         response.body = response.body + console_html
+      end
+
+      def can_render_console?
+        console_binding && should_render_console && content_type == Mime::HTML
       end
   end
 end

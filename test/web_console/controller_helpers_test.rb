@@ -7,6 +7,11 @@ module WebConsole
         render text: '<h1 id="greeting">Hello World</h1>'
         console
       end
+
+      def doesnt_render_console_on_non_html_requests
+        render json: {}
+        console
+      end
     end
 
     tests TestController
@@ -21,6 +26,12 @@ module WebConsole
       get :render_console_ontop_of_text
 
       assert_select "#greeting", "Hello World"
+    end
+
+    test "doesn't inject in non HTML views" do
+      get :doesnt_render_console_on_non_html_requests
+
+      assert_no_match %r{#console}, @response.body
     end
   end
 end
