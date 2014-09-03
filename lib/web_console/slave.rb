@@ -1,6 +1,3 @@
-require 'pty'
-require 'io/console'
-
 module WebConsole
   # = Slave\ Process\ Wrapper
   #
@@ -21,6 +18,11 @@ module WebConsole
     attr_reader :pid
 
     def initialize(command = WebConsole.config.command, options = {})
+      # Windows doesn't have PTY, requiring it at the top level will fail the
+      # whole program execution.
+      require 'pty'
+      require 'io/console'
+
       using_term(options[:term] || WebConsole.config.term) do
         @output, @input, @pid = PTY.spawn(command.to_s)
       end
