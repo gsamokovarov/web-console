@@ -1,3 +1,4 @@
+require 'pty'
 require 'stringio'
 require 'test_helper'
 
