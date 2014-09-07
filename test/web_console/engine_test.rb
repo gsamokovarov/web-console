@@ -48,6 +48,15 @@ module WebConsole
       end
     end
 
+    test 'whitelisted ips with IPv6 format as default' do
+      new_uninitialized_app do |app|
+        app.config.web_console.whitelisted_ips = [ '127.0.0.1', '::1' ]
+        app.initialize!
+
+        assert_equal [ IPAddr.new('127.0.0.1'), IPAddr.new('::1') ], app.config.web_console.whitelisted_ips
+      end
+    end
+
     test 'whitelisted ips are normalized and unique IPAddr' do
       new_uninitialized_app do |app|
         app.config.web_console.whitelisted_ips = [ '127.0.0.1', '127.0.0.1', nil, '', ' ' ]
