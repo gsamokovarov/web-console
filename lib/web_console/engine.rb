@@ -15,7 +15,7 @@ module WebConsole
       c.default_mount_path = '/console'
       c.timeout            = 0.seconds
       c.term               = 'xterm-color'
-      c.whitelisted_ips    = '127.0.0.1'
+      c.whitelisted_ips    = ['127.0.0.1', '::1']
 
       c.style = ActiveSupport::OrderedOptions.new.tap do |s|
         s.colors = 'light'
