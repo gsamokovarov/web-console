@@ -1,9 +1,7 @@
 <% if @console_session && @console_session.binding %>
   <div id="console"
     data-remote-path='<%= "console/repl_sessions/#{@console_session.id}" %>'
-    data-initial-prompt='<%= @console_session.prompt %>'>
-    <div id="resizer" style="width:100%; height: 3px; cursor: ns-resize;"></div>
-  </div>
+    data-initial-prompt='<%= @console_session.prompt %>'></div>
 
   <script type="text/javascript">
 
@@ -40,7 +38,7 @@
         "#console { position: fixed; left: 0; bottom: 0; width: 100%; height: 150px; border: 1px solid; padding-bottom: 20px; } " +
         "#console div.console-inner { font-family: monospace; font-size: 11px; height: 100%; overflow: auto; background: #333; padding: 10px; } " +
         "#console div.console-prompt-box { color: #FFF; } " +
-        "#console div.console-message { color: #1AD027; } " +
+        "#console pre.console-message { color: #1AD027; margin: 0; } " +
         "#console div.console-focus span.console-cursor { background: #FEFEFE; color: #333; font-weight: bold; }";
       document.getElementsByTagName('head')[0].appendChild(style);
 
@@ -90,12 +88,25 @@
         }
       }
 
+      // HTML strings for dynamic elements.
+      var consoleInnerHtml = [
+        "<div id='resizer' style='width:100%; height: 3px; cursor: ns-resize;'></div>",
+        "<div class='console-inner'></div>",
+        "<input id='clipboard' type='text'>"
+      ].join("");
+
+      var promptBoxHtml = [
+        "<span class='console-prompt-label' style='display: inline;'></span>",
+        "<pre class='console-prompt-display' style='display: inline;'></pre>"
+      ].join("");
+
       // REPLConsole Constructor
       function REPLConsole(config) {
         this.commandStorage = new CommandStorage();
         this.prompt = config && config.promptLabel ? config.promptLabel : ' >>';
         this.commandHandle = config && config.commandHandle ? config.commandHandle : function() { return this; }
       }
+
 
       REPLConsole.prototype.install = function(container) {
         var _this = this;
@@ -124,16 +135,34 @@
         });
 
         // Render the console.
-        this.inner = document.createElement('div');
-        this.inner.className = "console-inner";
+        container.innerHTML = consoleInnerHtml;
+        // Make the console resizable.
+        document.getElementById('resizer').addEventListener('mousedown', function(ev) {
+          var startY = ev.clientY;
+          var startHeight = parseInt(document.defaultView.getComputedStyle(consoleDiv).height, 10);
+
+          var doDrag = function(e) {
+            consoleDiv.style.height = (startHeight + startY - e.clientY) + 'px';
+          };
+
+          var stopDrag = function(e) {
+            document.documentElement.removeEventListener('mousemove', doDrag, false);
+            document.documentElement.removeEventListener('mouseup', stopDrag, false);
+          };
+
+          document.documentElement.addEventListener('mousemove', doDrag, false);
+          document.documentElement.addEventListener('mouseup', stopDrag, false);
+        });
+
+        // Initialize
+        this.inner = container.getElementsByClassName('console-inner')[0];
+        this.clipboard = document.getElementById('clipboard');
         this.newPromptBox();
-        container.appendChild(this.inner);
         this.focus();
       };
 
       REPLConsole.prototype.focus = function() {
         this.focused = true;
-
         if (! hasClass(this.inner, "console-focus")) {
           addClass(this.inner, "console-focus");
         }
@@ -149,26 +178,20 @@
        * Add a new empty prompt box to the console.
        */
       REPLConsole.prototype.newPromptBox = function() {
-        // Remove the caret from previous prompt box if any.
-        if (this.promptInput) {
+        // Remove the caret from previous prompt display if any.
+        if (this.promptDisplay) {
           this.removeCaretFromPrompt();
         }
 
         var promptBox = document.createElement('div');
         promptBox.className = "console-prompt-box";
-        var promptLabel = document.createElement('span');
-        promptLabel.className ="console-prompt-label";
-        promptLabel.style.display = "inline";
-        promptLabel.innerHTML = this.prompt;
-        var promptInput = document.createElement('span');
-        promptInput.className = "console-prompt";
-        promptBox.appendChild(promptLabel);
-        promptBox.appendChild(promptInput);
-        this.inner.appendChild(promptBox);
-
-        this.promptLabel = promptLabel;
-        this.promptInput = promptInput;
+        promptBox.innerHTML = promptBoxHtml;
+        this.promptLabel = promptBox.getElementsByClassName('console-prompt-label')[0];
+        this.promptDisplay = promptBox.getElementsByClassName('console-prompt-display')[0];
+        // Render the prompt box
         this.setInput("");
+        this.promptLabel.innerHTML = this.prompt;
+        this.inner.appendChild(promptBox);
         this.scrollToBottom();
       };
 
@@ -186,7 +209,18 @@
         this._caretPos = caretPos === undefined ? input.length : caretPos;
         this._input = input;
         this.renderInput();
-      }
+      };
+
+      /**
+       * Add some text to the existing input.
+       */
+      REPLConsole.prototype.addToInput = function(val, caretPos) {
+        caretPos = caretPos || this._caretPos;
+        var before = this._input.substring(0, caretPos);
+        var after = this._input.substring(caretPos, this._input.length);
+        var newInput =  before + val + after;
+        this.setInput(newInput, caretPos + val.length);
+      };
 
       /**
        * Render the input prompt. This is called whenever
@@ -194,11 +228,11 @@
        */
       REPLConsole.prototype.renderInput = function() {
         // Clear the current input.
-        removeAllChildren(this.promptInput);
+        removeAllChildren(this.promptDisplay);
 
         var promptCursor = document.createElement('span');
         promptCursor.className = "console-cursor";
-        var before, current, master;
+        var before, current, after;
 
         if (this._caretPos < 0) {
           before = this._input;
@@ -213,14 +247,14 @@
           after = this._input.substring(this._caretPos + 1, this._input.length);
         }
 
-        this.promptInput.appendChild(document.createTextNode(before));
+        this.promptDisplay.appendChild(document.createTextNode(before));
         promptCursor.appendChild(document.createTextNode(current));
-        this.promptInput.appendChild(promptCursor);
-        this.promptInput.appendChild(document.createTextNode(after));
+        this.promptDisplay.appendChild(promptCursor);
+        this.promptDisplay.appendChild(document.createTextNode(after));
       };
 
       REPLConsole.prototype.writeOutput = function(output) {
-        var consoleMessage = document.createElement('div');
+        var consoleMessage = document.createElement('pre');
         consoleMessage.className = "console-message";
         consoleMessage.innerHTML = escapeHTML(output);
         this.inner.appendChild(consoleMessage);
@@ -286,6 +320,22 @@
             this.deleteAtCurrent();
             ev.preventDefault();
             break;
+          case 86:
+            // ctrl/command-v
+            if (ev.ctrlKey || ev.metaKey) {
+              // Let the pasted text go to our clipboard.
+              this.clipboard.focus();
+
+              // Pasting to clipboard doesn't happen immediately,
+              // so we have to wait for a while to get the pasted text.
+              var _this = this;
+              setTimeout(function() {
+                _this.addToInput(_this.clipboard.value);
+                _this.clipboard.value = "";
+                _this.clipboard.blur();
+              }, 10);
+            }
+            break;
           default:
             break;
         }
@@ -330,29 +380,6 @@
 
       window.REPLConsole = REPLConsole;
     })();
-
-    // Make the console resizable (not sure if works in all browser)
-    var consoleDiv = document.getElementById('console');
-    var resizer = document.getElementById('resizer');
-
-    var initDrag = function(e) {
-      var startY = e.clientY;
-      var startHeight = parseInt(document.defaultView.getComputedStyle(consoleDiv).height, 10);
-
-      var doDrag = function(e) {
-        consoleDiv.style.height = (startHeight + startY - e.clientY) + 'px';
-      };
-
-      var stopDrag = function(e) {
-        document.documentElement.removeEventListener('mousemove', doDrag, false);
-        document.documentElement.removeEventListener('mouseup', stopDrag, false);
-      };
-
-      document.documentElement.addEventListener('mousemove', doDrag, false);
-      document.documentElement.addEventListener('mouseup', stopDrag, false);
-    }
-
-    resizer.addEventListener('mousedown', initDrag, false);
 
     // Install the console
     var consoleDiv = document.getElementById('console');
