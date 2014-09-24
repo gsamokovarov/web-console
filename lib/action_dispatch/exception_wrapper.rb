@@ -10,7 +10,7 @@ module ActionDispatch
           file: file,
           line_number: line_number
         }
-      end
+      end if exception.backtrace
     end
   end
 end

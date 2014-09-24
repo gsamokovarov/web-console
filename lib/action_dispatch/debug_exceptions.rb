@@ -52,8 +52,8 @@ module ActionDispatch
         traces = traces_from_wrapper(wrapper)
         extract_sources = wrapper.extract_sources
         console_session = WebConsole::REPLSession.create(
-          binding: binding_from_exception(exception),
-          binding_stack: exception.__web_console_bindings_stack
+          binding: exception.bindings.first,
+          binding_stack: exception.bindings
         )
         log_error(env, wrapper)
 
@@ -106,10 +106,6 @@ module ActionDispatch
           framework_trace: framework_trace,
           full_trace: application_trace + framework_trace
         }
-      end
-
-      def binding_from_exception(exception)
-        exception.__web_console_bindings_stack[0]
       end
   end
 end
