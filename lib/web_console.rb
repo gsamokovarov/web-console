@@ -12,6 +12,7 @@ require 'web_console/engine'
 require 'web_console/repl'
 require 'web_console/repl_session'
 require 'web_console/slave'
+require 'web_console/unsupported_platforms'
 
 module WebConsole
   # Shortcut the +WebConsole::Engine.config.web_console+.
