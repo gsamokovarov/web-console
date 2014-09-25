@@ -17,6 +17,7 @@ var AJAXTransport = (function(WebConsole) {
       configuration: options.url
     } : options.url;
 
+    this.uid = options.uid;
     this.pendingInput  = '';
 
     this.initializeEventHandlers();
@@ -38,8 +39,7 @@ var AJAXTransport = (function(WebConsole) {
   AJAXTransport.prototype.createRequest = function(method, url, options) {
     options || (options = {});
 
-    var request = new XMLHttpRequest;
-    request.open(method, url);
+    var params = '';
 
     if (typeof options.form === 'object') {
       var content = [], form = options.form;
@@ -49,15 +49,25 @@ var AJAXTransport = (function(WebConsole) {
         content.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
       }
 
+      params = content.join('&');
+      if (method === 'GET' ? '?' : '') params = '?' + params;
+    }
+
+    var request = new XMLHttpRequest;
+    request.open(method, method === 'GET' ? url + params : url);
+
+    if (params && method != 'GET') {
       request.setRequestHeader('Content-Type', FORM_MIME_TYPE);
-      request.data = content.join('&');
+      request.data = params;
     }
 
     return request;
   };
 
   AJAXTransport.prototype.pollForPendingOutput = function() {
-    var request = this.createRequest('GET', this.url.pendingOutput);
+    var request = this.createRequest('GET', this.url.pendingOutput, {
+      form: { uid: this.uid }
+    });
 
     var self = this;
     request.onreadystatechange = function() {
@@ -90,7 +100,7 @@ var AJAXTransport = (function(WebConsole) {
     this.sendingInput = true;
 
     var request = this.createRequest('PUT', this.url.input, {
-      form: { input: this.pendingInput + input }
+      form: { input: this.pendingInput + input, uid: this.uid }
     });
 
     // Clear the pending input.
@@ -117,7 +127,7 @@ var AJAXTransport = (function(WebConsole) {
     if (this.disconnected) return;
 
     var request = this.createRequest('PUT', this.url.configuration, {
-      form: { width: cols, height: rows }
+      form: { width: cols, height: rows, uid: this.uid }
     });
 
     // Just send the configuration and don't care about any output.

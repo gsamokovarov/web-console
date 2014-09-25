@@ -365,7 +365,8 @@
         var params = "input=" + encodeURIComponent(line);
 
         xhr.open("PUT", url, true);
-        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
         xhr.send(params);
 
         xhr.onreadystatechange = function() {

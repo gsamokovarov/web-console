@@ -9,7 +9,9 @@
         input: "<%= web_console.input_console_session_path(@console_session) %>",
         pendingOutput: "<%= web_console.pending_output_console_session_path(@console_session) %>",
         configuration: "<%= web_console.configuration_console_session_path(@console_session) %>"
-      }
+      },
+
+      uid: "<%= @console_session.uid %>"
     }
   };
 </script>

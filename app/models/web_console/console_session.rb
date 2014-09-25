@@ -24,12 +24,25 @@ module WebConsole
     # Raised when an operation transition to an invalid state.
     Invalid = Class.new(Error)
 
+    # Raised when a request doesn't know the slave process uid.
+    Unauthorized = Class.new(Error)
+
     class << self
       # Finds a session by its pid.
       #
       # Raises WebConsole::ConsoleSession::Expired if there is no such session.
       def find(pid)
         INMEMORY_STORAGE[pid.to_i] or raise Unavailable, 'Session unavailable'
+      end
+
+      # Finds a session by its pid.
+      #
+      # Raises WebConsole::ConsoleSession::Expired if there is no such session.
+      # Raises WebConsole::ConsoleSession::Unauthorized if uid doesn't match.
+      def find_by_pid_and_uid(pid, uid)
+        find(pid).tap do |console_session|
+          raise Unauthorized if console_session.uid != uid
+        end
       end
 
       # Creates an already persisted consolse session.

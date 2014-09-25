@@ -17,7 +17,7 @@ module WebConsole
     class << self
       # Finds a session by its id.
       def find(id)
-        INMEMORY_STORAGE[id.to_i] or raise NotFound, 'Session unavailable'
+        INMEMORY_STORAGE[id] or raise NotFound, 'Session unavailable'
       end
 
       # Creates an already persisted console session.
@@ -31,7 +31,7 @@ module WebConsole
 
     def initialize(attributes = {})
       self.attributes = attributes
-      ensure_consequential_id!
+      generate_secure_id!
       populate_repl_attributes!(initial: true)
     end
 
@@ -71,11 +71,8 @@ module WebConsole
 
     private
 
-      def ensure_consequential_id!
-        self.id = begin
-          @@counter ||= 0
-          @@counter  += 1
-        end
+      def generate_secure_id!
+        self.id = SecureRandom.hex(16)
       end
 
       def populate_repl_attributes!(options = {})

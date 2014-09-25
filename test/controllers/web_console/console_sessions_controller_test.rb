@@ -24,7 +24,7 @@ module WebConsole
       assert_not_nil console_session = assigns(:console_session)
 
       console_session.instance_variable_get(:@slave).stubs(:send_input).raises(ArgumentError)
-      put :input, id: console_session.pid, use_route: 'web_console'
+      put :input, id: console_session.pid, uid: console_session.uid, use_route: 'web_console'
 
       assert_response :unprocessable_entity
     end
@@ -35,7 +35,7 @@ module WebConsole
       assert_not_nil console_session = assigns(:console_session)
 
       console_session.expects(:send_input)
-      put :input, input: ' ', id: console_session.pid, use_route: 'web_console'
+      put :input, input: ' ', id: console_session.pid, uid: console_session.uid, use_route: 'web_console'
     end
 
     test 'GET pending_output gives the slave pending output' do
@@ -44,7 +44,7 @@ module WebConsole
       assert_not_nil console_session = assigns(:console_session)
       console_session.expects(:pending_output)
 
-      get :pending_output, id: console_session.pid, use_route: 'web_console'
+      get :pending_output, id: console_session.pid, uid: console_session.uid, use_route: 'web_console'
     end
 
     test 'GET pending_output raises 410 on exitted slave processes' do
@@ -53,7 +53,7 @@ module WebConsole
       assert_not_nil console_session = assigns(:console_session)
       console_session.stubs(:pending_output).raises(ConsoleSession::Unavailable)
 
-      get :pending_output, id: console_session.pid, use_route: 'web_console'
+      get :pending_output, id: console_session.pid, uid: console_session.uid, use_route: 'web_console'
       assert_response :gone
     end
 
@@ -61,9 +61,14 @@ module WebConsole
       get :index, use_route: 'web_console'
 
       assert_not_nil console_session = assigns(:console_session)
-      console_session.expects(:configure).with('id' => console_session.pid.to_s, 'width' => '80', 'height' => '24')
+      console_session.expects(:configure).with(
+        'id'     => console_session.pid.to_s,
+        'uid'    => console_session.uid,
+        'width'  => '80',
+        'height' => '24',
+      )
 
-      put :configuration, id: console_session.pid, width: 80, height: 24, use_route: 'web_console'
+      put :configuration, id: console_session.pid, uid: console_session.uid, width: 80, height: 24, use_route: 'web_console'
       assert_response :success
     end
 

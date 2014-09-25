@@ -17,15 +17,21 @@ module WebConsole
     # The slave process id.
     attr_reader :pid
 
+    # Unique identifier for each slave process.
+    attr_reader :uid
+
     def initialize(command = WebConsole.config.command, options = {})
       # Windows doesn't have PTY, requiring it at the top level will fail the
       # whole program execution.
       require 'pty'
       require 'io/console'
 
+      @uid = SecureRandom.hex(16)
+
       using_term(options[:term] || WebConsole.config.term) do
         @output, @input, @pid = PTY.spawn(command.to_s)
       end
+
       configure(options)
     end
 

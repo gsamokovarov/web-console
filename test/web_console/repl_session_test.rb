@@ -9,15 +9,15 @@ module WebConsole
     end
 
     test 'raises WebConsole::REPLSession::NotFound on not found sessions' do
-      assert_raises(WebConsole::REPLSession::NotFound) { WebConsole::REPLSession.find(-1) }
+      assert_raises(WebConsole::REPLSession::NotFound) { WebConsole::REPLSession.find("nonexistent session") }
     end
 
-    test 'find coerces ids' do
-      assert_equal @model.save, WebConsole::REPLSession.find("#{@model.id}")
+    test 'find returns a persisted object' do
+      assert_equal @model.save, WebConsole::REPLSession.find(@model.id)
     end
 
     test 'not found exceptions are JSON serializable' do
-      exception = assert_raises(WebConsole::REPLSession::NotFound) { WebConsole::REPLSession.find(-1) }
+      exception = assert_raises(WebConsole::REPLSession::NotFound) { WebConsole::REPLSession.find("nonexistent session") }
       assert_equal '{"error":"Session unavailable"}', exception.to_json
     end
 
