@@ -4,18 +4,12 @@ module WebConsole
 
     included do
       # Flag to decide whether the console should be rendered.
-      attr_internal :should_render_console
+      attr_internal :console_already_rendered
 
       # Storage of a binding the console to be rendered in.
       attr_internal :console_binding
 
       prepend_after_action :inject_console_into_view
-    end
-
-    def initialize(*)
-      super
-
-      @_should_render_console = true
     end
 
     # Helper for capturing a controller binding to prepare for console
@@ -38,7 +32,7 @@ module WebConsole
       end
 
       def can_render_console?
-        console_binding && should_render_console && content_type == Mime::HTML
+        console_binding && !console_already_rendered && content_type == Mime::HTML
       end
   end
 end
