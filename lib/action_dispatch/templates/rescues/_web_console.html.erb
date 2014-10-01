@@ -1,10 +1,10 @@
 <% if @console_session && @console_session.binding %>
   <div id="console"
     data-remote-path='<%= "console/repl_sessions/#{@console_session.id}" %>'
-    data-initial-prompt='<%= @console_session.prompt %>'></div>
+    data-initial-prompt='<%= @console_session.prompt %>'>
+  </div>
 
   <script type="text/javascript">
-
     (function() {
       // DOM helpers
       function hasClass(el, className) {
@@ -28,7 +28,13 @@
       }
 
       function escapeHTML(html) {
-        return html.replace(/&/, "&amp;").replace(/</g, "&lt;");
+        return html
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#x27;')
+          .replace(/`/g, '&#x60;');
       }
 
       // Add CSS styles dynamically. This probably doesnt work for IE <8.
