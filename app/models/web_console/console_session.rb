@@ -30,14 +30,14 @@ module WebConsole
     class << self
       # Finds a session by its pid.
       #
-      # Raises WebConsole::ConsoleSession::Expired if there is no such session.
+      # Raises WebConsole::ConsoleSession::Unavailable if there is no such session.
       def find(pid)
         INMEMORY_STORAGE[pid.to_i] or raise Unavailable, 'Session unavailable'
       end
 
       # Finds a session by its pid.
       #
-      # Raises WebConsole::ConsoleSession::Expired if there is no such session.
+      # Raises WebConsole::ConsoleSession::Unavailable if there is no such session.
       # Raises WebConsole::ConsoleSession::Unauthorized if uid doesn't match.
       def find_by_pid_and_uid(pid, uid)
         find(pid).tap do |console_session|
