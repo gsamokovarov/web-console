@@ -41,10 +41,10 @@
       var style = document.createElement('style');
       style.type = 'text/css';
       style.innerHTML =
-        "#console { position: fixed; left: 0; bottom: 0; width: 100%; height: 150px; border: 1px solid; padding-bottom: 20px; } " +
-        "#console div.console-inner { font-family: monospace; font-size: 11px; height: 100%; overflow: auto; background: #333; padding: 10px; } " +
+        "#console { position: fixed; left: 0; bottom: 0; width: 100%; height: 150px; border: 1px solid; padding: 0 0 20px 0; color: #1AD027; overflow: none; margin: 0; background: none repeat scroll 0% 0% #333; } " +
+        "#console div.console-inner { font-family: monospace; font-size: 11px; height: 100%; overflow: auto; background: #333; border: 0; padding: 0 margin: 0; } " +
         "#console div.console-prompt-box { color: #FFF; } " +
-        "#console pre.console-message { color: #1AD027; margin: 0; } " +
+        "#console pre.console-message { color: #1AD027; margin: 0; border: 0; white-space: pre-wrap; background-color: #333; padding: 0; } " +
         "#console div.console-focus span.console-cursor { background: #FEFEFE; color: #333; font-weight: bold; }";
       document.getElementsByTagName('head')[0].appendChild(style);
 
@@ -96,14 +96,14 @@
 
       // HTML strings for dynamic elements.
       var consoleInnerHtml = [
-        "<div id='resizer' style='width:100%; height: 3px; cursor: ns-resize;'></div>",
+        "<div id='resizer' style='width: 100%; height: 3px; cursor: ns-resize;'></div>",
         "<div class='console-inner'></div>",
         "<input id='clipboard' type='text'>"
       ].join("");
 
       var promptBoxHtml = [
-        "<span class='console-prompt-label' style='display: inline;'></span>",
-        "<pre class='console-prompt-display' style='display: inline;'></pre>"
+        "<span class='console-prompt-label' style='display: inline; color: #FFF; background: none repeat scroll 0% 0% #333; border: 0; padding: 0;'></span>",
+        "<pre class='console-prompt-display' style='display: inline; color: #FFF; background: none repeat scroll 0% 0% #333; border: 0; padding: 0;'></pre>"
       ].join("");
 
       // REPLConsole Constructor
