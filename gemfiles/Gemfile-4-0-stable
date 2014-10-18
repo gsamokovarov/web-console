@@ -1,8 +1,8 @@
 source 'https://rubygems.org'
 
-gemspec
+gemspec path: '..'
 
-gem 'rails', github: 'rails/rails'
+gem 'rails', github: 'rails/rails', branch: '4-0-stable'
 
 platforms :jruby do
   gem 'activerecord-jdbcsqlite3-adapter'
@@ -10,17 +10,6 @@ end
 
 platforms :ruby do
   gem 'sqlite3'
-end
-
-group :development do
-  gem 'puma'
-
-  # Only require this one explicitly.
-  gem 'pry-rails', require: false
-
-  platforms :ruby do
-    gem 'thin'
-  end
 end
 
 group :test do
