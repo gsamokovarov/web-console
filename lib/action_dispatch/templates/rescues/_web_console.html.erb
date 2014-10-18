@@ -168,11 +168,13 @@
       };
 
       REPLConsole.prototype.focus = function() {
-        this.focused = true;
-        if (! hasClass(this.inner, "console-focus")) {
-          addClass(this.inner, "console-focus");
+        if (! this.focused) {
+          this.focused = true;
+          if (! hasClass(this.inner, "console-focus")) {
+            addClass(this.inner, "console-focus");
+          }
+          this.scrollToBottom();
         }
-        this.scrollToBottom();
       };
 
       REPLConsole.prototype.blur = function() {
