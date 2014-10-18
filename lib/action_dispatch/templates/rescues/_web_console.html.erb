@@ -41,7 +41,7 @@
       var style = document.createElement('style');
       style.type = 'text/css';
       style.innerHTML =
-        "#console { position: fixed; left: 0; bottom: 0; width: 100%; height: 150px; border: 1px solid; padding: 0 0 20px 0; color: #1AD027; overflow: none; margin: 0; background: none repeat scroll 0% 0% #333; } " +
+        "#console { position: fixed; left: 0; bottom: 0; width: 100%; height: 150px; border: 1px solid; padding: 0 0 20px 0; overflow: none; margin: 0; background: none repeat scroll 0% 0% #333; } " +
         "#console div.console-inner { font-family: monospace; font-size: 11px; height: 100%; overflow: auto; background: #333; border: 0; padding: 0 margin: 0; } " +
         "#console div.console-prompt-box { color: #FFF; } " +
         "#console pre.console-message { color: #1AD027; margin: 0; border: 0; white-space: pre-wrap; background-color: #333; padding: 0; } " +
@@ -98,7 +98,7 @@
       var consoleInnerHtml = [
         "<div id='resizer' style='width: 100%; height: 3px; cursor: ns-resize;'></div>",
         "<div class='console-inner'></div>",
-        "<input id='clipboard' type='text'>"
+        "<input id='clipboard' type='text' style='visibility: hidden;'>"
       ].join("");
 
       var promptBoxHtml = [
