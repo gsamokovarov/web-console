@@ -51,6 +51,15 @@ module ActionDispatch
         wrapper = ExceptionWrapper.new(env, exception)
         traces = traces_from_wrapper(wrapper)
         extract_sources = wrapper.extract_sources
+
+        trace_to_show = :application_trace
+        if traces[trace_to_show].empty?
+          trace_to_show = :full_trace
+        end
+        if source_to_show = traces[trace_to_show].first
+          source_to_show_id = source_to_show[:id]
+        end
+
         console_session = WebConsole::REPLSession.create(
           binding: exception.bindings.first,
           binding_stack: exception.bindings
@@ -62,9 +71,14 @@ module ActionDispatch
           template = ActionView::Base.new([ RESCUES_TEMPLATE_PATH ],
             request: request,
             exception: wrapper.exception,
-            application_trace: traces[:application_trace],
-            framework_trace: traces[:framework_trace],
-            full_trace: traces[:full_trace],
+            show_source_idx: source_to_show_id,
+            trace_to_show: trace_to_show,
+            traces: traces,
+            trace_names: {
+              application_trace: 'Application Trace',
+              framework_trace: 'Framework Trace',
+              full_trace: 'Full Trace'
+            },
             routes_inspector: routes_inspector(exception),
             extract_sources: extract_sources,
             console_session: console_session
@@ -87,24 +101,30 @@ module ActionDispatch
 
       # Augment the exception traces by providing ids for all unique stack frames.
       def traces_from_wrapper(wrapper)
-        id_counter = 0
+        application_trace = wrapper.application_trace
+        framework_trace   = wrapper.framework_trace
+        full_trace        = wrapper.full_trace
 
-        application_trace = wrapper.application_trace.map do |trace|
-          prev = id_counter
-          id_counter += 1
-          { id: prev, trace: trace }
-        end
+        appplication_trace_with_ids = []
+        framework_trace_with_ids = []
+        full_trace_with_ids = []
 
-        framework_trace = wrapper.framework_trace.map do |trace|
-          prev = id_counter
-          id_counter += 1
-          { id: prev, trace: trace }
+        if full_trace
+          full_trace.each_with_index do |trace, idx|
+            id_trace = {
+              id: idx,
+              trace: trace
+            }
+            appplication_trace_with_ids << id_trace if application_trace.include? trace
+            framework_trace_with_ids << id_trace if framework_trace.include? trace
+            full_trace_with_ids << id_trace
+          end
         end
 
         {
-          application_trace: application_trace,
-          framework_trace: framework_trace,
-          full_trace: application_trace + framework_trace
+          application_trace: appplication_trace_with_ids,
+          framework_trace: framework_trace_with_ids,
+          full_trace: full_trace_with_ids
         }
       end
   end
