@@ -58,6 +58,7 @@ module WebConsole
     { dispose: :SIGTERM, dispose!: :SIGKILL }.each do |method, signal|
       test "##{method} sends #{signal} to the process and detaches it" do
         Process.expects(:kill).with(signal, @slave.pid)
+        Process.expects(:detach).with(@slave.pid)
         @slave.send(method)
       end
 
