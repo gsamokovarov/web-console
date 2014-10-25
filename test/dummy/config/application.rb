@@ -44,5 +44,7 @@ module Dummy
       else
         'light'
       end
+
+    config.active_support.test_order = :random
   end
 end
