@@ -2,20 +2,22 @@ require 'test_helper'
 
 module WebConsole
   class ExceptionTest < ActiveSupport::TestCase
-    module TestScenarionWithNestedCalls
-      extend self
-
+    class TestScenarionWithNestedCalls
       def call
         raise_an_error
       rescue => exc
         exc
       end
 
-      def raise_an_error
-        unused_local_variable = 42
-        raise
-      end
+      private
+
+        def raise_an_error
+          unused_local_variable = 42
+          raise
+        end
     end
+
+    CustomError = Class.new(StandardError)
 
     test '#bindings all the bindings of where the error originated' do
       begin
@@ -26,8 +28,18 @@ module WebConsole
       end
     end
 
+    test '#bindings all the bindings of where the error originated from a custom error' do
+      begin
+        unused_local_variable = "Test"
+        raise CustomError
+      rescue => exc
+        assert_equal 'Test', exc.bindings.first.eval('unused_local_variable')
+      end
+    end
+
     test '#bindings goes down the stack' do
-      exc = TestScenarionWithNestedCalls.call
+      exc = TestScenarionWithNestedCalls.new.call
+
       assert_equal 42, exc.bindings.first.eval('unused_local_variable')
     end
   end

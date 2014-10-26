@@ -17,6 +17,7 @@ matrix:
   allow_failures:
     - rvm: ruby-head
     - rvm: rbx-2
+    - rvm: jruby
     - gemfile: Gemfile
     - gemfile: gemfiles/Gemfile-4-1-stable
 before_install:

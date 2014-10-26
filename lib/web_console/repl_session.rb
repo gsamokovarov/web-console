@@ -58,7 +58,7 @@ module WebConsole
 
       # Returns a hash of the attributes and their values.
       def attributes
-        return Hash[ATTRIBUTES.zip([nil])]
+        return Hash[ATTRIBUTES.zip([nil])].except(:binding, :binding_stack)
       end
 
       # Sets model attributes from a hash.
