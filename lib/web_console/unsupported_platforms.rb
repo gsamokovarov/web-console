@@ -14,10 +14,6 @@ module WebConsole
 
         yield if compile_mode != interpreted_mode
       end
-
-      def rubinius
-        yield if RUBY_ENGINE == 'rbx'
-      end
     end
 
     jruby_in_non_interpreted_mode do
@@ -26,12 +22,6 @@ module WebConsole
 
         To turn on interpreted mode, put -J-Djruby.compile.mode=OFF in the
         JRUBY_OPTS environment variable.
-      END
-    end
-
-    rubinius do
-      warn <<-END.strip_heredoc
-        Web Console doesn't support Rubinius yet.
       END
     end
   end
