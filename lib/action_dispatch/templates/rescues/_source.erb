@@ -1,15 +1,16 @@
-<% if @extract_sources %>
-  <% @extract_sources.each_with_index do |extract_source, index| %>
-    <div class="source <%="hidden" if @show_source_idx != index%>" id="frame-source-<%=index%>">
-      <div class="info">
-        Extracted source (around line <strong>#<%= extract_source[:line_number] %></strong>):
-      </div>
-      <div class="data">
-        <table cellpadding="0" cellspacing="0" class="lines">
+<% if @source_extract %>
+  <% @source_extract.each_with_index do |extract_source, index| %>
+    <% if extract_source[:code] %>
+      <div class="source <%="hidden" if @show_source_idx != index%>" id="frame-source-<%=index%>">
+        <div class="info">
+          Extracted source (around line <strong>#<%= extract_source[:line_number] %></strong>):
+        </div>
+        <div class="data">
+          <table cellpadding="0" cellspacing="0" class="lines">
             <tr>
               <td>
                 <pre class="line_numbers">
-                  <% extract_source[:code].keys.each do |line_number| %>
+                  <% extract_source[:code].each_key do |line_number| %>
 <span><%= line_number -%></span>
                   <% end %>
                 </pre>
@@ -20,8 +21,9 @@
 </pre>
 </td>
             </tr>
-        </table>
+          </table>
+        </div>
       </div>
-    </div>
+    <% end %>
   <% end %>
 <% end %>

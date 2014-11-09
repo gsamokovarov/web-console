@@ -48,45 +48,42 @@ module ActionDispatch
       end
 
       def render_exception(env, exception)
-        if exception.respond_to?(:original_exception) && exception.original_exception
-          exception = exception.original_exception
-        end
-
         wrapper = ExceptionWrapper.new(env, exception)
-        traces = traces_from_wrapper(wrapper)
-        extract_sources = wrapper.extract_sources
-
-        trace_to_show = :application_trace
-        if traces[trace_to_show].empty?
-          trace_to_show = :full_trace
-        end
-        if source_to_show = traces[trace_to_show].first
-          source_to_show_id = source_to_show[:id]
-        end
-
         log_error(env, wrapper)
 
         if env['action_dispatch.show_detailed_exceptions']
           request = Request.new(env)
           if allowed?(request)
             console_session = WebConsole::REPLSession.create(
-              binding: exception.bindings.first,
+              binding: wrapper.exception.bindings.first,
               binding_stack: exception.bindings
             )
           end
+
+          traces = wrapper.traces
+          extract_sources = wrapper.extract_sources
+          console_session = WebConsole::REPLSession.create(
+            binding: exception.bindings.first,
+            binding_stack: exception.bindings
+          )
+
+          trace_to_show = 'Application Trace'
+          if traces[trace_to_show].empty? && wrapper.rescue_template != 'routing_error'
+            trace_to_show = 'Full Trace'
+          end
+
+          if source_to_show = traces[trace_to_show].first
+            source_to_show_id = source_to_show[:id]
+          end
+
           template = ActionView::Base.new([ RESCUES_TEMPLATE_PATH ],
             request: request,
             exception: wrapper.exception,
             show_source_idx: source_to_show_id,
             trace_to_show: trace_to_show,
             traces: traces,
-            trace_names: {
-              application_trace: 'Application Trace',
-              framework_trace: 'Framework Trace',
-              full_trace: 'Full Trace'
-            },
             routes_inspector: routes_inspector(exception),
-            extract_sources: extract_sources,
+            source_extract: wrapper.extract_sources,
             console_session: console_session
           )
           file = "rescues/#{wrapper.rescue_template}"
@@ -103,35 +100,6 @@ module ActionDispatch
         else
           raise exception
         end
-      end
-
-      # Augment the exception traces by providing ids for all unique stack frames.
-      def traces_from_wrapper(wrapper)
-        application_trace = wrapper.application_trace
-        framework_trace   = wrapper.framework_trace
-        full_trace        = wrapper.full_trace
-
-        appplication_trace_with_ids = []
-        framework_trace_with_ids = []
-        full_trace_with_ids = []
-
-        if full_trace
-          full_trace.each_with_index do |trace, idx|
-            id_trace = {
-              id: idx,
-              trace: trace
-            }
-            appplication_trace_with_ids << id_trace if application_trace.include? trace
-            framework_trace_with_ids << id_trace if framework_trace.include? trace
-            full_trace_with_ids << id_trace
-          end
-        end
-
-        {
-          application_trace: appplication_trace_with_ids,
-          framework_trace: framework_trace_with_ids,
-          full_trace: full_trace_with_ids
-        }
       end
   end
 end
