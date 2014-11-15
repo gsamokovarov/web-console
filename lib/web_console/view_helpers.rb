@@ -1,6 +1,8 @@
 module WebConsole
   module ViewHelpers
     def console(console_binding = nil)
+      return unless request.remote_ip.in?(WebConsole.config.whitelisted_ips)
+
       console_binding ||= binding.of_caller(1)
 
       unless controller.console_already_rendered
