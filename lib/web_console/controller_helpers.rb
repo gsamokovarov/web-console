@@ -32,7 +32,15 @@ module WebConsole
       end
 
       def can_render_console?
-        console_binding && !console_already_rendered && content_type == Mime::HTML
+        console_binding && !console_already_rendered && html_format? && whitelisted_ip?
+      end
+
+      def html_format?
+        content_type == Mime::HTML
+      end
+
+      def whitelisted_ip?
+        request.remote_ip.in?(WebConsole.config.whitelisted_ips)
       end
   end
 end

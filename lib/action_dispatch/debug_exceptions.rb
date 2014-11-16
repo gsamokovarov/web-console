@@ -5,9 +5,9 @@ module ActionDispatch
     def call(env)
       request = Request.new(env)
 
-      if request.put? && request.xhr? && m = env["PATH_INFO"].match(%r{/repl_sessions/(?<id>.+?)\z})
+      if request.put? && allowed?(request) && m = env["PATH_INFO"].match(%r{/repl_sessions/(?<id>.+?)\z})
         update_repl_session(m[:id], request.params[:input])
-      elsif request.post? && request.xhr? && m = env["PATH_INFO"].match(%r{/repl_sessions/(?<id>.+?)/trace\z})
+      elsif request.post? && allowed?(request) && m = env["PATH_INFO"].match(%r{/repl_sessions/(?<id>.+?)/trace\z})
         change_stack_trace(m[:id], request.params[:frame_id])
       else
         middleware_call(env)
@@ -29,6 +29,10 @@ module ActionDispatch
     end
 
     private
+
+      def allowed?(request)
+        request.xhr? && request.remote_ip.in?(WebConsole.config.whitelisted_ips)
+      end
 
       def update_repl_session(id, input)
         console_session = WebConsole::REPLSession.find(id)
@@ -60,14 +64,16 @@ module ActionDispatch
           source_to_show_id = source_to_show[:id]
         end
 
-        console_session = WebConsole::REPLSession.create(
-          binding: exception.bindings.first,
-          binding_stack: exception.bindings
-        )
         log_error(env, wrapper)
 
         if env['action_dispatch.show_detailed_exceptions']
           request = Request.new(env)
+          if allowed?(request)
+            console_session = WebConsole::REPLSession.create(
+              binding: exception.bindings.first,
+              binding_stack: exception.bindings
+            )
+          end
           template = ActionView::Base.new([ RESCUES_TEMPLATE_PATH ],
             request: request,
             exception: wrapper.exception,

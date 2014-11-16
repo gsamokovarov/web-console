@@ -3,6 +3,10 @@ require 'test_helper'
 class TestsControllerTest < ActionController::TestCase
   tests TestsController
 
+  setup do
+    request.stubs(:remote_ip).returns('127.0.0.1')
+  end
+
   test "injects a console into a view" do
     get :render_console_ontop_of_text
 
@@ -25,5 +29,13 @@ class TestsControllerTest < ActionController::TestCase
     get :doesnt_render_console_on_non_html_requests
 
     assert_no_match %r{#console}, @response.body
+  end
+
+  test "doesn't inject on requests from non whitelisted IPs" do
+    request.stubs(:remote_ip).returns('192.168.0.100')
+
+    get :render_console_ontop_of_text
+
+    assert_select "#console", 0
   end
 end
