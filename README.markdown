@@ -69,7 +69,7 @@ To install it in your current application, add the following to your `Gemfile`.
 
 ```ruby
 group :development do
-  gem 'web-console', '2.0.0.beta3'
+  gem 'web-console', '2.0.0.beta4'
 end
 ```
 
