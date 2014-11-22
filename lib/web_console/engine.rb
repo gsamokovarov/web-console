@@ -9,15 +9,41 @@ module WebConsole
     config.web_console = ActiveSupport::OrderedOptions.new
     config.web_console.whitelisted_ips = %w( 127.0.0.1 ::1 )
 
-    initializer "web_console.initialize_view_helpers" do
-      ActiveSupport.on_load :action_view do
-        include WebConsole::ViewHelpers
+    initializer 'web_console.initialize' do
+      ActionDispatch::DebugExceptions.class_eval do
+        def render_exception_with_web_console(env, exception)
+          render_exception_without_web_console(env, exception).tap do
+            env['web_console.exception'] = exception
+          end
+        end
+
+        alias_method_chain :render_exception, :web_console
       end
 
-      ActiveSupport.on_load :action_controller do
-        prepend_view_path File.dirname(__FILE__) + '/../action_dispatch/templates'
-        include WebConsole::ControllerHelpers
+      ActiveSupport.on_load(:action_view) do
+        ActionView::Helpers.module_eval do
+          def console(binding = nil)
+            request.env['web_console.binding'] ||= binding || ::Kernel.binding.of_caller(1)
+
+            # Make sure nothing is rendered from the view helper. Otherwise
+            # you're gonna see unexpected #<Binding:0x007fee4302b078> in the
+            # templates.
+            nil
+          end
+        end
       end
+
+      ActiveSupport.on_load(:action_controller) do
+        ActionController::Base.class_eval do
+          def console(binding = nil)
+            request.env['web_console.binding'] ||= binding || ::Kernel.binding.of_caller(1)
+          end
+        end
+      end
+    end
+
+    initializer 'web_console.insert_middleware' do |app|
+      app.middleware.insert_before ActionDispatch::DebugExceptions, Middleware
     end
 
     initializer 'web_console.process_whitelisted_ips' do
