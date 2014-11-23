@@ -23,7 +23,6 @@ module WebConsole
       end
 
       status, headers, body = @app.call(env)
-      response = Rack::Response.new(body, status, headers)
 
       if binding = env['web_console.binding']
         session = REPLSession.create(binding: binding)
@@ -32,11 +31,14 @@ module WebConsole
       end
 
       if session && request.acceptable_content_type?
+        response = Rack::Response.new(body, status, headers)
         template = ActionView::Base.new(TEMPLATES_PATH, session: session)
-        response.write(template.render(template: 'session', layout: false))
-      end
 
-      response.finish
+        response.write(template.render(template: 'session', layout: false))
+        response.finish
+      else
+        [ status, headers, body ]
+      end
     end
 
     private
