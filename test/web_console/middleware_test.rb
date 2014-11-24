@@ -28,9 +28,17 @@ module WebConsole
     end
 
     test 'render console in an html application from web_console.exception' do
-      get '/', nil, 'CONTENT_TYPE' => 'text/html', 'web_console.binding' => raise_exception
+      get '/', nil, 'CONTENT_TYPE' => 'text/html', 'web_console.binding' => binding
 
       assert_select '#console'
+    end
+
+    test 'prioritizes web_console.exception over web_console.binding' do
+      exception = raise_exception
+
+      REPLSession.expects(:create).with(binding: exception.bindings.first, binding_stack: exception.bindings)
+
+      get '/', nil, 'CONTENT_TYPE' => 'text/html', 'web_console.binding' => binding, 'web_console.exception' => exception
     end
 
     test 'render console in an html application with non text/html' do
