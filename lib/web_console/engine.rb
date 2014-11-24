@@ -13,7 +13,10 @@ module WebConsole
       ActionDispatch::DebugExceptions.class_eval do
         def render_exception_with_web_console(env, exception)
           render_exception_without_web_console(env, exception).tap do
-            env['web_console.exception'] = exception
+            wrapper = ActionDispatch::ExceptionWrapper.new(env, exception)
+
+            # Get the original exception if ExceptionWrapper decides to follow it.
+            env['web_console.exception'] = wrapper.exception
           end
         end
 
