@@ -24,10 +24,10 @@ module WebConsole
 
       status, headers, body = @app.call(env)
 
-      if binding = env['web_console.binding']
-        session = REPLSession.create(binding: binding)
-      elsif exception = env['web_console.exception']
+      if exception = env['web_console.exception']
         session = REPLSession.create(binding: exception.bindings.first, binding_stack: exception.bindings)
+      elsif binding = env['web_console.binding']
+        session = REPLSession.create(binding: binding)
       end
 
       if session && request.acceptable_content_type?
