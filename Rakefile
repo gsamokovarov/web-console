@@ -5,7 +5,6 @@ rescue LoadError
 end
 
 require 'socket'
-require 'active_support/core_ext/string/strip'
 require 'rake/testtask'
 
 EXPANDED_CWD = File.expand_path(File.dirname(__FILE__))
@@ -17,6 +16,6 @@ Rake::TestTask.new(:test) do |t|
   t.verbose = false
 end
 
-Bundler::GemHelper.install_tasks
+Bundler::GemHelper.install_tasks(name: 'web_console')
 
 task default: :test
