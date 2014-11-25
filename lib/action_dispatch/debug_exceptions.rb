@@ -5,9 +5,9 @@ module ActionDispatch
     def call(env)
       request = Request.new(env)
 
-      if request.put? && allowed?(request) && m = env["PATH_INFO"].match(%r{/repl_sessions/(?<id>.+?)\z})
+      if request.put? && request.xhr? && allowed?(request) && m = env["PATH_INFO"].match(%r{/repl_sessions/(?<id>.+?)\z})
         update_repl_session(m[:id], request.params[:input])
-      elsif request.post? && allowed?(request) && m = env["PATH_INFO"].match(%r{/repl_sessions/(?<id>.+?)/trace\z})
+      elsif request.post? && request.xhr? && allowed?(request) && m = env["PATH_INFO"].match(%r{/repl_sessions/(?<id>.+?)/trace\z})
         change_stack_trace(m[:id], request.params[:frame_id])
       else
         middleware_call(env)
@@ -31,7 +31,7 @@ module ActionDispatch
     private
 
       def allowed?(request)
-        request.xhr? && request.remote_ip.in?(WebConsole.config.whitelisted_ips)
+        request.remote_ip.in?(WebConsole.config.whitelisted_ips)
       end
 
       def update_repl_session(id, input)
