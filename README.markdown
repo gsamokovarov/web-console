@@ -7,12 +7,7 @@
   <a href=https://github.com/rails/web-console/tree/v1.0.4>v1.0.4</a>
 </p>
 
-<p align=center>
-  <em>Web Console is currently in beta for <code>2.0.0</code>. If you're searching for a stable
-  version documentation, checkout the links above.</em>
-</p>
-
-Web Console [![Travis](https://travis-ci.org/rails/web-console.png)](https://travis-ci.org/rails/web-console)
+Web Console [![Build Status](https://travis-ci.org/rails/web_console.svg?branch=master)](https://travis-ci.org/rails/web_console)
 ===========
 
 _Web Console_ is a set of debugging tools for your Rails application.
@@ -47,8 +42,6 @@ _Web Console_ has been tested on the following rubies.
 There is an experimental _JRuby_ 1.7 support. See Installation section for more
 information.
 
-_Rubinius_ in 1.9 mode may work, but it hasn't been explicitly tested.
-
 _Web Console_ is built explicitly for _Rails 4_.
 
 Installation
@@ -58,7 +51,18 @@ To install it in your current application, add the following to your `Gemfile`.
 
 ```ruby
 group :development do
-  gem 'web-console', '2.0.0.beta4'
+  gem 'web_console', '~> 2.0'
+end
+```
+
+If you are running JRuby, you can get experimental support with adding a
+pre-release version of [binding_of_caller].
+
+```ruby
+group :development do
+  gem 'web_console', '~> 2.0'
+
+  gem 'binding_of_caller', '0.7.3.pre1'
 end
 ```
 
@@ -83,8 +87,7 @@ By default, only requests coming from `127.0.0.1` are allowed.
 `config.web_console.whitelisted_ips` lets you control which IP's have access to
 the console.
 
-Let's say you want to share your console with just that one roommate, you like
-and his/her IP is `192.168.0.100`.
+Let's say you want to share your console with `192.168.0.100`. You can do this:
 
 ```ruby
 class Application < Rails::Application
@@ -96,18 +99,13 @@ From the example, you can guess that `config.web_console.whitelisted_ips`
 accepts an array of ip addresses, provided as strings. An important thing to
 note here is that, we won't push `127.0.0.1` if you manually set the option!
 
-Now let's assume you like all of your roommates. Instead of enumerating their
-IP's, you can whitelist the whole private network. Now every time their IP's
-change, you'll have them covered.
+If you want to whitelist a whole network, you can do:
 
 ```ruby
 class Application < Rails::Application
   config.web_console.whitelisted_ips = '192.168.0.0/16'
 end
 ```
-
-You can see that `config.web_console.whitelisted_ips` accepts plains strings
-too. More than that, they can cover whole networks.
 
 Again, note that this network doesn't allow `127.0.0.1`. If you want to access
 the console, you have to do so from it's external IP or add `127.0.0.1` to the
