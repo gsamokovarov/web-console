@@ -7,11 +7,9 @@ require 'action_dispatch/debug_exceptions'
 require 'web_console/core_ext/exception'
 require "web_console/view_helpers"
 require "web_console/controller_helpers"
-require 'web_console/colors'
 require 'web_console/engine'
 require 'web_console/repl'
 require 'web_console/repl_session'
-require 'web_console/slave'
 require 'web_console/unsupported_platforms'
 
 module WebConsole
