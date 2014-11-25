@@ -2,43 +2,6 @@ require 'test_helper'
 
 module WebConsole
   class EngineTest < ActiveSupport::TestCase
-    test 'custom default_mount_path' do
-      new_uninitialized_app do |app|
-        app.config.web_console.default_mount_path = '/shell'
-        app.initialize!
-
-        assert app.routes.named_routes['web_console'].path.match('/shell')
-      end
-    end
-
-    test 'disabling automounting' do
-      new_uninitialized_app do |app|
-        app.config.web_console.automount = false
-        app.initialize!
-
-        assert_not app.routes.named_routes['web_console']
-      end
-    end
-
-    test 'blank commands are expanded to the rails console' do
-      new_uninitialized_app do |app|
-        app.config.web_console.command = ' '
-        app.initialize!
-
-        expected_path = Rails.root.join('bin/rails console').to_s
-        assert_equal expected_path, app.config.web_console.command
-      end
-    end
-
-    test 'present commands are not processed' do
-      new_uninitialized_app do |app|
-        app.config.web_console.command = '/bin/login'
-        app.initialize!
-
-        assert_equal '/bin/login', app.config.web_console.command
-      end
-    end
-
     test 'whitelisted ips are courced to IPAddr' do
       new_uninitialized_app do |app|
         app.config.web_console.whitelisted_ips = '127.0.0.1'
