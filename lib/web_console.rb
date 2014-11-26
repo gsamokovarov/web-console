@@ -4,6 +4,7 @@ require 'active_support/lazy_load_hooks'
 
 require 'web_console/core_ext/exception'
 require 'web_console/engine'
+require 'web_console/errors'
 require 'web_console/helper'
 require 'web_console/repl'
 require 'web_console/repl_session'
