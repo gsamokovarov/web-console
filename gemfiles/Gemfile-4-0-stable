@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gemspec path: '..', name: 'web_console'
+gemspec path: '..'
 
 gem 'rails', github: 'rails/rails', branch: '4-0-stable'
 

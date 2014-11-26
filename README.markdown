@@ -7,7 +7,7 @@
   <a href=https://github.com/rails/web-console/tree/v1.0.4>v1.0.4</a>
 </p>
 
-Web Console [![Build Status](https://travis-ci.org/rails/web_console.svg?branch=master)](https://travis-ci.org/rails/web_console)
+Web Console [![Build Status](https://travis-ci.org/rails/web-console.svg?branch=master)](https://travis-ci.org/rails/web-console)
 ===========
 
 _Web Console_ is a set of debugging tools for your Rails application.
@@ -51,7 +51,7 @@ To install it in your current application, add the following to your `Gemfile`.
 
 ```ruby
 group :development do
-  gem 'web_console', '~> 2.0'
+  gem 'web-console', '~> 2.0'
 end
 ```
 
@@ -60,7 +60,7 @@ pre-release version of [binding_of_caller].
 
 ```ruby
 group :development do
-  gem 'web_console', '~> 2.0'
+  gem 'web-console', '~> 2.0'
 
   gem 'binding_of_caller', '0.7.3.pre1'
 end
