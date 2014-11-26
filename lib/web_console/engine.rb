@@ -24,24 +24,11 @@ module WebConsole
       end
 
       ActiveSupport.on_load(:action_view) do
-        ActionView::Helpers.module_eval do
-          def console(binding = nil)
-            request.env['web_console.binding'] ||= binding || ::Kernel.binding.of_caller(1)
-
-            # Make sure nothing is rendered from the view helper. Otherwise
-            # you're gonna see unexpected #<Binding:0x007fee4302b078> in the
-            # templates.
-            nil
-          end
-        end
+        ActionView::Helpers.send(:include, Helper)
       end
 
       ActiveSupport.on_load(:action_controller) do
-        ActionController::Base.class_eval do
-          def console(binding = nil)
-            request.env['web_console.binding'] ||= binding || ::Kernel.binding.of_caller(1)
-          end
-        end
+        ActionController::Base.send(:include, Helper)
       end
     end
 
