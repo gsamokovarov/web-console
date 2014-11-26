@@ -1,7 +1,5 @@
 language: ruby
-env:
-  global:
-    - JRUBY_OPTS=--dev
+
 rvm:
   - 1.9.3
   - 2.0.0
@@ -9,10 +7,21 @@ rvm:
   - ruby-head
   - rbx-2
   - jruby
+
 gemfile:
   - Gemfile
   - gemfiles/Gemfile-4-0-stable
   - gemfiles/Gemfile-4-1-stable
+
+env:
+  global:
+    - JRUBY_OPTS=--dev
+
+sudo: false
+
+before_script:
+  - RAILS_ENV=test bundle exec rake --rakefile=test/dummy/Rakefile db:setup
+
 matrix:
   allow_failures:
     - rvm: ruby-head
@@ -20,7 +29,4 @@ matrix:
     - rvm: jruby
     - gemfile: Gemfile
     - gemfile: gemfiles/Gemfile-4-1-stable
-before_install:
-  - gem install bundler
-before_script:
-  - RAILS_ENV=test bundle exec rake --rakefile=test/dummy/Rakefile db:setup
+
