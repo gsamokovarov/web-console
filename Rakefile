@@ -16,6 +16,6 @@ Rake::TestTask.new(:test) do |t|
   t.verbose = false
 end
 
-Bundler::GemHelper.install_tasks(name: 'web_console')
+Bundler::GemHelper.install_tasks
 
 task default: :test
