@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.files      = Dir["lib/**/*", "MIT-LICENSE", "Rakefile", "README.markdown"]
   s.test_files = Dir["test/**/*"]
 
-  rails_version = "~> 4.0"
+  rails_version = ">= 4.0"
 
   s.add_dependency "railties",          rails_version
   s.add_dependency "activemodel",       rails_version
