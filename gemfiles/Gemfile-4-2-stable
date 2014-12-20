@@ -1,0 +1,19 @@
+source 'https://rubygems.org'
+
+gemspec path: '..'
+
+gem 'rails', github: 'rails/rails', branch: '4-2-stable'
+
+platforms :jruby do
+  gem 'activerecord-jdbcsqlite3-adapter'
+end
+
+platforms :ruby do
+  gem 'sqlite3'
+end
+
+group :test do
+  gem 'rake'
+  gem 'mocha', require: false
+  gem 'simplecov', require: false
+end
