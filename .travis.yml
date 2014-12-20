@@ -12,6 +12,7 @@ gemfile:
   - Gemfile
   - gemfiles/Gemfile-4-0-stable
   - gemfiles/Gemfile-4-1-stable
+  - gemfiles/Gemfile-4-2-stable
 
 env:
   global:
@@ -29,4 +30,5 @@ matrix:
     - rvm: jruby
     - gemfile: Gemfile
     - gemfile: gemfiles/Gemfile-4-1-stable
+    - gemfile: gemfiles/Gemfile-4-2-stable
 
