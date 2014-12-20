@@ -25,7 +25,7 @@ _(Check out [better_errors] as a great alternative for any Rack application!)_
 **A debugging tool in your controllers and views.**
 
 Drop `<%= console %>` anywhere in a view to launch an interactive console
-session and execute code in it. Drop `console` anywhere in a controler and do
+session and execute code in it. Drop `console` anywhere in a controller and do
 the same in the context of the controller action.
 
 ![image](https://cloud.githubusercontent.com/assets/705116/3825939/7e284de0-1d5a-11e4-9896-81465a38da76.gif)
