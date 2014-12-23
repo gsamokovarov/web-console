@@ -20,5 +20,5 @@ Gem::Specification.new do |s|
   s.add_dependency "railties",    rails_version
   s.add_dependency "activemodel", rails_version
   s.add_dependency "actionview",  rails_version
-  s.add_dependency "debug_inspector"
+  s.add_dependency "bindex"
 end
