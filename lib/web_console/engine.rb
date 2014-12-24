@@ -24,7 +24,7 @@ module WebConsole
       end
 
       ActiveSupport.on_load(:action_view) do
-        ActionView::Helpers.send(:include, Helper)
+        ActionView::Base.send(:include, Helper)
       end
 
       ActiveSupport.on_load(:action_controller) do
