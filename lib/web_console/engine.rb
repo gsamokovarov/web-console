@@ -9,15 +9,31 @@ module WebConsole
     config.web_console = ActiveSupport::OrderedOptions.new
     config.web_console.whitelisted_ips = %w( 127.0.0.1 ::1 )
 
-    initializer "web_console.initialize_view_helpers" do
-      ActiveSupport.on_load :action_view do
-        include WebConsole::ViewHelpers
+    initializer 'web_console.initialize' do
+      ActionDispatch::DebugExceptions.class_eval do
+        def render_exception_with_web_console(env, exception)
+          render_exception_without_web_console(env, exception).tap do
+            wrapper = ActionDispatch::ExceptionWrapper.new(env, exception)
+
+            # Get the original exception if ExceptionWrapper decides to follow it.
+            env['web_console.exception'] = wrapper.exception
+          end
+        end
+
+        alias_method_chain :render_exception, :web_console
       end
 
-      ActiveSupport.on_load :action_controller do
-        prepend_view_path File.dirname(__FILE__) + '/../action_dispatch/templates'
-        include WebConsole::ControllerHelpers
+      ActiveSupport.on_load(:action_view) do
+        ActionView::Base.send(:include, Helper)
       end
+
+      ActiveSupport.on_load(:action_controller) do
+        ActionController::Base.send(:include, Helper)
+      end
+    end
+
+    initializer 'web_console.insert_middleware' do |app|
+      app.middleware.insert_before ActionDispatch::DebugExceptions, Middleware
     end
 
     initializer 'web_console.process_whitelisted_ips' do

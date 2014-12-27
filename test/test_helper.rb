@@ -19,7 +19,7 @@ module SilenceRailsDomTesting
   end
 end
 
-ActionController::TestCase.class_eval do
+ActionDispatch::IntegrationTest.class_eval do
   include SilenceRailsDomTesting
 end
 
