@@ -38,7 +38,7 @@ module WebConsole
     test 'prioritizes web_console.exception over web_console.binding' do
       exception = raise_exception
 
-      REPLSession.expects(:create).with(binding: exception.bindings.first, binding_stack: exception.bindings)
+      Session.expects(:from_exception).with(exception)
 
       get '/', nil, 'CONTENT_TYPE' => 'text/html', 'web_console.binding' => binding, 'web_console.exception' => exception
     end

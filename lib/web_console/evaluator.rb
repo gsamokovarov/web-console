@@ -1,10 +1,11 @@
 module WebConsole
-  # Simple read–eval–print implementation.
+  # Simple Ruby code evaluator.
   #
-  # Provides only the most basic code evaluation with no multiline code
-  # support.
-  class REPL
-    # Cleanses exceptions raised inside #send_input.
+  # This class wraps a +Binding+ object and evaluates code inside of it. The
+  # difference of a regular +Binding+ eval is that +Evaluator+ will always
+  # return a string and will format exception output.
+  class Evaluator
+    # Cleanses exceptions raised inside #eval.
     cattr_reader :cleaner
     @@cleaner = ActiveSupport::BacktraceCleaner.new
     @@cleaner.add_silencer { |line| line.start_with?(File.expand_path('..', __FILE__)) }
@@ -13,11 +14,7 @@ module WebConsole
       @binding = binding
     end
 
-    def prompt
-      '>> '
-    end
-
-    def send_input(input)
+    def eval(input)
       "=> #{@binding.eval(input).inspect}\n"
     rescue Exception => exc
       format_exception(exc)

@@ -25,9 +25,9 @@ module WebConsole
       status, headers, body = @app.call(env)
 
       if exception = env['web_console.exception']
-        session = REPLSession.create(binding: exception.bindings.first, binding_stack: exception.bindings)
+        session = Session.from_exception(exception)
       elsif binding = env['web_console.binding']
-        session = REPLSession.create(binding: binding)
+        session = Session.from_binding(binding)
       end
 
       if session && request.acceptable_content_type?
@@ -64,18 +64,18 @@ module WebConsole
       end
 
       def update_repl_session(id, params)
-        session = REPLSession.find(id)
+        session = Session.find(id)
 
         status  = 200
         headers = { 'Content-Type' => 'application/json; charset = utf-8' }
-        body    = session.save(input: params[:input]).to_json
+        body    = { output: session.eval(params[:input]) }.to_json
 
         Rack::Response.new(body, status, headers).finish
       end
 
       def change_stack_trace(id, params)
-        session = REPLSession.find(id)
-        session.binding = session.binding_stack[params[:frame_id].to_i]
+        session = Session.find(id)
+        session.switch_binding_to(params[:frame_id])
 
         status  = 200
         headers = { 'Content-Type' => 'application/json; charset = utf-8' }
