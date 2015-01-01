@@ -2,6 +2,10 @@ require 'test_helper'
 
 module WebConsole
   class RequestTest < ActiveSupport::TestCase
+    setup do
+      WebConsole.config.stubs(:whitelisted_ips).returns(IPAddr.new('127.0.0.1'))
+    end
+
     test '#from_whitelited_ip? is falsy for blacklisted IPs' do
       req = request('http://example.com', 'REMOTE_ADDR' => '0.0.0.0')
 

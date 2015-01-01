@@ -29,6 +29,3 @@ matrix:
     - rvm: rbx-2
     - rvm: jruby
     - gemfile: Gemfile
-    - gemfile: gemfiles/Gemfile-4-1-stable
-    - gemfile: gemfiles/Gemfile-4-2-stable
-

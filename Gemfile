@@ -6,21 +6,11 @@ gem 'rails', github: 'rails/rails'
 
 platforms :jruby do
   gem 'activerecord-jdbcsqlite3-adapter'
+  gem 'binding_of_caller', '0.7.3.pre1'
 end
 
 platforms :ruby do
   gem 'sqlite3'
-end
-
-group :development do
-  gem 'puma'
-
-  # Only require this one explicitly.
-  gem 'pry-rails', require: false
-
-  platforms :ruby do
-    gem 'thin'
-  end
 end
 
 group :test do
