@@ -47,6 +47,8 @@ module WebConsole
     end
 
     setup do
+      WebConsole.config.stubs(:whitelisted_ips).returns(IPAddr.new('0.0.0.0/0'))
+
       @app = Middleware.new(SingleConsoleApplication.new)
     end
 
