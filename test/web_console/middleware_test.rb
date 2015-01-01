@@ -69,6 +69,28 @@ module WebConsole
       assert_select '#console', 0
     end
 
+    test 'can evaluate code and return it as a JSON' do
+      session, line = Session.new(binding), __LINE__
+
+      Session.stubs(:from_binding).returns(session)
+
+      get '/', nil, 'CONTENT_TYPE' => 'text/html', 'web-console.binding' => binding
+      xhr :put, "/repl_sessions/#{session.id}", { input: '__LINE__' }
+
+      assert_equal({ output: "=> #{line}\n" }.to_json, response.body)
+    end
+
+    test 'can switch bindings on error pages' do
+      session = Session.new(exception = raise_exception)
+
+      Session.stubs(:from_exception).returns(session)
+
+      get '/', nil, 'CONTENT_TYPE' => 'text/html', 'web-console.exception' => exception
+      xhr :post, "/repl_sessions/#{session.id}/trace", { frame_id: 1 }
+
+      assert_equal({ ok: true }.to_json, response.body)
+    end
+
     private
 
       def raise_exception
