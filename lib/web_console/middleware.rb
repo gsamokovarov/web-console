@@ -64,7 +64,9 @@ module WebConsole
       end
 
       def update_repl_session(id, params)
-        session = Session.find(id)
+        unless session = Session.find(id)
+          return respond_with_unavailable_session
+        end
 
         status  = 200
         headers = { 'Content-Type' => 'application/json; charset = utf-8' }
@@ -74,12 +76,23 @@ module WebConsole
       end
 
       def change_stack_trace(id, params)
-        session = Session.find(id)
+        unless session = Session.find(id)
+          return respond_with_unavailable_session
+        end
+
         session.switch_binding_to(params[:frame_id])
 
         status  = 200
         headers = { 'Content-Type' => 'application/json; charset = utf-8' }
         body    = { ok: true }.to_json
+
+        Rack::Response.new(body, status, headers).finish
+      end
+
+      def respond_with_unavailable_session
+        status = 404
+        headers = { 'Content-Type' => 'application/json; charset = utf-8' }
+        body    = { output: 'Unavailable session' }.to_json
 
         Rack::Response.new(body, status, headers).finish
       end

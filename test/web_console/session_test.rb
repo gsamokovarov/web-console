@@ -21,17 +21,12 @@ module WebConsole
       @session = Session.new TOPLEVEL_BINDING
     end
 
-    test 'raises Session::NotFound on not found sessions' do
-      assert_raises(Session::NotFound) { Session.find("nonexistent session") }
+    test 'returns nil when a session is not found' do
+      assert_nil Session.find("nonexistent session")
     end
 
     test 'find returns a persisted object' do
       assert_equal @session, Session.find(@session.id)
-    end
-
-    test 'not found exceptions are JSON serializable' do
-      exception = assert_raises(Session::NotFound) { Session.find("nonexistent session") }
-      assert_equal '{"error":"Session unavailable"}', exception.to_json
     end
 
     test 'can evaluate code in the currently selected binding' do

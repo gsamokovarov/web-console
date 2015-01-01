@@ -11,19 +11,13 @@ module WebConsole
   class Session
     INMEMORY_STORAGE = {}
 
-    class NotFound < Error
-      def as_json(*)
-        { error: message }
-      end
-    end
-
     class << self
       # Finds a persisted session in memory by its id.
       #
       # Returns a persisted session if found in memory.
       # Raises NotFound error unless found in memory.
       def find(id)
-        INMEMORY_STORAGE[id] or raise NotFound, 'Session unavailable'
+        INMEMORY_STORAGE[id]
       end
 
       # Create a Session from an exception.

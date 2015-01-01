@@ -91,6 +91,18 @@ module WebConsole
       assert_equal({ ok: true }.to_json, response.body)
     end
 
+    test 'unavailable sessions respond to the user with a message' do
+      xhr :put, '/repl_sessions/no_such_session', { input: '__LINE__' }
+
+      assert_equal({ output: 'Unavailable session' }.to_json, response.body)
+    end
+
+    test 'unavailable sessions can occur on binding switch' do
+      xhr :post, "/repl_sessions/no_such_session/trace", { frame_id: 1 }
+
+      assert_equal({ output: 'Unavailable session' }.to_json, response.body)
+    end
+
     private
 
       def raise_exception
