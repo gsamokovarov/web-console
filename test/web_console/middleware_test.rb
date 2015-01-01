@@ -30,7 +30,7 @@ module WebConsole
     end
 
     test 'render console in an html application from web_console.exception' do
-      get '/', nil, 'CONTENT_TYPE' => 'text/html', 'web_console.binding' => binding
+      get '/', nil, 'CONTENT_TYPE' => 'text/html', 'web_console.exception' => raise_exception
 
       assert_select '#console'
     end
