@@ -12,17 +12,6 @@ platforms :ruby do
   gem 'sqlite3'
 end
 
-group :development do
-  gem 'puma'
-
-  # Only require this one explicitly.
-  gem 'pry-rails', require: false
-
-  platforms :ruby do
-    gem 'thin'
-  end
-end
-
 group :test do
   gem 'rake'
   gem 'mocha', require: false
