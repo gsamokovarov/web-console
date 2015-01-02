@@ -38,7 +38,7 @@ module WebConsole
     test 'prioritizes web_console.exception over web_console.binding' do
       exception = raise_exception
 
-      REPLSession.expects(:create).with(binding: exception.bindings.first, binding_stack: exception.bindings)
+      Session.expects(:from_exception).with(exception)
 
       get '/', nil, 'CONTENT_TYPE' => 'text/html', 'web_console.binding' => binding, 'web_console.exception' => exception
     end
@@ -67,6 +67,40 @@ module WebConsole
       get '/', nil, 'CONTENT_TYPE' => 'text/html'
 
       assert_select '#console', 0
+    end
+
+    test 'can evaluate code and return it as a JSON' do
+      session, line = Session.new(binding), __LINE__
+
+      Session.stubs(:from_binding).returns(session)
+
+      get '/', nil, 'CONTENT_TYPE' => 'text/html', 'web-console.binding' => binding
+      xhr :put, "/repl_sessions/#{session.id}", { input: '__LINE__' }
+
+      assert_equal({ output: "=> #{line}\n" }.to_json, response.body)
+    end
+
+    test 'can switch bindings on error pages' do
+      session = Session.new(exception = raise_exception)
+
+      Session.stubs(:from_exception).returns(session)
+
+      get '/', nil, 'CONTENT_TYPE' => 'text/html', 'web-console.exception' => exception
+      xhr :post, "/repl_sessions/#{session.id}/trace", { frame_id: 1 }
+
+      assert_equal({ ok: true }.to_json, response.body)
+    end
+
+    test 'unavailable sessions respond to the user with a message' do
+      xhr :put, '/repl_sessions/no_such_session', { input: '__LINE__' }
+
+      assert_equal({ output: 'Unavailable session' }.to_json, response.body)
+    end
+
+    test 'unavailable sessions can occur on binding switch' do
+      xhr :post, "/repl_sessions/no_such_session/trace", { frame_id: 1 }
+
+      assert_equal({ output: 'Unavailable session' }.to_json, response.body)
     end
 
     private
