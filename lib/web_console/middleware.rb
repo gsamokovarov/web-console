@@ -32,9 +32,9 @@ module WebConsole
 
       if session && request.acceptable_content_type?
         response = Rack::Response.new(body, status, headers)
-        template = ActionView::Base.new(TEMPLATES_PATH, session: session)
+        template = Template.new(env, session)
 
-        response.write(template.render(template: 'session', layout: false))
+        response.write(template.render('index'))
         response.finish
       else
         [ status, headers, body ]
