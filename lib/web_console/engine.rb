@@ -36,6 +36,12 @@ module WebConsole
       app.middleware.insert_before ActionDispatch::DebugExceptions, Middleware
     end
 
+    initializer 'web_console.templates_path' do
+      if template_paths = config.web_console.template_paths
+        WebConsole::Template.template_paths.unshift(*Array(template_paths))
+      end
+    end
+
     initializer 'web_console.process_whitelisted_ips' do
       config.web_console.tap do |c|
         # Ensure that it is an array of IPAddr instances and it is defaulted to

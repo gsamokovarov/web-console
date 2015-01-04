@@ -70,6 +70,17 @@ module WebConsole
       end
     end
 
+    test 'config.template_paths prepend paths if it exists' do
+      new_uninitialized_app do |app|
+        dirname = File.expand_path('..', __FILE__)
+
+        app.config.web_console.template_paths = dirname
+        app.initialize!
+
+        assert_equal dirname, WebConsole::Template.template_paths.first
+      end
+    end
+
     private
 
       def new_uninitialized_app(root = File.expand_path('../../dummy', __FILE__))
