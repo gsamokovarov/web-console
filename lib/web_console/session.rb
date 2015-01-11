@@ -54,16 +54,6 @@ module WebConsole
       @evaluator = Evaluator.new(@bindings[index.to_i])
     end
 
-    # Whether this session is special cased for the error page.
-    #
-    # The error page is special, because its the only page that requires
-    # multiple bindings.
-    #
-    # Returns true when there are multiple binding or false otherwise.
-    def for_error_page?
-      @bindings.count > 1
-    end
-
     private
 
       def store_into_memory

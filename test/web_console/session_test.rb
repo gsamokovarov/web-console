@@ -47,13 +47,6 @@ module WebConsole
       assert_equal "=> #{exc.line}\n", session.eval('__LINE__')
     end
 
-    test 'is aware if it has multiple bindings' do
-      exc = LineAwareError.raise
-      session = Session.from_exception(exc)
-
-      assert session.for_error_page?
-    end
-
     test 'can switch to bindings' do
       exc, saved_line = LineAwareError.raise, __LINE__
 
