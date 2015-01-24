@@ -32,10 +32,10 @@ module WebConsole
     # An unique identifier for every REPL.
     attr_reader :id
 
-    def initialize(*bindings)
+    def initialize(bindings)
       @id = SecureRandom.hex(16)
-      @bindings = bindings.flatten
-      @evaluator = Evaluator.new(@bindings.first)
+      @bindings = Array(bindings)
+      @evaluator = Evaluator.new(@bindings[0])
 
       store_into_memory
     end
