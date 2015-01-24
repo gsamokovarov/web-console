@@ -21,14 +21,16 @@ module WebConsole
         proc do |event, file, line, id, binding, classname|
           case event
           when 'raise'
-            # binding_of_caller will generate an improperly built binding at
-            # caller[1]. Every call to a non existent method, constant or a
-            # local variable will result in a Java NullPointerException.
-            #
-            # The binding that Kernel#set_trace_func is giving us is properly
-            # built, so we can use in place of the broken one.
-            current_bindings = ::Kernel.binding.callers.drop(2).unshift(binding)
-            $ERROR_INFO.instance_variable_set(:@bindings, current_bindings)
+            if $ERROR_INFO.bindings.empty?
+              # binding_of_caller will generate an improperly built binding at
+              # caller[1]. Every call to a non existent method, constant or a
+              # local variable will result in a Java NullPointerException.
+              #
+              # The binding that Kernel#set_trace_func is giving us is properly
+              # built, so we can use in place of the broken one.
+              bindings = ::Kernel.binding.callers.drop(2).unshift(binding)
+              $ERROR_INFO.instance_variable_set(:@bindings, bindings)
+            end
           end
         end
       end
