@@ -25,8 +25,10 @@ module WebConsole
         new(exc.bindings)
       end
 
-      alias from_binding new
-      alias from_bindings new
+      # Create a Session from a single binding.
+      def from_binding(binding)
+        new(binding)
+      end
     end
 
     # An unique identifier for every REPL.

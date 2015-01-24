@@ -54,7 +54,7 @@ module WebConsole
       END
     end
 
-    test 'Evaluator callers are cleaned up of unneeded backtraces' do
+    test 'Evaluator callers are cleaned up of unneeded backtraces', only: :ruby do
       # Those have to be on the same line to get the same trace.
       repl, trace = Evaluator.new(binding), current_trace
 
