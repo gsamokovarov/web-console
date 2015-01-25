@@ -1,5 +1,8 @@
-require 'simplecov'
-SimpleCov.start 'rails'
+case RUBY_ENGINE
+when 'ruby', 'rbx'
+  require 'simplecov'
+  SimpleCov.start 'rails'
+end
 
 # Configure Rails Environment
 ENV["RAILS_ENV"] = "test"
