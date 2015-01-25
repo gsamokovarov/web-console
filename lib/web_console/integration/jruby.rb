@@ -41,19 +41,21 @@ module WebConsole
     # It won't actually evaluate any code, rather it will tell the user how to
     # enable interpreted mode.
     class FakeJRubyBinding
+      TURN_ON_INTERPRETED_MODE_TEXT = <<-END.strip_heredoc
+        JRuby needs to run in interpreted mode for introspection support.
+
+        To turn on interpreted mode, put -J-Djruby.compile.mode=OFF in the
+        JRUBY_OPTS environment variable.
+      END
+
+      def TURN_ON_INTERPRETED_MODE_TEXT.inspect
+        self
+      end
+
+      TURN_ON_INTERPRETED_MODE_TEXT.freeze
+
       def eval(*)
-        output = <<-END.strip_heredoc
-          JRuby needs to run in interpreted mode for introspection support.
-
-          To turn on interpreted mode, put -J-Djruby.compile.mode=OFF in the
-          JRUBY_OPTS environment variable.
-        END
-
-        def output.inspect
-          self
-        end
-
-        output
+        TURN_ON_INTERPRETED_MODE_TEXT
       end
     end
 
