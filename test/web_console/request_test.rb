@@ -25,6 +25,12 @@ module WebConsole
       [ html, xhtml ].each { |req| assert req.acceptable_content_type? }
     end
 
+    test '#acceptable_content_type? is truthy for plain text content type' do
+      req = request('http://example.com', 'CONTENT_TYPE' => 'text/plain')
+
+      assert req.acceptable_content_type?
+    end
+
     test '#acceptable_content_type? is truthy for blank content type' do
       req = request('http://example.com', 'CONTENT_TYPE' => '')
 
