@@ -22,12 +22,12 @@ module WebConsole
         render(template: template, layout: 'layouts/javascript')
       end
 
-      # Render inlined CSS to be used inside of JavaScript code.
+      # Render inlined string to be used inside of JavaScript code.
       #
-      # The inlined CSS is returned as JavaScript string. You don't need to
-      # wrap it in a string yourself.
-      def render_inlined_css(template)
-        render(template: template, layout: 'layouts/inlined_css')
+      # The inlined string is returned as an actual JavaScript string. You
+      # don't need to wrap the result yourself.
+      def render_inlined_string(template)
+        render(template: template, layout: 'layouts/inlined_string')
       end
     end
 
