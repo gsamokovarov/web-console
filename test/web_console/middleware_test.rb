@@ -18,7 +18,7 @@ module WebConsole
     end
 
     setup do
-      WebConsole.config.stubs(:whitelisted_ips).returns(IPAddr.new('0.0.0.0/0'))
+      Request.stubs(:whitelisted_ips).returns(IPAddr.new('0.0.0.0/0'))
 
       @app = Middleware.new(Application.new)
     end
@@ -56,7 +56,7 @@ module WebConsole
     end
 
     test "doesn't render console from non whitelisted IP" do
-      WebConsole.config.stubs(:whitelisted_ips).returns(IPAddr.new('127.0.0.1'))
+      Request.stubs(:whitelisted_ips).returns(IPAddr.new('127.0.0.1'))
 
       get '/', nil, 'CONTENT_TYPE' => 'text/html', 'REMOTE_ADDR' => '1.1.1.1', 'web-console.binding' => binding
 

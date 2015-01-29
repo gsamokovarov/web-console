@@ -8,8 +8,8 @@ module WebConsole
         app.initialize!
 
         1.upto(255).each do |n|
-          assert_includes WebConsole::Request.whitelisted_ips, "172.16.0.#{n}"
-          assert_includes WebConsole::Request.whitelisted_ips, "192.168.0.#{n}"
+          assert_includes Request.whitelisted_ips, "172.16.0.#{n}"
+          assert_includes Request.whitelisted_ips, "192.168.0.#{n}"
         end
       end
     end
@@ -19,9 +19,9 @@ module WebConsole
         app.config.web_console.whitelisted_ips = '8.8.8.8'
         app.initialize!
 
-        assert_includes WebConsole::Request.whitelisted_ips, '127.0.0.1'
-        assert_includes WebConsole::Request.whitelisted_ips, '::1'
-        assert_includes WebConsole::Request.whitelisted_ips, '8.8.8.8'
+        assert_includes Request.whitelisted_ips, '127.0.0.1'
+        assert_includes Request.whitelisted_ips, '::1'
+        assert_includes Request.whitelisted_ips, '8.8.8.8'
       end
     end
 
@@ -32,15 +32,13 @@ module WebConsole
         app.config.web_console.template_paths = dirname
         app.initialize!
 
-        assert_equal dirname, WebConsole::Template.template_paths.first
+        assert_equal dirname, Template.template_paths.first
       end
     end
 
     private
 
       def new_uninitialized_app(root = File.expand_path('../../dummy', __FILE__))
-        skip if Rails::VERSION::MAJOR == 3
-
         old_app = Rails.application
 
         FileUtils.mkdir_p(root)

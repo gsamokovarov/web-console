@@ -38,13 +38,13 @@ module WebConsole
 
     initializer 'web_console.templates_path' do
       if template_paths = config.web_console.template_paths
-        WebConsole::Template.template_paths.unshift(*Array(template_paths))
+        Template.template_paths.unshift(*Array(template_paths))
       end
     end
 
     initializer 'web_console.whitelisted_ips' do
       if whitelisted_ips = config.web_console.whitelisted_ips
-        WebConsole::Request.whitelisted_ips = WebConsole::Whitelist.new(whitelisted_ips)
+        Request.whitelisted_ips = Whitelist.new(whitelisted_ips)
       end
     end
   end
