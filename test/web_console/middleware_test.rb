@@ -58,7 +58,9 @@ module WebConsole
     test "doesn't render console from non whitelisted IP" do
       Request.stubs(:whitelisted_ips).returns(IPAddr.new('127.0.0.1'))
 
-      get '/', nil, 'CONTENT_TYPE' => 'text/html', 'REMOTE_ADDR' => '1.1.1.1', 'web-console.binding' => binding
+      silence(:stderr) do
+        get '/', nil, 'CONTENT_TYPE' => 'text/html', 'REMOTE_ADDR' => '1.1.1.1', 'web-console.binding' => binding
+      end
 
       assert_select '#console', 0
     end

@@ -47,5 +47,11 @@ module WebConsole
         Request.whitelisted_ips = Whitelist.new(whitelisted_ips)
       end
     end
+
+    initializer 'web_console.whiny_requests' do
+      if config.web_console.key?(:whiny_requests)
+        Middleware.whiny_requests = config.web_console.whiny_requests
+      end
+    end
   end
 end

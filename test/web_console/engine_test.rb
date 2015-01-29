@@ -36,6 +36,15 @@ module WebConsole
       end
     end
 
+    test 'config.whiny_request removes extra logging' do
+      new_uninitialized_app do |app|
+        app.config.web_console.whiny_requests = false
+        app.initialize!
+
+        assert_not Middleware.whiny_requests
+      end
+    end
+
     private
 
       def new_uninitialized_app(root = File.expand_path('../../dummy', __FILE__))
