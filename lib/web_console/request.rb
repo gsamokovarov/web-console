@@ -5,12 +5,16 @@ module WebConsole
     # Puma will return text/plain.
     ACCEPTABLE_CONTENT_TYPE = [Mime::HTML, Mime::TEXT]
 
+    # Configurable whitelisted IPs.
+    cattr_accessor :whitelisted_ips
+    @@whitelisted_ips = Whitelist.new
+
     # Returns whether a request came from a whitelisted IP.
     #
     # For a request to hit Web Console features, it needs to come from a white
     # listed IP.
     def from_whitelited_ip?
-      WebConsole.config.whitelisted_ips.include?(remote_ip)
+      whitelisted_ips.include?(remote_ip)
     end
 
     # Returns whether the request is from an acceptable content type.

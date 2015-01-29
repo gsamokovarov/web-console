@@ -2,6 +2,29 @@ require 'test_helper'
 
 module WebConsole
   class EngineTest < ActiveSupport::TestCase
+    test 'config.whitelisted_ips sets whitelisted networks' do
+      new_uninitialized_app do |app|
+        app.config.web_console.whitelisted_ips = %w( 172.16.0.0/12 192.168.0.0/16 )
+        app.initialize!
+
+        1.upto(255).each do |n|
+          assert_includes WebConsole::Request.whitelisted_ips, "172.16.0.#{n}"
+          assert_includes WebConsole::Request.whitelisted_ips, "192.168.0.#{n}"
+        end
+      end
+    end
+
+    test 'config.whitelisted_ips always includes localhost' do
+      new_uninitialized_app do |app|
+        app.config.web_console.whitelisted_ips = '8.8.8.8'
+        app.initialize!
+
+        assert_includes WebConsole::Request.whitelisted_ips, '127.0.0.1'
+        assert_includes WebConsole::Request.whitelisted_ips, '::1'
+        assert_includes WebConsole::Request.whitelisted_ips, '8.8.8.8'
+      end
+    end
+
     test 'config.template_paths prepend paths if it exists' do
       new_uninitialized_app do |app|
         dirname = File.expand_path('..', __FILE__)

@@ -11,8 +11,8 @@ require 'web_console/session'
 require 'web_console/template'
 require 'web_console/unsupported_platforms'
 require 'web_console/middleware'
-require 'web_console/request'
 require 'web_console/whitelist'
+require 'web_console/request'
 
 module WebConsole
   # Shortcut the +WebConsole::Engine.config.web_console+.
