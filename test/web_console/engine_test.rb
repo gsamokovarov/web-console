@@ -2,71 +2,26 @@ require 'test_helper'
 
 module WebConsole
   class EngineTest < ActiveSupport::TestCase
-    test 'whitelisted ips are courced to IPAddr' do
-      new_uninitialized_app do |app|
-        app.config.web_console.whitelisted_ips = '127.0.0.1'
-        app.initialize!
-
-        assert_equal [ IPAddr.new('127.0.0.1') ], app.config.web_console.whitelisted_ips
-      end
-    end
-
-    test 'whitelisted ips with IPv6 format as default' do
-      new_uninitialized_app do |app|
-        app.config.web_console.whitelisted_ips = [ '127.0.0.1', '::1' ]
-        app.initialize!
-
-        assert_equal [ IPAddr.new('127.0.0.1'), IPAddr.new('::1') ], app.config.web_console.whitelisted_ips
-      end
-    end
-
-    test 'whitelisted ips are normalized and unique IPAddr' do
-      new_uninitialized_app do |app|
-        app.config.web_console.whitelisted_ips = [ '127.0.0.1', '127.0.0.1', nil, '', ' ' ]
-        app.initialize!
-
-        assert_equal [ IPAddr.new('127.0.0.1') ], app.config.web_console.whitelisted_ips
-      end
-    end
-
-    test 'whitelisted_ips.include? coerces to IPAddr' do
-      new_uninitialized_app do |app|
-        app.config.web_console.whitelisted_ips = '127.0.0.1'
-        app.initialize!
-
-        assert app.config.web_console.whitelisted_ips.include?('127.0.0.1')
-      end
-    end
-
-    test 'whitelisted_ips.include? works with IPAddr' do
-      new_uninitialized_app do |app|
-        app.config.web_console.whitelisted_ips = '127.0.0.1'
-        app.initialize!
-
-        assert app.config.web_console.whitelisted_ips.include?(IPAddr.new('127.0.0.1'))
-      end
-    end
-
-    test 'whitelist whole networks' do
-      new_uninitialized_app do |app|
-        app.config.web_console.whitelisted_ips = '172.16.0.0/12'
-        app.initialize!
-
-        1.upto(255).each do |n|
-          assert_includes app.config.web_console.whitelisted_ips, "172.16.0.#{n}"
-        end
-      end
-    end
-
-    test 'whitelist multiple networks' do
+    test 'config.whitelisted_ips sets whitelisted networks' do
       new_uninitialized_app do |app|
         app.config.web_console.whitelisted_ips = %w( 172.16.0.0/12 192.168.0.0/16 )
         app.initialize!
 
         1.upto(255).each do |n|
-          assert_includes app.config.web_console.whitelisted_ips, "172.16.0.#{n}"
-          assert_includes app.config.web_console.whitelisted_ips, "192.168.0.#{n}"
+          assert_includes Request.whitelisted_ips, "172.16.0.#{n}"
+          assert_includes Request.whitelisted_ips, "192.168.0.#{n}"
         end
+      end
+    end
+
+    test 'config.whitelisted_ips always includes localhost' do
+      new_uninitialized_app do |app|
+        app.config.web_console.whitelisted_ips = '8.8.8.8'
+        app.initialize!
+
+        assert_includes Request.whitelisted_ips, '127.0.0.1'
+        assert_includes Request.whitelisted_ips, '::1'
+        assert_includes Request.whitelisted_ips, '8.8.8.8'
       end
     end
 
@@ -77,15 +32,22 @@ module WebConsole
         app.config.web_console.template_paths = dirname
         app.initialize!
 
-        assert_equal dirname, WebConsole::Template.template_paths.first
+        assert_equal dirname, Template.template_paths.first
+      end
+    end
+
+    test 'config.whiny_request removes extra logging' do
+      new_uninitialized_app do |app|
+        app.config.web_console.whiny_requests = false
+        app.initialize!
+
+        assert_not Middleware.whiny_requests
       end
     end
 
     private
 
       def new_uninitialized_app(root = File.expand_path('../../dummy', __FILE__))
-        skip if Rails::VERSION::MAJOR == 3
-
         old_app = Rails.application
 
         FileUtils.mkdir_p(root)

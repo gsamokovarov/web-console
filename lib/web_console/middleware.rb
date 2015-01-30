@@ -7,13 +7,16 @@ module WebConsole
       binding_change_re: %r{/repl_sessions/(?<id>.+?)/trace\z}
     }
 
+    cattr_accessor :whiny_requests
+    @@whiny_requests = true
+
     def initialize(app, options = {})
       @app     = app
       @options = DEFAULT_OPTIONS.merge(options)
     end
 
     def call(env)
-      request = Request.new(env)
+      request = create_regular_or_whiny_request(env)
       return @app.call(env) unless request.from_whitelited_ip?
 
       if id = id_for_repl_session_update(request)
@@ -42,6 +45,11 @@ module WebConsole
     end
 
     private
+
+      def create_regular_or_whiny_request(env)
+        request = Request.new(env)
+        whiny_requests ? WhinyRequest.new(request) : request
+      end
 
       def update_re
         @options[:update_re]
