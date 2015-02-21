@@ -1,105 +1,122 @@
 <p align=right>
   Documentation for:
-  <a href=https://github.com/rails/web-console/tree/v0.1.0>v0.1.0</a>
-  <a href=https://github.com/rails/web-console/tree/v0.2.0>v0.2.0</a>
-  <a href=https://github.com/rails/web-console/tree/v0.3.0>v0.3.0</a>
-  <a href=https://github.com/rails/web-console/tree/v0.4.0>v0.4.0</a>
-  <a href=https://github.com/rails/web-console/tree/v1.0.4>v1.0.4</a>
+  <a href=https://github.com/rails/web-console/tree/v2.0.0>v2.0.0</a>
 </p>
 
-Web Console [![Build Status](https://travis-ci.org/rails/web-console.svg?branch=master)](https://travis-ci.org/rails/web-console)
-===========
+# Web Console [![Build Status](https://travis-ci.org/rails/web-console.svg?branch=master)](https://travis-ci.org/rails/web-console)
 
-_Web Console_ is a set of debugging tools for your Rails application.
+_Web Console_ is a debugging tool for your Ruby on Rails applications.
 
-**A debugging tool in the default error page.**
+- [Installation](#installation)
+- [Runtime](#runtime)
+  - [CRuby](#cruby)
+  - [JRuby](#jruby)
+  - [Rubinius](#rubinius)
+- [Configuration](#configuration)
+- [Usage](#usage)
+- [FAQ](#faq)
+- [Credits](#credits)
 
-An interactive console is launched automatically in the default Rails error
-page. It makes it easy to inspect the stack trace and execute Ruby code in the stack
-trace's bindings.
+## Installation
 
-_(Check out [better_errors] as a great alternative for any Rack application!)_
-
-![image](https://cloud.githubusercontent.com/assets/705116/3825943/a010af92-1d5a-11e4-84c2-4ed0ba367f4e.gif)
-
-**A debugging tool in your controllers and views.**
-
-Drop `<%= console %>` anywhere in a view to launch an interactive console
-session and execute code in it. Drop `console` anywhere in a controller and do
-the same in the context of the controller action.
-
-![image](https://cloud.githubusercontent.com/assets/705116/3825939/7e284de0-1d5a-11e4-9896-81465a38da76.gif)
-
-Requirements
-------------
-
-_Web Console_ has been tested on the following rubies.
-
-* _MRI Ruby_ 2.1.0
-* _MRI Ruby_ 2.0.0
-* _MRI Ruby_ 1.9.3
-
-There is an experimental _JRuby_ 1.7 support. See Installation section for more
-information.
-
-_Web Console_ is built explicitly for _Rails 4_.
-
-Installation
-------------
-
-To install it in your current application, add the following to your `Gemfile`.
+_Web Console_ is meant to work as a Rails plugin. To install it in your current
+application, add the following to your `Gemfile`.
 
 ```ruby
 group :development do
   gem 'web-console', '~> 2.0'
-end
-```
-
-If you are running JRuby, you can get experimental support with adding a
-pre-release version of [binding_of_caller].
-
-```ruby
-group :development do
-  gem 'web-console', '~> 2.0'
-
-  gem 'binding_of_caller', '0.7.3.pre1'
 end
 ```
 
 After you save the `Gemfile` changes, make sure to run `bundle install` and
 restart your server for the _Web Console_ to kick in.
 
-Configuration
--------------
+## Runtime
 
-> Today we have learned in the agony of war that great power involves great
-> responsibility.
->
-> -- <cite>Franklin D. Roosevelt</cite>
+_Web Console_ uses [John Mair]'s [binding_of_caller] to spawn a console in a
+specific binding. This comes at the price of limited Ruby runtime support.
 
-_Web Console_ is a powerful tool. It allows you to execute arbitrary code on
-the server, so you should be very careful, who you give access to it.
+### CRuby
+
+CRuby 1.9.2 and below is **not** supported.
+
+### JRuby
+
+JRuby needs to run in interpreted mode. You can enable it by:
+
+```bash
+export JRUBY_OPTS=-J-Djruby.compile.mode=OFF
+
+# If you run JRuby 1.7.12 and above, you can use:
+export JRUBY_OPTS=--dev
+```
+
+An unstable version of [binding_of_caller] is needed as the latest stable one
+won't compile on _JRuby_. To install it, put the following in your application
+`Gemfile`:
+
+```ruby
+group :development do
+  gem 'binding_of_caller', '0.7.3.pre1'
+end
+```
+
+Only _JRuby_ 1.7, is supported (no JRuby 9K support at the moment).
+
+### Rubinius
+
+Internal errors like `ZeroDevisionError` aren't caught.
+
+## Usage
+
+The web console allows you to create an interactive Ruby session in your
+browser. Those sessions are launched automatically in case on an error, but
+they can also be launched manually in in any page.
+
+For example, calling `console` in a view will display a console in the current
+page in the context of the view binding.
+
+```html
+<% console %>
+```
+
+Calling `console` in a controller will result in a console in the context of
+the controller action:
+
+```ruby
+class PostsController < ApplicationController
+  def new
+    console
+    @post = Post.new
+  end
+end
+```
+
+Only one `console` invocation is allowed per request. If you happen to have
+multiple ones, a `WebConsole::DoubleRenderError` is raised.
+
+## Configuration
+
+_Web Console_ allows you to execute arbitrary code on the server, so you
+should be very careful, who you give access to.
 
 ### config.web_console.whitelisted_ips
 
-By default, only requests coming from `127.0.0.1` are allowed.
+By default, only requests coming from IPv4 and IPv6 localhosts are allowed.
 
 `config.web_console.whitelisted_ips` lets you control which IP's have access to
 the console.
 
-Let's say you want to share your console with `192.168.0.100`. You can do this:
+You can whitelist single IP's or whole networks. Say you want to share your
+console with `192.168.0.100`. You can do this:
 
 ```ruby
 class Application < Rails::Application
-  config.web_console.whitelisted_ips = %w( 127.0.0.1 192.168.0.100 )
+  config.web_console.whitelisted_ips = '192.168.0.100'
 end
 ```
 
-From the example, you can guess that `config.web_console.whitelisted_ips`
-accepts an array of ip addresses, provided as strings. An important thing to
-note here is that, we won't push `127.0.0.1` if you manually set the option!
-
-If you want to whitelist a whole network, you can do:
+If you want to whitelist the whole private network, you can do:
 
 ```ruby
 class Application < Rails::Application
@@ -107,46 +124,76 @@ class Application < Rails::Application
 end
 ```
 
-Again, note that this network doesn't allow `127.0.0.1`. If you want to access
-the console, you have to do so from it's external IP or add `127.0.0.1` to the
-mix.
+Take a note that IPv4 and IPv6 localhosts are always allowed. This wasn't the
+case in 2.0.
 
-Credits
--------
+### config.web_console.whiny_requests
 
-* Shoutout to [Charlie Somerville] for [better_errors]! Most of the exception
-  binding code is coming straight out of the [better_errors] project.
+When a console cannot be shown for a given IP address or content type, a
+messages like the following is printed in the server logs:
 
-* _Web Console_ wouldn't be possible without the work [John Mair] put in
-  [binding_of_caller]. This is the technology that let us execute a console
-  right where an error occurred.
+> Cannot render console from 192.168.1.133! Allowed networks:
+> 127.0.0.0/127.255.255.255, ::1
 
-* Thanks to [Charles Oliver Nutter] for all the JRuby feedback and support he
-  has given us.
+If you don't wanna see this message anymore, set this option to `false`:
 
-FAQ
----
-
-### I'm running JRuby and there's no console on the default error page.
-
-You would also have to run you Rails server in JRuby's interpreted mode. Enable
-it with code snippet below, then start your development Rails server with
-`rails server`, as usual.
-
-```bash
-export JRUBY_OPTS=-J-Djruby.compile.mode=OFF
-
-# If you run JRuby 1.7.12 and above, you can use:
-# export JRUBY_OPTS=--dev
+```ruby
+class Application < Rails::Application
+  config.web_console.whiny_requests = false
+end
 ```
+
+### config.web_console.templates_path
+
+If you wanna style the console yourself, you can place `style.css` at a
+directory pointed by `config.web_console.templates_path`:
+
+```ruby
+class Application < Rails::Application
+  config.web_console.templates_path = 'app/views/web_console'
+end
+```
+
+You may wanna check the [templates] folder at the source tree for the files you
+may override.
+
+## FAQ
+
+### Where did /console go?
+
+The remote terminal emulator was extracted in its own gem that is no longer
+bundled with _Web Console_.
+
+If you miss this feature, check out [rvt].
+
+### Why I constantly get unavailable session errors?
+
+All of _Web Console_ sessions are stored in memory. If you happen to run on a
+multi-process server (like Unicorn) you may get unavailable session errors
+while the server is still running. This is because a request may hit a
+different worker (process) that doesn't have the desired session in memory.
+
+To avoid that, if you use such servers in development, configure them so they
+server requests only out of one process.
 
 ### How to inspect local and instance variables?
 
 The interactive console executes Ruby code. Invoking `instance_variables` and
 `local_variables` will give you what you want.
 
-  [better_errors]: https://github.com/charliesome/better_errors
-  [binding_of_caller]: https://github.com/banister/binding_of_caller
-  [Charlie Somerville]: https://github.com/charliesome
-  [John Mair]: https://github.com/banister
-  [Charles Oliver Nutter]: https://github.com/headius
+## Credits
+
+* Shoutout to [Charlie Somerville] for [better_errors] and [this] code.
+* Kudos to [John Mair] for [binding_of_caller].
+* Thanks to [Charles Oliver Nutter] for all the _JRuby_ feedback.
+* Hugs and kisses to all of our [contributors].
+
+[better_errors]: https://github.com/charliesome/better_errors
+[binding_of_caller]: https://github.com/banister/binding_of_caller
+[Charlie Somerville]: https://github.com/charliesome
+[John Mair]: https://github.com/banister
+[Charles Oliver Nutter]: https://github.com/headius
+[templates]: https://github.com/rails/web-console/tree/master/lib/web_console/templates
+[this]: https://github.com/rails/web-console/blob/master/lib/web_console/integration/cruby.rb#L20-L32
+[rvt]: https://github.com/gsamokovarov/rvt
+[contributors]: https://github.com/rails/web-console/graphs/contributors

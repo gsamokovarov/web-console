@@ -1,11 +1,7 @@
-require 'ipaddr'
-require 'rails/engine'
-
-require 'active_model'
-require 'sprockets/rails'
+require 'rails/railtie'
 
 module WebConsole
-  class Engine < ::Rails::Engine
+  class Railtie < ::Rails::Railtie
     config.web_console = ActiveSupport::OrderedOptions.new
     config.web_console.whitelisted_ips = %w( 127.0.0.1 ::1 )
 
@@ -51,6 +47,14 @@ module WebConsole
     initializer 'web_console.whiny_requests' do
       if config.web_console.key?(:whiny_requests)
         Middleware.whiny_requests = config.web_console.whiny_requests
+      end
+    end
+
+    # Leave this undocumented so we treat such content type misses as bugs,
+    # while still being able to help the affected users in the meantime.
+    initializer 'web_console.acceptable_content_types' do
+      if acceptable_content_types = config.web_console.acceptable_content_types
+        Request.acceptable_content_types.concat(Array(acceptable_content_types))
       end
     end
   end

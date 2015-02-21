@@ -4,7 +4,7 @@ require 'active_support/lazy_load_hooks'
 require 'active_support/logger'
 
 require 'web_console/integration'
-require 'web_console/engine'
+require 'web_console/railtie'
 require 'web_console/errors'
 require 'web_console/helper'
 require 'web_console/evaluator'
