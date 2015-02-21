@@ -1,5 +1,8 @@
-require 'simplecov'
-SimpleCov.start 'rails'
+case RUBY_ENGINE
+when 'ruby', 'rbx'
+  require 'simplecov'
+  SimpleCov.start 'rails'
+end
 
 # Configure Rails Environment
 ENV["RAILS_ENV"] = "test"
@@ -17,6 +20,28 @@ module SilenceRailsDomTesting
   def assert_select(*)
     silence_warnings { super }
   end
+end
+
+# Allows you to specify test to run only on specific Ruby platforms.
+#
+# Example:
+#
+#   test 'CRuby specific feature', only: :ruby
+#   test 'CRuby and JRuby specific feature', only: %w(ruby jruby)
+#
+# If the :only option isn't present, the test is defined for all the platforms.
+module PlatformSpecificTestMacro
+  def test(name, options = {})
+    platforms = Array(options[:only]).map(&:to_s)
+
+    if platforms.blank? || RUBY_ENGINE.in?(platforms)
+      super(name)
+    end
+  end
+end
+
+ActiveSupport::TestCase.class_eval do
+  extend PlatformSpecificTestMacro
 end
 
 ActionDispatch::IntegrationTest.class_eval do
