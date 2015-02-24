@@ -1,3 +1,5 @@
+require 'active_support/core_ext/string/strip'
+
 module WebConsole
   class Middleware
     TEMPLATES_PATH = File.expand_path('../templates', __FILE__)
@@ -6,6 +8,13 @@ module WebConsole
       update_re: %r{/repl_sessions/(?<id>.+?)\z},
       binding_change_re: %r{/repl_sessions/(?<id>.+?)/trace\z}
     }
+
+    UNAVAILABLE_SESSION_MESSAGE = <<-END.strip_heredoc
+      Session %{id} is is no longer available in memory.
+
+      If you happen to run on a multi-process server (like Unicorn) the process
+      this request hit doesn't store %{id} in memory.
+    END
 
     cattr_accessor :whiny_requests
     @@whiny_requests = true
@@ -73,7 +82,7 @@ module WebConsole
 
       def update_repl_session(id, params)
         unless session = Session.find(id)
-          return respond_with_unavailable_session
+          return respond_with_unavailable_session(id)
         end
 
         status  = 200
@@ -85,7 +94,7 @@ module WebConsole
 
       def change_stack_trace(id, params)
         unless session = Session.find(id)
-          return respond_with_unavailable_session
+          return respond_with_unavailable_session(id)
         end
 
         session.switch_binding_to(params[:frame_id])
@@ -97,10 +106,10 @@ module WebConsole
         Rack::Response.new(body, status, headers).finish
       end
 
-      def respond_with_unavailable_session
+      def respond_with_unavailable_session(id)
         status = 404
         headers = { 'Content-Type' => 'application/json; charset = utf-8' }
-        body    = { output: 'Unavailable session' }.to_json
+        body    = { output: format(UNAVAILABLE_SESSION_MESSAGE, id: id)}.to_json
 
         Rack::Response.new(body, status, headers).finish
       end
