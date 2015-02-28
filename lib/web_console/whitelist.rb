@@ -1,3 +1,5 @@
+require 'ipaddr'
+
 module WebConsole
   # Whitelist of allowed networks that can access Web Console.
   #

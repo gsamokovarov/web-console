@@ -1,48 +1,24 @@
 # CHANGELOG
 
-## 1.0.4 (December 13, 2013)
+## master (unreleased)
 
-* Fix Rails 4.0.2 incompatibility. [[#9](https://github.com/rails/web-console/pull/9)]
+## 2.1.0
 
-## 1.0.3 (September 27, 2013)
+* [#109](https://github.com/rails/web-console/pull/109) Revamp unavailable session response message ([@gsamokovarov])
+* [#107](https://github.com/rails/web-console/pull/107) Fix pasting regression for all browsers ([@parterburn])
+* [#105](https://github.com/rails/web-console/pull/105) Lock scroll bottom on console window resize ([@noahpatterson])
+* [#104](https://github.com/rails/web-console/pull/104) Always whitelist localhost and inform users why no console is displayed ([@gsamokovarov])
+* [#100](https://github.com/rails/web-console/pull/100) Accept text/plain as acceptable content type for Puma ([@gsamokovarov])
+* [#98](https://github.com/rails/web-console/pull/98) Add arbitrary big z-index to the console ([@bglbruno])
+* [#88](https://github.com/rails/web-console/pull/88) Spelling fixes ([@jeffnv])
+* [#86](https://github.com/rails/web-console/pull/86) Disable autofocus when initializing the console ([@ryandao])
+* [#84](https://github.com/rails/web-console/pull/84) Allow Rails 5 as dependency in gemspec ([@jonatack])
+* [#69](https://github.com/rails/web-console/pull/69) Introduce middleware for request dispatch and console rendering ([@gsamokovarov])
 
-* Fallback to `rails console` if relative `bin/rails` isn't available.
-
-## 1.0.2 (September 24, 2013)
-
-* Depend on Rails 4.\* instead of 4.0.\*.
-
-## 1.0.1 (September 20, 2013
-
-* Break rails meta-package dependency. [[#5](https://github.com/rails/web-console/pull/5)]
-* Fix ActiveModel load error happening on rails -O configured apps. [[#4](https://github.com/rails/web-console/pull/4)]
-
-## 1.0.0 (September 16, 2013)
-
-* Don't throw server errors on finished slave processes.
-* Add monokai color theme.
-
-## 0.4.0 (September 6, 2013)
-
-* Drop GPL dependency of vt100.js.
-* Use term.js as vt100.js replacement.
-* Add config.web_console.term for using custom $TERM.
-* Add config.web_console.style.colors for color theming.
-* Add config.web_console.style.font for using custom fonts.
-* Fix ZSH repeating the first command argument on servers started inside a TMUX session.
-
-## 0.3.0 (August 23, 2013)
-
-* Proper VT100 emulation.
-* Add config.web_console.command to allow custom programs execution.
-* Add config.web_console.timeout to allow for long-polling, where available.
-* Remove config.web_console.prevent_irbrc_execution.
-
-## 0.2.0 (August 1, 2013)
-
-* Run closest .irbrc config while initializing IRB adapters.
-* Add config.web_console.prevent_irbrc_execution option.
-
-## 0.1.0 (July 30, 2013)
-
-* Initial release.
+[@jonatack]: https://github.com/jonatack
+[@ryandao]: https://github.com/ryandao
+[@jeffnv]: https://github.com/jeffnv
+[@gsamokovarov]: https://github.com/gsamokovarov
+[@bglbruno]: https://github.com/bglbruno
+[@noahpatterson]: https://github.com/noahpatterson
+[@parterburn]: https://github.com/parterburn

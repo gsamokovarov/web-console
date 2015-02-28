@@ -1,4 +1,5 @@
 require 'English'
+require 'active_support/core_ext/string/strip'
 
 java_import org.jruby.RubyInstanceConfig
 

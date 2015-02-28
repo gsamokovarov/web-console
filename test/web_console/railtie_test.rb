@@ -1,7 +1,7 @@
 require 'test_helper'
 
 module WebConsole
-  class EngineTest < ActiveSupport::TestCase
+  class RailtieTest < ActiveSupport::TestCase
     test 'config.whitelisted_ips sets whitelisted networks' do
       new_uninitialized_app do |app|
         app.config.web_console.whitelisted_ips = %w( 172.16.0.0/12 192.168.0.0/16 )
@@ -45,6 +45,17 @@ module WebConsole
       end
     end
 
+    test 'config.acceptable_content_types adds extra content types' do
+      preserving_acceptable_content_type do
+        new_uninitialized_app do |app|
+          app.config.web_console.acceptable_content_types = [Mime::ALL]
+          app.initialize!
+
+          assert_includes Request.acceptable_content_types, Mime::ALL
+        end
+      end
+    end
+
     private
 
       def new_uninitialized_app(root = File.expand_path('../../dummy', __FILE__))
@@ -64,6 +75,13 @@ module WebConsole
         end
       ensure
         Rails.application = old_app
+      end
+
+      def preserving_acceptable_content_type
+        acceptable_content_types = Request.acceptable_content_types.dup
+        yield
+      ensure
+        Request.acceptable_content_types = acceptable_content_types
       end
 
       def teardown_fixtures(*)
