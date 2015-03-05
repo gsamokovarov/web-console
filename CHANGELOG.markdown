@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+## 2.1.1
+
+* [#112](https://github.com/rails/web-console/pull/112) Always allow application/x-www-form-urlencoded content type ([@gsamokovarov])
+
 ## 2.1.0
 
 * [#109](https://github.com/rails/web-console/pull/109) Revamp unavailable session response message ([@gsamokovarov])
