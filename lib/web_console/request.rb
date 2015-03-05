@@ -4,7 +4,7 @@ module WebConsole
     # While most of the servers will return blank content type if none given,
     # Puma will return text/plain.
     cattr_accessor :acceptable_content_types
-    @@acceptable_content_types = [Mime::HTML, Mime::TEXT]
+    @@acceptable_content_types = [Mime::HTML, Mime::TEXT, Mime::URL_ENCODED_FORM]
 
     # Configurable set of whitelisted networks.
     cattr_accessor :whitelisted_ips

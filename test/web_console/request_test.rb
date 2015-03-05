@@ -31,6 +31,12 @@ module WebConsole
       assert req.acceptable_content_type?
     end
 
+    test '#acceptable_content_type? is truthy during form submission' do
+      req = request('http://example.com', 'CONTENT_TYPE' => 'application/x-www-form-urlencoded')
+
+      assert req.acceptable_content_type?
+    end
+
     test '#acceptable_content_type? is truthy for blank content type' do
       req = request('http://example.com', 'CONTENT_TYPE' => '')
 
