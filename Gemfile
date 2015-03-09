@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'rails', github: 'rails/rails'
+gem 'arel', github: 'rails/arel'
 
 platforms :jruby do
   gem 'activerecord-jdbcsqlite3-adapter'
