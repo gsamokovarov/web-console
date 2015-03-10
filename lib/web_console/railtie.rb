@@ -6,18 +6,7 @@ module WebConsole
     config.web_console.whitelisted_ips = %w( 127.0.0.1 ::1 )
 
     initializer 'web_console.initialize' do
-      ActionDispatch::DebugExceptions.class_eval do
-        def render_exception_with_web_console(env, exception)
-          render_exception_without_web_console(env, exception).tap do
-            wrapper = ActionDispatch::ExceptionWrapper.new(env, exception)
-
-            # Get the original exception if ExceptionWrapper decides to follow it.
-            env['web_console.exception'] = wrapper.exception
-          end
-        end
-
-        alias_method_chain :render_exception, :web_console
-      end
+      require 'web_console/extensions'
 
       ActiveSupport.on_load(:action_view) do
         ActionView::Base.send(:include, Helper)
