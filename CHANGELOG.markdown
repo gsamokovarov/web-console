@@ -2,6 +2,11 @@
 
 ## master (unreleased)
 
+## 2.1.2
+
+* [#115](https://github.com/rails/web-console/pull/115) Show proper binding when raising an error in a template ([@gsamokovarov])
+* [#114](https://github.com/rails/web-console/pull/114) Fix templates non rendering, because of missing template suffix ([@gsamokovarov])
+
 ## 2.1.1
 
 * [#112](https://github.com/rails/web-console/pull/112) Always allow application/x-www-form-urlencoded content type ([@gsamokovarov])
