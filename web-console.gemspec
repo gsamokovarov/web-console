@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.summary  = "A debugging tool for your Ruby on Rails applications."
   s.license  = 'MIT'
 
-  s.files      = Dir["lib/**/*", "MIT-LICENSE", "Rakefile", "README.markdown"]
+  s.files      = Dir["lib/**/*", "MIT-LICENSE", "Rakefile", "README.markdown", "CHANGELOG.markdown"]
   s.test_files = Dir["test/**/*"]
 
   rails_version = ">= 4.0"
