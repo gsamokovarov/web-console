@@ -12,7 +12,6 @@ Gem::Specification.new do |s|
   s.license  = 'MIT'
 
   s.files      = Dir["lib/**/*", "MIT-LICENSE", "Rakefile", "README.markdown", "CHANGELOG.markdown"]
-  s.test_files = Dir["test/**/*"]
 
   rails_version = ">= 4.0"
 
