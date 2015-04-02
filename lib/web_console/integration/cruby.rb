@@ -34,6 +34,7 @@ class Exception
       set_backtrace_without_binding_of_caller(*args)
     end
 
-    alias_method_chain :set_backtrace, :binding_of_caller
+    alias_method :set_backtrace_without_binding_of_caller, :set_backtrace
+    alias_method :set_backtrace, :set_backtrace_with_binding_of_caller
   end
 end

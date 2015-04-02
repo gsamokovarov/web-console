@@ -15,5 +15,6 @@ ActionDispatch::DebugExceptions.class_eval do
     end
   end
 
-  alias_method_chain :render_exception, :web_console
+  alias_method :render_exception_without_web_console, :render_exception
+  alias_method :render_exception, :render_exception_with_web_console
 end

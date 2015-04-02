@@ -62,5 +62,6 @@ end
     raise_exception_without_current_bindings(exc)
   end
 
-  alias_method_chain :raise_exception, :current_bindings
+  alias_method :raise_exception_without_current_bindings, :raise_exception
+  alias_method :raise_exception, :raise_exception_with_current_bindings
 end
