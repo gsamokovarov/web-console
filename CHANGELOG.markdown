@@ -1,6 +1,7 @@
 # CHANGELOG
 
 ## master (unreleased)
+* [#123](https://github.com/rails/web-console/pull/123) Replace deprecated `alias_method_chain` with `alias_method` ([@jonatack])
 
 ## 2.1.2
 
