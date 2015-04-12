@@ -17,7 +17,7 @@ module WebConsole
     end
 
     setup do
-      Session::INMEMORY_STORAGE.clear
+      Session.inmemory_storage.clear
       @session = Session.new TOPLEVEL_BINDING
     end
 

@@ -9,7 +9,8 @@ module WebConsole
   # error pages only, as currently, this is the only client that needs to do
   # that.
   class Session
-    INMEMORY_STORAGE = {}
+    cattr_reader :inmemory_storage
+    @@inmemory_storage = {}
 
     class << self
       # Finds a persisted session in memory by its id.
@@ -17,7 +18,7 @@ module WebConsole
       # Returns a persisted session if found in memory.
       # Raises NotFound error unless found in memory.
       def find(id)
-        INMEMORY_STORAGE[id]
+        inmemory_storage[id]
       end
 
       # Create a Session from an exception.
@@ -59,7 +60,7 @@ module WebConsole
     private
 
       def store_into_memory
-        INMEMORY_STORAGE[id] = self
+        inmemory_storage[id] = self
       end
   end
 end
