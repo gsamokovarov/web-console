@@ -181,6 +181,18 @@ server requests only out of one process.
 The interactive console executes Ruby code. Invoking `instance_variables` and
 `local_variables` will give you what you want.
 
+### Why does console only appear on error pages but not when I call it?
+
+This can be happening if you are using `Rack::Deflater`. Be sure that
+`WebConsole::Middleware` is used after `Rack::Deflater`. The easiest way to do
+this is to insert `Rack::Deflater` as early as possible
+
+```ruby
+class Application < Rails::Application
+  config.middleware.insert(0, Rack::Deflater)
+end
+```
+
 ## Credits
 
 * Shoutout to [Charlie Somerville] for [better_errors] and [this] code.
