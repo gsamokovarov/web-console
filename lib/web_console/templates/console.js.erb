@@ -29,12 +29,6 @@ function escapeHTML(html) {
     .replace(/`/g, '&#x60;');
 }
 
-// Add CSS styles dynamically. This probably doesnt work for IE <8.
-var style = document.createElement('style');
-style.type = 'text/css';
-style.innerHTML = <%= render_inlined_string 'style.css' %>;
-document.getElementsByTagName('head')[0].appendChild(style);
-
 /**
  * Constructor for command storage.
  * It uses localStorage if available. Otherwise fallback to normal JS array.
@@ -84,6 +78,10 @@ function CommandStorage() {
 // HTML strings for dynamic elements.
 var consoleInnerHtml = <%= render_inlined_string '_inner_console_markup.html' %>;
 var promptBoxHtml = <%= render_inlined_string '_prompt_box_markup.html' %>;
+// CSS
+var consoleStyleCss = <%= render_inlined_string 'style.css' %>;
+// Insert a style element with the unique ID
+var styleElementId = 'sr02459pvbvrmhco';
 
 // REPLConsole Constructor
 function REPLConsole(config) {
@@ -148,6 +146,19 @@ REPLConsole.prototype.install = function(container) {
   this.inner = container.getElementsByClassName('console-inner')[0];
   this.clipboard = document.getElementById('clipboard');
   this.newPromptBox();
+  this.insertCss();
+};
+
+// Add CSS styles dynamically. This probably doesnt work for IE <8.
+REPLConsole.prototype.insertCss = function() {
+  if (document.getElementById(styleElementId)) {
+    return; // already inserted
+  }
+  var style = document.createElement('style');
+  style.type = 'text/css';
+  style.innerHTML = consoleStyleCss;
+  style.id = styleElementId;
+  document.getElementsByTagName('head')[0].appendChild(style);
 };
 
 REPLConsole.prototype.focus = function() {
