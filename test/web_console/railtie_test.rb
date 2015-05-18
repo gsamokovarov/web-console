@@ -2,6 +2,10 @@ require 'test_helper'
 
 module WebConsole
   class RailtieTest < ActiveSupport::TestCase
+    setup do
+      Railtie.any_instance.stubs(:abort)
+    end
+
     test 'config.whitelisted_ips sets whitelisted networks' do
       new_uninitialized_app do |app|
         app.config.web_console.whitelisted_ips = %w( 172.16.0.0/12 192.168.0.0/16 )
@@ -53,6 +57,26 @@ module WebConsole
 
           assert_includes Request.acceptable_content_types, Mime::ALL
         end
+      end
+    end
+
+    test 'config.development_only prevents usage outside of development' do
+      Railtie.any_instance.expects(:abort)
+
+      new_uninitialized_app do |app|
+        app.config.web_console.development_only = true
+
+        app.initialize!
+      end
+    end
+
+    test 'config.development_only can be used to allow non-development usage' do
+      Rails.env.stubs(:development?).returns(true)
+
+      new_uninitialized_app do |app|
+        app.config.web_console.development_only = false
+
+        app.initialize!
       end
     end
 
