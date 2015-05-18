@@ -29,16 +29,7 @@ function changeBinding(frameId, callback) {
   if (! consoleEl) { return; }
   var url = consoleEl.dataset.remotePath + "/trace";
   var params = "frame_id=" + encodeURIComponent(frameId);
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", url, true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-  xhr.send(params);
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState === 4) {
-      callback();
-    }
-  }
+  postRequest(url, params, callback);
 }
 
 function changeSourceExtract(frameId) {
