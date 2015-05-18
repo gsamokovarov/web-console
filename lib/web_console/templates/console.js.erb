@@ -412,4 +412,28 @@ function escapeHTML(html) {
     .replace(/`/g, '&#x60;');
 }
 
+// XHR helpers
+function request(method, url, params, callback) {
+  var xhr = new XMLHttpRequest();
+
+  xhr.open(method, url, true);
+  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+  xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+  xhr.send(params);
+
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4) {
+      callback(xhr);
+    }
+  }
+}
+
+function postRequest(url, params, callback) {
+  request("POST", url, params, callback);
+}
+
+function putRequest(url, params, callback) {
+  request("PUT", url, params, callback);
+}
+
 window.REPLConsole = REPLConsole;
