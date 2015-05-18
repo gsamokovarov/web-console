@@ -1,34 +1,3 @@
-// DOM helpers
-function hasClass(el, className) {
-  var regex = new RegExp('(?:^|\\s)' + className + '(?!\\S)', 'g');
-  return el.className.match(regex);
-}
-
-function addClass(el, className) {
-  el.className += " " + className;
-}
-
-function removeClass(el, className) {
-  var regex = new RegExp('(?:^|\\s)' + className + '(?!\\S)', 'g');
-  el.className = el.className.replace(regex, '');
-}
-
-function removeAllChildren(el) {
-  while (el.firstChild) {
-    el.removeChild(el.firstChild);
-  }
-}
-
-function escapeHTML(html) {
-  return html
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#x27;')
-    .replace(/`/g, '&#x60;');
-}
-
 /**
  * Constructor for command storage.
  * It uses localStorage if available. Otherwise fallback to normal JS array.
@@ -411,5 +380,36 @@ REPLConsole.installInto = function(id) {
 
   replConsole.install(consoleElement);
 };
+
+// DOM helpers
+function hasClass(el, className) {
+  var regex = new RegExp('(?:^|\\s)' + className + '(?!\\S)', 'g');
+  return el.className.match(regex);
+}
+
+function addClass(el, className) {
+  el.className += " " + className;
+}
+
+function removeClass(el, className) {
+  var regex = new RegExp('(?:^|\\s)' + className + '(?!\\S)', 'g');
+  el.className = el.className.replace(regex, '');
+}
+
+function removeAllChildren(el) {
+  while (el.firstChild) {
+    el.removeChild(el.firstChild);
+  }
+}
+
+function escapeHTML(html) {
+  return html
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;')
+    .replace(/`/g, '&#x60;');
+}
 
 window.REPLConsole = REPLConsole;
