@@ -17,6 +17,20 @@ module WebConsole
       end
     end
 
+    initializer 'web_console.development_only' do
+      unless (config.web_console.development_only == false) || Rails.env.development?
+        abort <<-END.strip_heredoc
+          Running Web Console outside of development isn't recommended. Please,
+          keep it in the development group of your Gemfile.
+
+          If you still want to run it and know what you are doing, put this in
+          your Rails application configuration:
+
+          config.web_console.development_only = false
+        END
+      end
+    end
+
     initializer 'web_console.insert_middleware' do |app|
       app.middleware.insert_before ActionDispatch::DebugExceptions, Middleware
     end
