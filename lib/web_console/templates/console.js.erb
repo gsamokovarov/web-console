@@ -350,6 +350,13 @@ REPLConsole.prototype.scrollToBottom = function() {
   this.inner.scrollTop = this.inner.scrollHeight;
 };
 
+// Change the binding of the console
+REPLConsole.prototype.switchBindingTo = function(frameId, callback) {
+  var url = this.remotePath + "/trace";
+  var params = "frame_id=" + encodeURIComponent(frameId);
+  postRequest(url, params, callback);
+};
+
 /**
  * Install the console into the element with a specific ID.
  * Example: REPLConsole.installInto("target-id")
