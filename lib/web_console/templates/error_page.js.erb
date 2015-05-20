@@ -25,11 +25,11 @@ for (var i = 0; i < traceFrames.length; i++) {
 }
 
 function changeBinding(frameId, callback) {
-  var consoleEl = document.getElementById('console');
-  if (! consoleEl) { return; }
-  var url = consoleEl.dataset.remotePath + "/trace";
-  var params = "frame_id=" + encodeURIComponent(frameId);
-  postRequest(url, params, callback);
+  var consoleElement = document.getElementById('console');
+  if (! consoleElement) { return; }
+  var remotePath = consoleElement.dataset.remotePath;
+  var session = REPLConsole.session[remotePath];
+  session.switchBindingTo(frameId, callback);
 }
 
 function changeSourceExtract(frameId) {

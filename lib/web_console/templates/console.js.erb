@@ -364,11 +364,12 @@ REPLConsole.prototype.switchBindingTo = function(frameId, callback) {
  */
 REPLConsole.installInto = function(id) {
   var consoleElement = document.getElementById(id);
+  var remotePath = consoleElement.dataset.remotePath;
   var replConsole = new REPLConsole({
     promptLabel: consoleElement.dataset.initialPrompt,
     commandHandle: function(line) {
       var _this = this;
-      var url = consoleElement.dataset.remotePath;
+      var url = remotePath;
       var params = "input=" + encodeURIComponent(line);
       putRequest(url, params, function(xhr) {
         var response = JSON.parse(xhr.responseText);
@@ -378,7 +379,12 @@ REPLConsole.installInto = function(id) {
   });
 
   replConsole.install(consoleElement);
+  REPLConsole.session[remotePath] = replConsole;
+  return replConsole;
 };
+
+// Store instances with the remote paths
+REPLConsole.session = {};
 
 // DOM helpers
 function hasClass(el, className) {
