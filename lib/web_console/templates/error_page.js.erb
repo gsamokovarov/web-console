@@ -25,20 +25,11 @@ for (var i = 0; i < traceFrames.length; i++) {
 }
 
 function changeBinding(frameId, callback) {
-  var consoleEl = document.getElementById('console');
-  if (! consoleEl) { return; }
-  var url = consoleEl.dataset.remotePath + "/trace";
-  var params = "frame_id=" + encodeURIComponent(frameId);
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", url, true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-  xhr.send(params);
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState === 4) {
-      callback();
-    }
-  }
+  var consoleElement = document.getElementById('console');
+  if (! consoleElement) { return; }
+  var remotePath = consoleElement.dataset.remotePath;
+  var session = REPLConsole.session[remotePath];
+  session.switchBindingTo(frameId, callback);
 }
 
 function changeSourceExtract(frameId) {

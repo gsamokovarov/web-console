@@ -1,40 +1,3 @@
-// DOM helpers
-function hasClass(el, className) {
-  var regex = new RegExp('(?:^|\\s)' + className + '(?!\\S)', 'g');
-  return el.className.match(regex);
-}
-
-function addClass(el, className) {
-  el.className += " " + className;
-}
-
-function removeClass(el, className) {
-  var regex = new RegExp('(?:^|\\s)' + className + '(?!\\S)', 'g');
-  el.className = el.className.replace(regex, '');
-}
-
-function removeAllChildren(el) {
-  while (el.firstChild) {
-    el.removeChild(el.firstChild);
-  }
-}
-
-function escapeHTML(html) {
-  return html
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#x27;')
-    .replace(/`/g, '&#x60;');
-}
-
-// Add CSS styles dynamically. This probably doesnt work for IE <8.
-var style = document.createElement('style');
-style.type = 'text/css';
-style.innerHTML = <%= render_inlined_string 'style.css' %>;
-document.getElementsByTagName('head')[0].appendChild(style);
-
 /**
  * Constructor for command storage.
  * It uses localStorage if available. Otherwise fallback to normal JS array.
@@ -84,6 +47,10 @@ function CommandStorage() {
 // HTML strings for dynamic elements.
 var consoleInnerHtml = <%= render_inlined_string '_inner_console_markup.html' %>;
 var promptBoxHtml = <%= render_inlined_string '_prompt_box_markup.html' %>;
+// CSS
+var consoleStyleCss = <%= render_inlined_string 'style.css' %>;
+// Insert a style element with the unique ID
+var styleElementId = 'sr02459pvbvrmhco';
 
 // REPLConsole Constructor
 function REPLConsole(config) {
@@ -147,7 +114,21 @@ REPLConsole.prototype.install = function(container) {
   // Initialize
   this.inner = container.getElementsByClassName('console-inner')[0];
   this.clipboard = document.getElementById('clipboard');
+  this.remotePath = container.dataset.remotePath;
   this.newPromptBox();
+  this.insertCss();
+};
+
+// Add CSS styles dynamically. This probably doesnt work for IE <8.
+REPLConsole.prototype.insertCss = function() {
+  if (document.getElementById(styleElementId)) {
+    return; // already inserted
+  }
+  var style = document.createElement('style');
+  style.type = 'text/css';
+  style.innerHTML = consoleStyleCss;
+  style.id = styleElementId;
+  document.getElementsByTagName('head')[0].appendChild(style);
 };
 
 REPLConsole.prototype.focus = function() {
@@ -369,5 +350,95 @@ REPLConsole.prototype.insertAtCurrent = function(char) {
 REPLConsole.prototype.scrollToBottom = function() {
   this.inner.scrollTop = this.inner.scrollHeight;
 };
+
+// Change the binding of the console
+REPLConsole.prototype.switchBindingTo = function(frameId, callback) {
+  var url = this.remotePath + "/trace";
+  var params = "frame_id=" + encodeURIComponent(frameId);
+  postRequest(url, params, callback);
+};
+
+/**
+ * Install the console into the element with a specific ID.
+ * Example: REPLConsole.installInto("target-id")
+ */
+REPLConsole.installInto = function(id) {
+  var consoleElement = document.getElementById(id);
+  var remotePath = consoleElement.dataset.remotePath;
+  var replConsole = new REPLConsole({
+    promptLabel: consoleElement.dataset.initialPrompt,
+    commandHandle: function(line) {
+      var _this = this;
+      var url = remotePath;
+      var params = "input=" + encodeURIComponent(line);
+      putRequest(url, params, function(xhr) {
+        var response = JSON.parse(xhr.responseText);
+        _this.writeOutput(response.output);
+      });
+    }
+  });
+
+  replConsole.install(consoleElement);
+  REPLConsole.session[remotePath] = replConsole;
+  return replConsole;
+};
+
+// Store instances with the remote paths
+REPLConsole.session = {};
+
+// DOM helpers
+function hasClass(el, className) {
+  var regex = new RegExp('(?:^|\\s)' + className + '(?!\\S)', 'g');
+  return el.className.match(regex);
+}
+
+function addClass(el, className) {
+  el.className += " " + className;
+}
+
+function removeClass(el, className) {
+  var regex = new RegExp('(?:^|\\s)' + className + '(?!\\S)', 'g');
+  el.className = el.className.replace(regex, '');
+}
+
+function removeAllChildren(el) {
+  while (el.firstChild) {
+    el.removeChild(el.firstChild);
+  }
+}
+
+function escapeHTML(html) {
+  return html
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;')
+    .replace(/`/g, '&#x60;');
+}
+
+// XHR helpers
+function request(method, url, params, callback) {
+  var xhr = new XMLHttpRequest();
+
+  xhr.open(method, url, true);
+  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+  xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+  xhr.send(params);
+
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4) {
+      callback(xhr);
+    }
+  }
+}
+
+function postRequest(url, params, callback) {
+  request("POST", url, params, callback);
+}
+
+function putRequest(url, params, callback) {
+  request("PUT", url, params, callback);
+}
 
 window.REPLConsole = REPLConsole;
