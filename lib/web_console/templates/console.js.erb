@@ -114,6 +114,7 @@ REPLConsole.prototype.install = function(container) {
   // Initialize
   this.inner = container.getElementsByClassName('console-inner')[0];
   this.clipboard = document.getElementById('clipboard');
+  this.remotePath = container.dataset.remotePath;
   this.newPromptBox();
   this.insertCss();
 };
