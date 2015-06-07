@@ -89,11 +89,16 @@ REPLConsole.prototype.install = function(container) {
   // Render the console.
   container.innerHTML = consoleInnerHtml;
 
+  // Get a child element by class name
+  function findChild(className) {
+    return container.getElementsByClassName(className)[0];
+  }
+
   // Make the console resizable.
-  document.getElementById('resizer').addEventListener('mousedown', function(ev) {
+  findChild('resizer').addEventListener('mousedown', function(ev) {
     var startY                   = ev.clientY;
     var startHeight              = parseInt(document.defaultView.getComputedStyle(container).height, 10);
-    var consoleInner             = document.getElementsByClassName('console-inner')[0];
+    var consoleInner             = _this.inner;
     var innerScrollTopStart      = consoleInner.scrollTop;
     var innerClientHeightStart   = consoleInner.clientHeight;
 
@@ -112,8 +117,8 @@ REPLConsole.prototype.install = function(container) {
   });
 
   // Initialize
-  this.inner = container.getElementsByClassName('console-inner')[0];
-  this.clipboard = document.getElementById('clipboard');
+  this.inner = findChild('console-inner');
+  this.clipboard = findChild('clipboard');
   this.remotePath = container.dataset.remotePath;
   this.newPromptBox();
   this.insertCss();

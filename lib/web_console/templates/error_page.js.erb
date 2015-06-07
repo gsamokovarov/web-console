@@ -51,7 +51,7 @@ function changeSourceExtract(frameId) {
 // better user experience, won't hurt.
 document.addEventListener('DOMContentLoaded', function() {
   var consoleElement = document.getElementById('console');
-  var resizerElement = document.getElementById('resizer')
+  var resizerElement = consoleElement.getElementsByClassName('resizer')[0];
   var containerElement = document.getElementById('container');
 
   function setContainerElementBottomMargin(pixels) {
