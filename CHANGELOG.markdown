@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+## 2.1.3
+
+* Fix remote code execution vulnerability in Web Console. CVE-2015-3224.
+
 ## 2.1.2
 
 * [#115](https://github.com/rails/web-console/pull/115) Show proper binding when raising an error in a template ([@gsamokovarov])
