@@ -89,13 +89,8 @@ REPLConsole.prototype.install = function(container) {
   // Render the console.
   container.innerHTML = consoleInnerHtml;
 
-  // Get a child element by class name
-  function findChild(className) {
-    return container.getElementsByClassName(className)[0];
-  }
-
   // Make the console resizable.
-  findChild('resizer').addEventListener('mousedown', function(ev) {
+  findChild(container, 'resizer').addEventListener('mousedown', function(ev) {
     var startY                   = ev.clientY;
     var startHeight              = parseInt(document.defaultView.getComputedStyle(container).height, 10);
     var consoleInner             = _this.inner;
@@ -117,8 +112,8 @@ REPLConsole.prototype.install = function(container) {
   });
 
   // Initialize
-  this.inner = findChild('console-inner');
-  this.clipboard = findChild('clipboard');
+  this.inner = findChild(container, 'console-inner');
+  this.clipboard = findChild(container, 'clipboard');
   this.remotePath = container.dataset.remotePath;
   this.newPromptBox();
   this.insertCss();
@@ -394,7 +389,7 @@ REPLConsole.session = {};
 // DOM helpers
 function hasClass(el, className) {
   var regex = new RegExp('(?:^|\\s)' + className + '(?!\\S)', 'g');
-  return el.className.match(regex);
+  return el.className && el.className.match(regex);
 }
 
 function addClass(el, className) {
@@ -409,6 +404,14 @@ function removeClass(el, className) {
 function removeAllChildren(el) {
   while (el.firstChild) {
     el.removeChild(el.firstChild);
+  }
+}
+
+function findChild(el, className) {
+  for (var i = 0; i < el.childNodes.length; ++ i) {
+    if (hasClass(el.childNodes[i], className)) {
+      return el.childNodes[i];
+    }
   }
 }
 
