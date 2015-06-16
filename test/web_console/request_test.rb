@@ -18,6 +18,30 @@ module WebConsole
       assert req.from_whitelited_ip?
     end
 
+    test '#from_whitelisted_ip? is truthy for whitelisted IPs via whitelisted proxies' do
+      req = request('http://example.com', 'REMOTE_ADDR' => '127.0.0.1', 'HTTP_X_FORWARDED_FOR' => '127.0.0.0')
+
+      assert req.from_whitelited_ip?
+    end
+
+    test '#from_whitelisted_ip? is falsy for blacklisted IPs via whitelisted proxies' do
+      req = request('http://example.com', 'REMOTE_ADDR' => '127.0.0.1', 'HTTP_X_FORWARDED_FOR' => '0.0.0.0')
+
+      assert_not req.from_whitelited_ip?
+    end
+
+    test '#from_whitelisted_ip? is falsy for lying blacklisted IPs via whitelisted proxies' do
+      req = request('http://example.com', 'REMOTE_ADDR' => '127.0.0.1', 'HTTP_X_FORWARDED_FOR' => '10.0.0.0, 127.0.0.0')
+
+      assert_not req.from_whitelited_ip?
+    end
+
+    test '#from_whitelisted_ip? is falsy for whitelisted IPs via blacklisted proxies' do
+      req = request('http://example.com', 'REMOTE_ADDR' => '10.0.0.0', 'HTTP_X_FORWARDED_FOR' => '127.0.0.0')
+
+      assert_not req.from_whitelited_ip?
+    end
+
     test '#acceptable_content_type? is truthy for explicit HTML content type' do
       html = request('http://example.com', 'CONTENT_TYPE' => 'text/html')
       xhtml = request('http://example.com', 'CONTENT_TYPE' => 'application/xhtml+xml')
