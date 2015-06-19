@@ -43,6 +43,7 @@ module WebConsole
       end
 
       if session && request.acceptable_content_type?
+        headers["X-Web-Console-Session-Id"] = session.id
         response = Rack::Response.new(body, status, headers)
         template = Template.new(env, session)
 
