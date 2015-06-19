@@ -39,7 +39,7 @@ module WebConsole
       app.middleware.insert_before ActionDispatch::DebugExceptions, Middleware
     end
 
-    initializer 'web_console.templates_path' do
+    initializer 'web_console.template_paths' do
       if template_paths = config.web_console.template_paths
         Template.template_paths.unshift(*Array(template_paths))
       end
