@@ -143,14 +143,14 @@ class Application < Rails::Application
 end
 ```
 
-### config.web_console.templates_path
+### config.web_console.template_paths
 
 If you wanna style the console yourself, you can place `style.css` at a
-directory pointed by `config.web_console.templates_path`:
+directory pointed by `config.web_console.template_paths`:
 
 ```ruby
 class Application < Rails::Application
-  config.web_console.templates_path = 'app/views/web_console'
+  config.web_console.template_paths = 'app/views/web_console'
 end
 ```
 
