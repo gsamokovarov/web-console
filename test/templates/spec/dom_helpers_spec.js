@@ -1,5 +1,3 @@
-var assert = chai.assert;
-
 describe("DOM helpers", function() {
   describe("hasClass()", function() {
     context("create a <div>", function() {

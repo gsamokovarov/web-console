@@ -19,6 +19,7 @@
     <script src="/templates/console.js"></script>
 
     <!-- find and load test cases -->
+    <script src="/spec/spec_helper.js"></script>
     <% Pathname.glob(TEST_ROOT.join "spec/**/*_spec.js") do |spec| %>
     <script src="/<%= spec.relative_path_from TEST_ROOT %>"></script>
     <% end %>

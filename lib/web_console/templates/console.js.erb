@@ -89,22 +89,25 @@ REPLConsole.prototype.install = function(container) {
   // Render the console.
   container.innerHTML = consoleInnerHtml;
 
-  // Get a child element by class name
-  function findChild(className) {
-    return container.getElementsByClassName(className)[0];
-  }
+  var consoleOuter = findChild(container, 'console-outer');
+  var consoleActions = findChild(consoleOuter, 'console-actions');
+
+  addClass(container, 'console');
+  addClass(container.getElementsByClassName('layer'), 'pos-absolute border-box');
+  addClass(container.getElementsByClassName('button'), 'border-box');
+  addClass(consoleActions, 'pos-fixed pos-right');
 
   // Make the console resizable.
-  findChild('resizer').addEventListener('mousedown', function(ev) {
+  function resizeContainer(ev) {
     var startY                   = ev.clientY;
     var startHeight              = parseInt(document.defaultView.getComputedStyle(container).height, 10);
-    var consoleInner             = _this.inner;
-    var innerScrollTopStart      = consoleInner.scrollTop;
-    var innerClientHeightStart   = consoleInner.clientHeight;
+    var scrollTopStart      = consoleOuter.scrollTop;
+    var clientHeightStart   = consoleOuter.clientHeight;
 
     var doDrag = function(e) {
       container.style.height = (startHeight + startY - e.clientY) + 'px';
-      consoleInner.scrollTop = innerScrollTopStart + (innerClientHeightStart - consoleInner.clientHeight);
+      consoleOuter.scrollTop = scrollTopStart + (clientHeightStart - consoleOuter.clientHeight);
+      shiftConsoleActions();
     };
 
     var stopDrag = function(e) {
@@ -114,14 +117,36 @@ REPLConsole.prototype.install = function(container) {
 
     document.documentElement.addEventListener('mousemove', doDrag, false);
     document.documentElement.addEventListener('mouseup', stopDrag, false);
-  });
+  }
+
+  function closeContainer(ev) {
+    container.parentNode.removeChild(container);
+  }
+
+  var shifted = false;
+  function shiftConsoleActions() {
+    if (consoleOuter.scrollHeight > consoleOuter.clientHeight) {
+      var widthDiff = document.documentElement.clientWidth - consoleOuter.clientWidth;
+      if (shifted || ! widthDiff) return;
+      shifted = true;
+      consoleActions.style.marginRight = widthDiff + 'px';
+    } else if (shifted) {
+      shifted = false;
+      consoleActions.style.marginRight = '0px';
+    }
+  }
 
   // Initialize
-  this.inner = findChild('console-inner');
-  this.clipboard = findChild('clipboard');
+  this.outer = consoleOuter;
+  this.inner = findChild(this.outer, 'console-inner');
+  this.clipboard = findChild(container, 'clipboard');
   this.remotePath = container.dataset.remotePath;
   this.newPromptBox();
   this.insertCss();
+
+  findChild(container, 'resizer').addEventListener('mousedown', resizeContainer);
+  findChild(consoleActions, 'close-button').addEventListener('click', closeContainer);
+  consoleOuter.addEventListener('DOMNodeInserted', shiftConsoleActions);
 };
 
 // Add CSS styles dynamically. This probably doesnt work for IE <8.
@@ -353,7 +378,7 @@ REPLConsole.prototype.insertAtCurrent = function(char) {
 };
 
 REPLConsole.prototype.scrollToBottom = function() {
-  this.inner.scrollTop = this.inner.scrollHeight;
+  this.outer.scrollTop = this.outer.scrollHeight;
 };
 
 // Change the binding of the console
@@ -394,11 +419,22 @@ REPLConsole.session = {};
 // DOM helpers
 function hasClass(el, className) {
   var regex = new RegExp('(?:^|\\s)' + className + '(?!\\S)', 'g');
-  return el.className.match(regex);
+  return el.className && el.className.match(regex);
+}
+
+function isNodeList(el) {
+  return typeof el.length === 'number' &&
+    typeof el.item === 'function';
 }
 
 function addClass(el, className) {
-  el.className += " " + className;
+  if (isNodeList(el)) {
+    for (var i = 0; i < el.length; ++ i) {
+      addClass(el[i], className);
+    }
+  } else {
+    el.className += " " + className;
+  }
 }
 
 function removeClass(el, className) {
@@ -409,6 +445,14 @@ function removeClass(el, className) {
 function removeAllChildren(el) {
   while (el.firstChild) {
     el.removeChild(el.firstChild);
+  }
+}
+
+function findChild(el, className) {
+  for (var i = 0; i < el.childNodes.length; ++ i) {
+    if (hasClass(el.childNodes[i], className)) {
+      return el.childNodes[i];
+    }
   }
 }
 
