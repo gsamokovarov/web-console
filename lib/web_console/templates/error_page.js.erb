@@ -25,11 +25,7 @@ for (var i = 0; i < traceFrames.length; i++) {
 }
 
 function changeBinding(frameId, callback) {
-  var consoleElement = document.getElementById('console');
-  if (! consoleElement) { return; }
-  var remotePath = consoleElement.dataset.remotePath;
-  var session = REPLConsole.session[remotePath];
-  session.switchBindingTo(frameId, callback);
+  REPLConsole.currentSession.switchBindingTo(frameId, callback);
 }
 
 function changeSourceExtract(frameId) {
