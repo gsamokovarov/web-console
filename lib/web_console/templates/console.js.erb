@@ -147,6 +147,8 @@ REPLConsole.prototype.install = function(container) {
   findChild(container, 'resizer').addEventListener('mousedown', resizeContainer);
   findChild(consoleActions, 'close-button').addEventListener('click', closeContainer);
   consoleOuter.addEventListener('DOMNodeInserted', shiftConsoleActions);
+
+  REPLConsole.currentSession = this;
 };
 
 // Add CSS styles dynamically. This probably doesnt work for IE <8.
@@ -409,12 +411,13 @@ REPLConsole.installInto = function(id) {
   });
 
   replConsole.install(consoleElement);
-  REPLConsole.session[remotePath] = replConsole;
   return replConsole;
 };
 
-// Store instances with the remote paths
-REPLConsole.session = {};
+// This is to store the latest single session, and the stored session
+// is updated by the REPLConsole#install() method.
+// It allows to operate the current session from the other scripts.
+REPLConsole.currentSession = null;
 
 // DOM helpers
 function hasClass(el, className) {
