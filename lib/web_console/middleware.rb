@@ -16,6 +16,8 @@ module WebConsole
       this request hit doesn't store %{id} in memory.
     END
 
+    UNACCEPTABLE_REQUEST_MESSAGE = "A supported version is expected in the Accept header."
+
     cattr_accessor :whiny_requests
     @@whiny_requests = true
 
@@ -27,6 +29,12 @@ module WebConsole
     def call(env)
       request = create_regular_or_whiny_request(env)
       return @app.call(env) unless request.from_whitelited_ip?
+
+      if request.xhr?
+        unless request.acceptable?
+          return respond_with_unacceptable_request
+        end
+      end
 
       if id = id_for_repl_session_update(request)
         return update_repl_session(id, request.params)
@@ -110,6 +118,14 @@ module WebConsole
         status = 404
         headers = { 'Content-Type' => 'application/json; charset = utf-8' }
         body    = { output: format(UNAVAILABLE_SESSION_MESSAGE, id: id)}.to_json
+
+        Rack::Response.new(body, status, headers).finish
+      end
+
+      def respond_with_unacceptable_request
+        status  = 406
+        headers = { 'Content-Type' => 'application/json; charset = utf-8' }
+        body    = { error: UNACCEPTABLE_REQUEST_MESSAGE }.to_json
 
         Rack::Response.new(body, status, headers).finish
       end

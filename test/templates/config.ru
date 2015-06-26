@@ -1,5 +1,7 @@
 require "action_view"
 require "pathname"
+require "action_dispatch"
+require "web_console"
 
 TEST_ROOT = Pathname(__FILE__).dirname
 
