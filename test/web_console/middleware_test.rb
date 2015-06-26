@@ -105,7 +105,21 @@ module WebConsole
       assert_equal(404, response.status)
     end
 
+    test "doesn't accept request for old version and reutrn 406" do
+      xhr :put, "/repl_sessions/no_such_session", { input: "__LINE__" },
+        {"HTTP_ACCEPT" => "application/vnd.web-console.v0"}
+
+      assert_equal(406, response.status)
+    end
+
     private
+
+      # Override the xhr testing helper of ActionDispatch to customize http headers
+      def xhr(*args)
+        args[3] ||= {}
+        args[3]['HTTP_ACCEPT'] ||= "#{Mime::WEB_CONSOLE_V2}"
+        super
+      end
 
       def raise_exception
         raise

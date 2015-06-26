@@ -73,10 +73,27 @@ module WebConsole
       assert_not req.acceptable_content_type?
     end
 
+    test '#acceptable? is truthy for current version' do
+      req = xhr('http://example.com', 'HTTP_ACCEPT' => "#{Mime::WEB_CONSOLE_V2}")
+
+      assert req.acceptable?
+    end
+
+    test '#acceptable? is falsy for request without vendor mime type' do
+      req = xhr('http://example.com', 'HTTP_ACCEPT' => 'text/plain; charset=utf-8')
+
+      assert_not req.acceptable?
+    end
+
     private
 
       def request(*args)
         Request.new(Rack::MockRequest.env_for(*args))
+      end
+
+      def xhr(*args)
+        args[1]['HTTP_X_REQUESTED_WITH'] ||= 'XMLHttpRequest'
+        request(*args)
       end
   end
 end
