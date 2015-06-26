@@ -35,6 +35,14 @@ module WebConsole
       assert_select '#console'
     end
 
+    test 'returns X-Web-Console-Session-Id as response header' do
+      get '/', nil, 'CONTENT_TYPE' => 'text/html', 'web_console.binding' => binding
+
+      session_id = response.headers["X-Web-Console-Session-Id"]
+
+      assert_not Session.find(session_id).nil?
+    end
+
     test 'prioritizes web_console.exception over web_console.binding' do
       exception = raise_exception
 
