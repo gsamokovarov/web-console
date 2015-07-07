@@ -1,3 +1,5 @@
+require 'test_helper'
+
 module WebConsole
   class WhitelistTest < ActiveSupport::TestCase
     test 'localhost is always whitelisted' do
