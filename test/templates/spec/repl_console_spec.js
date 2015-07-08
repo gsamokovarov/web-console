@@ -1,6 +1,36 @@
 describe("REPLConsole", function() {
   SpecHelper.prepareStageElement();
 
+  describe(".installInto()", function() {
+    beforeEach(function() {
+      this.elm = document.createElement('div');
+      this.elm.innerHTML = '<div id="console" data-remote-path="data-remote-path" ' +
+        'data-prompt-label="data-prompt-label"></div>';
+      this.stageElement.appendChild(this.elm);
+    });
+
+    context("install console without options", function() {
+      beforeEach(function() {
+        this.console = REPLConsole.installInto('console');
+      });
+      it("should have data-prompt-label", function() {
+        assert.equal(this.console.prompt, 'data-prompt-label');
+      });
+      it("should have data-remote-path", function() {
+        assert.equal(this.console.remotePath, 'data-remote-path');
+      });
+    });
+
+    context("install console with {remotePath: 'opt-remote-path'}", function() {
+      beforeEach(function() {
+        this.console = REPLConsole.installInto('console', {remotePath: 'opt-remote-path'});
+      });
+      it("should have opt-remote-path", function() {
+        assert.equal(this.console.remotePath, 'opt-remote-path');
+      });
+    });
+  });
+
   describe("#install()", function() {
     beforeEach(function() {
       this.elm = document.createElement("div");
