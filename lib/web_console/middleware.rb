@@ -16,6 +16,8 @@ module WebConsole
       this request hit doesn't store %{id} in memory.
     END
 
+    UNACCEPTABLE_REQUEST_MESSAGE = "A supported version is expected in the Accept header."
+
     cattr_accessor :whiny_requests
     @@whiny_requests = true
 
@@ -29,9 +31,9 @@ module WebConsole
       return @app.call(env) unless request.from_whitelited_ip?
 
       if id = id_for_repl_session_update(request)
-        return update_repl_session(id, request.params)
+        return update_repl_session(id, request)
       elsif id = id_for_repl_session_stack_frame_change(request)
-        return change_stack_trace(id, request.params)
+        return change_stack_trace(id, request)
       end
 
       status, headers, body = @app.call(env)
@@ -55,6 +57,28 @@ module WebConsole
     end
 
     private
+
+      def json_response(opts = {})
+        status  = opts.fetch(:status, 200)
+        headers = { 'Content-Type' => 'application/json; charset = utf-8' }
+        body    = yield.to_json
+
+        Rack::Response.new(body, status, headers).finish
+      end
+
+      def json_response_with_session(id, request, opts = {})
+        json_response(opts) do
+          unless request.acceptable?
+            return respond_with_unacceptable_request
+          end
+
+          unless session = Session.find(id)
+            return respond_with_unavailable_session(id)
+          end
+
+          yield session
+        end
+      end
 
       def create_regular_or_whiny_request(env)
         request = Request.new(env)
@@ -81,38 +105,30 @@ module WebConsole
         end
       end
 
-      def update_repl_session(id, params)
-        unless session = Session.find(id)
-          return respond_with_unavailable_session(id)
+      def update_repl_session(id, request)
+        json_response_with_session(id, request) do |session|
+          { output: session.eval(request.params[:input]) }
         end
-
-        status  = 200
-        headers = { 'Content-Type' => 'application/json; charset = utf-8' }
-        body    = { output: session.eval(params[:input]) }.to_json
-
-        Rack::Response.new(body, status, headers).finish
       end
 
-      def change_stack_trace(id, params)
-        unless session = Session.find(id)
-          return respond_with_unavailable_session(id)
+      def change_stack_trace(id, request)
+        json_response_with_session(id, request) do |session|
+          session.switch_binding_to(request.params[:frame_id])
+
+          { ok: true }
         end
-
-        session.switch_binding_to(params[:frame_id])
-
-        status  = 200
-        headers = { 'Content-Type' => 'application/json; charset = utf-8' }
-        body    = { ok: true }.to_json
-
-        Rack::Response.new(body, status, headers).finish
       end
 
       def respond_with_unavailable_session(id)
-        status = 404
-        headers = { 'Content-Type' => 'application/json; charset = utf-8' }
-        body    = { output: format(UNAVAILABLE_SESSION_MESSAGE, id: id)}.to_json
+        json_response(status: 404) do
+          { output: format(UNAVAILABLE_SESSION_MESSAGE, id: id)}
+        end
+      end
 
-        Rack::Response.new(body, status, headers).finish
+      def respond_with_unacceptable_request
+        json_response(status: 406) do
+          { error: UNACCEPTABLE_REQUEST_MESSAGE }
+        end
       end
   end
 end
