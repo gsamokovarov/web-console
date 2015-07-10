@@ -2,15 +2,20 @@
 
 ## master (unreleased)
 
+## 2.2.1
+
+* [#150](https://github.com/rails/web-console/pull/150) Change config.development_only default until 4.2.4 is released.
+
 ## 2.2.0
 
 * [#140](https://github.com/rails/web-console/pull/140) Add the ability to close the console on each page ([@sh19910711])
 * [#135](https://github.com/rails/web-console/pull/135) Run the console only in development mode and raise warning in tests ([@frenesim])
+* [#134](https://github.com/rails/web-conscle/pull/134) Force development only web console by default ([@gsamokovarov])
+* [#123](https://github.com/rails/web-console/pull/123) Replace deprecated `alias_method_chain` with `alias_method` ([@jonatack])
 
 ## 2.1.3
 
 * Fix remote code execution vulnerability in Web Console. CVE-2015-3224.
-* [#123](https://github.com/rails/web-console/pull/123) Replace deprecated `alias_method_chain` with `alias_method` ([@jonatack])
 
 ## 2.1.2
 
