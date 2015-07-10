@@ -1,6 +1,10 @@
 <p align=right>
   Documentation for:
   <a href=https://github.com/rails/web-console/tree/v2.0.0>v2.0.0</a>
+  <a href=https://github.com/rails/web-console/tree/v2.1.0>v2.1.0</a>
+  <a href=https://github.com/rails/web-console/tree/v2.1.1>v2.1.1</a>
+  <a href=https://github.com/rails/web-console/tree/v2.1.2>v2.1.2</a>
+  <a href=https://github.com/rails/web-console/tree/v2.1.3>v2.1.3</a>
 </p>
 
 # Web Console [![Build Status](https://travis-ci.org/rails/web-console.svg?branch=master)](https://travis-ci.org/rails/web-console)
@@ -119,7 +123,7 @@ end
 If you want to whitelist the whole private network, you can do:
 
 ```ruby
-class Application < Rails::Application
+Rails.application.configure do
   config.web_console.whitelisted_ips = '192.168.0.0/16'
 end
 ```
@@ -138,7 +142,7 @@ messages like the following is printed in the server logs:
 If you don't wanna see this message anymore, set this option to `false`:
 
 ```ruby
-class Application < Rails::Application
+Rails.application.configure do
   config.web_console.whiny_requests = false
 end
 ```
@@ -149,7 +153,7 @@ If you wanna style the console yourself, you can place `style.css` at a
 directory pointed by `config.web_console.template_paths`:
 
 ```ruby
-class Application < Rails::Application
+Rails.application.configure do
   config.web_console.template_paths = 'app/views/web_console'
 end
 ```
@@ -188,10 +192,14 @@ This can be happening if you are using `Rack::Deflater`. Be sure that
 this is to insert `Rack::Deflater` as early as possible
 
 ```ruby
-class Application < Rails::Application
+Rails.application.configure do
   config.middleware.insert(0, Rack::Deflater)
 end
 ```
+
+### Why I'm getting an undefined method `web_console`?
+
+Make sure you configuration lives in `config/environments/development.rb`.
 
 ## Credits
 

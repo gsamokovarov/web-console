@@ -1,11 +1,16 @@
 # CHANGELOG
 
 ## master (unreleased)
-* [#123](https://github.com/rails/web-console/pull/123) Replace deprecated `alias_method_chain` with `alias_method` ([@jonatack])
+
+## 2.2.0
+
+* [#140](https://github.com/rails/web-console/pull/140) Add the ability to close the console on each page ([@sh19910711])
+* [#135](https://github.com/rails/web-console/pull/135) Run the console only in development mode and raise warning in tests ([@frenesim])
 
 ## 2.1.3
 
 * Fix remote code execution vulnerability in Web Console. CVE-2015-3224.
+* [#123](https://github.com/rails/web-console/pull/123) Replace deprecated `alias_method_chain` with `alias_method` ([@jonatack])
 
 ## 2.1.2
 
@@ -36,3 +41,5 @@
 [@bglbruno]: https://github.com/bglbruno
 [@noahpatterson]: https://github.com/noahpatterson
 [@parterburn]: https://github.com/parterburn
+[@sh19910711]: https://github.com/sh19910711
+[@frenesim]: https://github.com/frenesim
