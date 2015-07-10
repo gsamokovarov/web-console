@@ -67,17 +67,10 @@ module WebConsole
       end
 
       def json_response_with_session(id, request, opts = {})
-        json_response(opts) do
-          unless request.acceptable?
-            return respond_with_unacceptable_request
-          end
+        return respond_with_unacceptable_request unless request.acceptable?
+        return respond_with_unavailable_session(id) unless session = Session.find(id)
 
-          unless session = Session.find(id)
-            return respond_with_unavailable_session(id)
-          end
-
-          yield session
-        end
+        json_response(opts) { yield session }
       end
 
       def create_regular_or_whiny_request(env)
