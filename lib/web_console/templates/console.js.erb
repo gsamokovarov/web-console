@@ -532,4 +532,8 @@ function putRequest() {
   REPLConsole.request.apply(this, ["PUT"].concat([].slice.call(arguments)));
 }
 
-window.REPLConsole = REPLConsole;
+if (typeof exports === 'object') {
+  exports.REPLConsole = REPLConsole;
+} else {
+  window.REPLConsole = REPLConsole;
+}
