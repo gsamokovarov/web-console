@@ -61,10 +61,7 @@ function REPLConsole(config) {
   this.commandStorage = new CommandStorage();
   this.prompt = getConfig('promptLabel', ' >>');
   this.remotePath = getConfig('remotePath');
-  this.request = getConfig('request', this.request);
 }
-
-REPLConsole.prototype.request = request;
 
 REPLConsole.prototype.getUrl = function(path) {
   if (path) {
@@ -78,7 +75,7 @@ REPLConsole.prototype.commandHandle = function(line) {
   var self = this;
   var params = 'input=' + encodeURIComponent(line);
 
-  this.request('PUT', self.getUrl(), params, function(xhr) {
+  putRequest(self.getUrl(), params, function(xhr) {
     var response = JSON.parse(xhr.responseText);
     self.writeOutput(response.output);
   }, function(xhr) {
@@ -446,6 +443,38 @@ REPLConsole.installInto = function(id, options) {
 // It allows to operate the current session from the other scripts.
 REPLConsole.currentSession = null;
 
+// This line is for the Firefox Add-on, because it doesn't have XMLHttpRequest as default.
+// And so we need to require a module compatible with XMLHttpRequest from SDK.
+REPLConsole.XMLHttpRequest = typeof XMLHttpRequest === 'undefined' ? null : XMLHttpRequest;
+
+REPLConsole.request = function request(method, url, params, ok, fail) {
+  var xhr = new REPLConsole.XMLHttpRequest();
+
+  xhr.open(method, url, true);
+  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+  xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+  xhr.setRequestHeader("Accept", "<%= Mime::WEB_CONSOLE_V2 %>");
+  xhr.send(params);
+
+  function isSuccess(status) {
+    return status >= 200 && status < 300 || status === 304;
+  }
+
+  // optional callbacks
+  ok   = ok || function() {};
+  fail = fail || function() {};
+
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4) {
+      if (isSuccess(xhr.status)) {
+        ok(xhr);
+      } else {
+        fail(xhr);
+      }
+    }
+  };
+};
+
 // DOM helpers
 function hasClass(el, className) {
   var regex = new RegExp('(?:^|\\s)' + className + '(?!\\S)', 'g');
@@ -497,40 +526,12 @@ function escapeHTML(html) {
 }
 
 // XHR helpers
-function request(method, url, params, ok, fail) {
-  var xhr = new XMLHttpRequest();
-
-  xhr.open(method, url, true);
-  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-  xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-  xhr.setRequestHeader("Accept", "<%= Mime::WEB_CONSOLE_V2 %>");
-  xhr.send(params);
-
-  function isSuccess(status) {
-    return status >= 200 && status < 300 || status === 304;
-  }
-
-  // optional callbacks
-  ok   = ok || function() {};
-  fail = fail || function() {};
-
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState === 4) {
-      if (isSuccess(xhr.status)) {
-        ok(xhr);
-      } else {
-        fail(xhr);
-      }
-    }
-  }
+function postRequest() {
+  REPLConsole.request.apply(this, ["POST"].concat([].slice.call(arguments)));
 }
 
-function postRequest(url, params, callback) {
-  request("POST", url, params, callback);
-}
-
-function putRequest(url, params, callback) {
-  request("PUT", url, params, callback);
+function putRequest() {
+  REPLConsole.request.apply(this, ["PUT"].concat([].slice.call(arguments)));
 }
 
 window.REPLConsole = REPLConsole;
