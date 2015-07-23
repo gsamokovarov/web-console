@@ -75,12 +75,17 @@ REPLConsole.prototype.commandHandle = function(line) {
   var self = this;
   var params = 'input=' + encodeURIComponent(line);
 
+  function isSuccess(status) {
+    return status >= 200 && status < 300 || status === 304;
+  }
+
   putRequest(self.getUrl(), params, function(xhr) {
     var response = JSON.parse(xhr.responseText);
-    self.writeOutput(response.output);
-  }, function(xhr) {
-    var response = JSON.parse(xhr.responseText);
-    self.writeError(response.output);
+    if (isSuccess(xhr.status)) {
+      self.writeOutput(response.output);
+    } else {
+      self.writeError(response.output);
+    }
   });
 };
 
@@ -447,7 +452,7 @@ REPLConsole.currentSession = null;
 // And so we need to require a module compatible with XMLHttpRequest from SDK.
 REPLConsole.XMLHttpRequest = typeof XMLHttpRequest === 'undefined' ? null : XMLHttpRequest;
 
-REPLConsole.request = function request(method, url, params, ok, fail) {
+REPLConsole.request = function request(method, url, params, callback) {
   var xhr = new REPLConsole.XMLHttpRequest();
 
   xhr.open(method, url, true);
@@ -456,21 +461,9 @@ REPLConsole.request = function request(method, url, params, ok, fail) {
   xhr.setRequestHeader("Accept", "<%= Mime::WEB_CONSOLE_V2 %>");
   xhr.send(params);
 
-  function isSuccess(status) {
-    return status >= 200 && status < 300 || status === 304;
-  }
-
-  // optional callbacks
-  ok   = ok || function() {};
-  fail = fail || function() {};
-
   xhr.onreadystatechange = function() {
     if (xhr.readyState === 4) {
-      if (isSuccess(xhr.status)) {
-        ok(xhr);
-      } else {
-        fail(xhr);
-      }
+      callback(xhr);
     }
   };
 };
