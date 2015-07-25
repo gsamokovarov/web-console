@@ -25,7 +25,11 @@ module WebConsole
     end
 
     def call(env)
-      request = create_regular_or_whiny_request(env)
+      logger = if whiny_requests
+                 env['action_dispatch.logger'] || WebConsole.logger
+               end
+
+      request = Request.new(env, logger)
       return @app.call(env) unless request.from_whitelited_ip?
 
       if id = id_for_repl_session_update(request)
@@ -35,6 +39,7 @@ module WebConsole
       end
 
       status, headers, body = @app.call(env)
+      response = Response.new(body, status, headers, logger)
 
       if exception = env['web_console.exception']
         session = Session.from_exception(exception)
@@ -42,11 +47,10 @@ module WebConsole
         session = Session.from_binding(binding)
       end
 
-      if session && request.acceptable_content_type?
-        headers["X-Web-Console-Session-Id"] = session.id
-        response = Rack::Response.new(body, status, headers)
+      if session && response.acceptable_content_type?
         template = Template.new(env, session)
 
+        response.headers["X-Web-Console-Session-Id"] = session.id
         response.write(template.render('index'))
         response.finish
       else
@@ -69,11 +73,6 @@ module WebConsole
         return respond_with_unavailable_session(id) unless session = Session.find(id)
 
         json_response(opts) { yield session }
-      end
-
-      def create_regular_or_whiny_request(env)
-        request = Request.new(env)
-        whiny_requests ? WhinyRequest.new(request) : request
       end
 
       def repl_sessions_re

@@ -3,8 +3,12 @@ require 'test_helper'
 module WebConsole
   class MiddlewareTest < ActionDispatch::IntegrationTest
     class Application
+      def initialize(options = {})
+        @response_content_type = options[:response_content_type] || Mime::HTML
+      end
+
       def call(env)
-        Rack::Response.new(<<-HTML.strip_heredoc).finish
+        Rack::Response.new(<<-HTML.strip_heredoc, status, headers).finish
           <html>
             <head>
               <title>Hello world</title>
@@ -15,6 +19,16 @@ module WebConsole
           </html>
         HTML
       end
+
+      private
+
+        def status
+          500
+        end
+
+        def headers
+          { 'Content-Type' => "#{@response_content_type}; charset=utf-8" }
+        end
     end
 
     setup do
@@ -25,19 +39,19 @@ module WebConsole
     end
 
     test 'render console in an html application from web_console.binding' do
-      get '/', nil, 'CONTENT_TYPE' => 'text/html', 'web_console.binding' => binding
+      get '/', nil, 'web_console.binding' => binding
 
       assert_select '#console'
     end
 
     test 'render console in an html application from web_console.exception' do
-      get '/', nil, 'CONTENT_TYPE' => 'text/html', 'web_console.exception' => raise_exception
+      get '/', nil, 'web_console.exception' => raise_exception
 
       assert_select '#console'
     end
 
     test 'returns X-Web-Console-Session-Id as response header' do
-      get '/', nil, 'CONTENT_TYPE' => 'text/html', 'web_console.binding' => binding
+      get '/', nil, 'web_console.binding' => binding
 
       session_id = response.headers["X-Web-Console-Session-Id"]
 
@@ -49,17 +63,12 @@ module WebConsole
 
       Session.expects(:from_exception).with(exception)
 
-      get '/', nil, 'CONTENT_TYPE' => 'text/html', 'web_console.binding' => binding, 'web_console.exception' => exception
+      get '/', nil, 'web_console.binding' => binding, 'web_console.exception' => exception
     end
 
-    test 'render console in an html application with non text/html' do
-      get '/', nil, 'CONTENT_TYPE' => 'application/xhtml+xml', 'web_console.binding' => binding
-
-      assert_select '#console'
-    end
-
-    test "doesn't render console in non html application" do
-      get '/', nil, 'CONTENT_TYPE' => 'application/json', 'web-console.binding' => binding
+    test "doesn't render console in non html response" do
+      @app = Middleware.new(Application.new(response_content_type: Mime::JSON))
+      get '/', nil, 'web_console.binding' => binding
 
       assert_select '#console', 0
     end
@@ -68,14 +77,14 @@ module WebConsole
       Request.stubs(:whitelisted_ips).returns(IPAddr.new('127.0.0.1'))
 
       silence(:stderr) do
-        get '/', nil, 'CONTENT_TYPE' => 'text/html', 'REMOTE_ADDR' => '1.1.1.1', 'web-console.binding' => binding
+        get '/', nil, 'REMOTE_ADDR' => '1.1.1.1', 'web_console.binding' => binding
       end
 
       assert_select '#console', 0
     end
 
     test "doesn't render console without a web_console.binding or web_console.exception" do
-      get '/', nil, 'CONTENT_TYPE' => 'text/html'
+      get '/', nil
 
       assert_select '#console', 0
     end
@@ -85,7 +94,7 @@ module WebConsole
 
       Session.stubs(:from_binding).returns(session)
 
-      get '/', nil, 'CONTENT_TYPE' => 'text/html', 'web-console.binding' => binding
+      get '/', nil, 'web-console.binding' => binding
       xhr :put, "/repl_sessions/#{session.id}", { input: '__LINE__' }
 
       assert_equal({ output: "=> #{line}\n" }.to_json, response.body)
@@ -96,7 +105,7 @@ module WebConsole
 
       Session.stubs(:from_exception).returns(session)
 
-      get '/', nil, 'CONTENT_TYPE' => 'text/html', 'web-console.exception' => exception
+      get '/', nil, 'web-console.exception' => exception
       xhr :post, "/repl_sessions/#{session.id}/trace", { frame_id: 1 }
 
       assert_equal({ ok: true }.to_json, response.body)

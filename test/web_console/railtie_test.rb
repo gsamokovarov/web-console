@@ -58,17 +58,6 @@ module WebConsole
       end
     end
 
-    test 'config.acceptable_content_types adds extra content types' do
-      preserving_acceptable_content_type do
-        new_uninitialized_app do |app|
-          app.config.web_console.acceptable_content_types = [Mime::ALL]
-          app.initialize!
-
-          assert_includes Request.acceptable_content_types, Mime::ALL
-        end
-      end
-    end
-
     test 'config.development_only prevents usage outside of development' do
       Railtie.any_instance.expects(:abort)
 
@@ -111,10 +100,10 @@ module WebConsole
       end
 
       def preserving_acceptable_content_type
-        acceptable_content_types = Request.acceptable_content_types.dup
+        acceptable_content_types = Middleware.acceptable_content_types.dup
         yield
       ensure
-        Request.acceptable_content_types = acceptable_content_types
+        Middleware.acceptable_content_types = acceptable_content_types
       end
 
       def teardown_fixtures(*)

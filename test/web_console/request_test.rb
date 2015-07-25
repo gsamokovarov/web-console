@@ -42,35 +42,11 @@ module WebConsole
       assert_not req.from_whitelited_ip?
     end
 
-    test '#acceptable_content_type? is truthy for explicit HTML content type' do
-      html = request('http://example.com', 'CONTENT_TYPE' => 'text/html')
-      xhtml = request('http://example.com', 'CONTENT_TYPE' => 'application/xhtml+xml')
-
-      [ html, xhtml ].each { |req| assert req.acceptable_content_type? }
-    end
-
-    test '#acceptable_content_type? is truthy for plain text content type' do
-      req = request('http://example.com', 'CONTENT_TYPE' => 'text/plain')
-
-      assert req.acceptable_content_type?
-    end
-
-    test '#acceptable_content_type? is truthy during form submission' do
-      req = request('http://example.com', 'CONTENT_TYPE' => 'application/x-www-form-urlencoded')
-
-      assert req.acceptable_content_type?
-    end
-
-    test '#acceptable_content_type? is truthy for blank content type' do
-      req = request('http://example.com', 'CONTENT_TYPE' => '')
-
-      assert req.acceptable_content_type?
-    end
-
-    test '#acceptable_content_type? is falsy for non blank and non HTML content type' do
-      req = request('http://example.com', 'CONTENT_TYPE' => 'application/json')
-
-      assert_not req.acceptable_content_type?
+    test '#from_whitelited_ip? logs out to stderr' do
+      assert_output_to_stderr do
+        req = request_with_logger('http://example.com', 'REMOTE_ADDR' => '0.0.0.0')
+        assert_not req.from_whitelited_ip?
+      end
     end
 
     test '#acceptable? is truthy for current version' do
@@ -88,12 +64,25 @@ module WebConsole
     private
 
       def request(*args)
-        Request.new(Rack::MockRequest.env_for(*args))
+        Request.new(mock_env(*args))
+      end
+
+      def request_with_logger(*args)
+        Request.new(mock_env(*args), WebConsole.logger)
+      end
+
+      def mock_env(*args)
+        Rack::MockRequest.env_for(*args)
       end
 
       def xhr(*args)
         args[1]['HTTP_X_REQUESTED_WITH'] ||= 'XMLHttpRequest'
         request(*args)
+      end
+
+      def assert_output_to_stderr
+        output = capture(:stderr) { yield }
+        assert_not output.blank?
       end
   end
 end

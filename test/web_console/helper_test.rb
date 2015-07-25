@@ -6,7 +6,7 @@ module WebConsole
       include Helper
 
       def call(env)
-        Rack::Response.new(<<-HTML.strip_heredoc).finish
+        Rack::Response.new(<<-HTML.strip_heredoc, status, headers).finish
           <html>
             <head>
               <title>Hello world</title>
@@ -22,6 +22,14 @@ module WebConsole
 
         def request
           Request.new(@env)
+        end
+
+        def status
+          500
+        end
+
+        def headers
+          { 'Content-Type' => "#{Mime::HTML}; charset=utf-8" }
         end
     end
 
