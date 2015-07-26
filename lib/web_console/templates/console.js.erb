@@ -89,6 +89,10 @@ REPLConsole.prototype.commandHandle = function(line) {
   });
 };
 
+REPLConsole.prototype.uninstall = function() {
+  this.container.parentNode.removeChild(this.container);
+};
+
 REPLConsole.prototype.install = function(container) {
   var _this = this;
 
@@ -128,8 +132,8 @@ REPLConsole.prototype.install = function(container) {
 
   // Make the console resizable.
   function resizeContainer(ev) {
-    var startY                   = ev.clientY;
-    var startHeight              = parseInt(document.defaultView.getComputedStyle(container).height, 10);
+    var startY              = ev.clientY;
+    var startHeight         = parseInt(document.defaultView.getComputedStyle(container).height, 10);
     var scrollTopStart      = consoleOuter.scrollTop;
     var clientHeightStart   = consoleOuter.clientHeight;
 
@@ -166,6 +170,7 @@ REPLConsole.prototype.install = function(container) {
   }
 
   // Initialize
+  this.container = container;
   this.outer = consoleOuter;
   this.inner = findChild(this.outer, 'console-inner');
   this.clipboard = findChild(container, 'clipboard');
