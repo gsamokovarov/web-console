@@ -12,8 +12,9 @@ module WebConsole
     UNAVAILABLE_SESSION_MESSAGE = <<-END.strip_heredoc
       Session %{id} is is no longer available in memory.
 
-      If you happen to run on a multi-process server (like Unicorn) the process
-      this request hit doesn't store %{id} in memory.
+      If you happen to run on a multi-process server (like Unicorn or Puma) the process
+      this request hit doesn't store %{id} in memory. Consider turning the number of
+      processes/workers to one (1) or using a different server in development.
     END
 
     UNACCEPTABLE_REQUEST_MESSAGE = "A supported version is expected in the Accept header."
