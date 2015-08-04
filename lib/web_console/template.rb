@@ -38,6 +38,7 @@ module WebConsole
     def initialize(env, session)
       @env = env
       @session = session
+      @mount_point = Middleware.mount_point
     end
 
     # Render a template (inferred from +template_paths+) as a plain string.
