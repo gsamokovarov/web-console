@@ -1,0 +1,19 @@
+{
+  "name": "Rails Web Console",
+  "version": "0.0.0",
+  "manifest_version": 2,
+  "background": {
+    "scripts": ["lib/console.js", "js/background.js"]
+  },
+  "icons": {
+    "128": "img/icon_128.png"
+  },
+  "devtools_page": "html/devtools.html",
+  "permissions": [
+    "webRequest",
+    "webNavigation",
+    "http://*/*",
+    "https://*/*"
+  ],
+  "homepage_url": "https://github.com/rails/web-console"
+}

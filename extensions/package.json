@@ -1,0 +1,7 @@
+{
+  "name": "dev",
+  "version": "0.0.0",
+  "devDependencies": {
+    "crx": "^3.0.2"
+  }
+}
