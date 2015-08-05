@@ -43,6 +43,12 @@ module WebConsole
       app.middleware.insert_before ActionDispatch::DebugExceptions, Middleware
     end
 
+    initializer 'web_console.mount_point' do
+      if mount_point = config.web_console.mount_point
+        Middleware.mount_point = mount_point.chomp('/')
+      end
+    end
+
     initializer 'web_console.template_paths' do
       if template_paths = config.web_console.template_paths
         Template.template_paths.unshift(*Array(template_paths))

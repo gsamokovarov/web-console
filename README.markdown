@@ -161,6 +161,18 @@ end
 You may wanna check the [templates] folder at the source tree for the files you
 may override.
 
+### config.web_console.mount_point
+
+Usually the middleware of _Web Console_ is mounted at `/__web_console`.
+If you wanna change the path for some reasons, you can specify it
+by `config.web_console.mount_point`:
+
+```ruby
+Rails.application.configure do
+  config.web_console.mount_point = '/path/to/web_console'
+end
+```
+
 ## FAQ
 
 ### Where did /console go?

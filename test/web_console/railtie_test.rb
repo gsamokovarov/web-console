@@ -40,6 +40,15 @@ module WebConsole
       end
     end
 
+    test 'config.mount_point changes the mount point of Middleware' do
+      new_uninitialized_app do |app|
+        app.config.web_console.mount_point = '/customized/path'
+        app.initialize!
+
+        assert_equal Middleware.mount_point, '/customized/path'
+      end
+    end
+
     test 'config.whiny_request removes extra logging' do
       new_uninitialized_app do |app|
         app.config.web_console.whiny_requests = false
