@@ -23,7 +23,7 @@ port.onMessage.addListener(function(msg) {
 });
 
 function updateRemotePath(sessionId) {
-  var remotePath = 'console/repl_sessions/' + sessionId;
+  var remotePath = '__web_console/repl_sessions/' + sessionId;
   if (repl) {
     repl.remotePath = remotePath;
   } else {

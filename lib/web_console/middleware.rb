@@ -4,11 +4,6 @@ module WebConsole
   class Middleware
     TEMPLATES_PATH = File.expand_path('../templates', __FILE__)
 
-    DEFAULT_OPTIONS = {
-      update_re: %r{/repl_sessions/(?<id>.+?)\z},
-      binding_change_re: %r{/repl_sessions/(?<id>.+?)/trace\z}
-    }
-
     UNAVAILABLE_SESSION_MESSAGE = <<-END.strip_heredoc
       Session %{id} is is no longer available in memory.
 
@@ -19,12 +14,14 @@ module WebConsole
 
     UNACCEPTABLE_REQUEST_MESSAGE = "A supported version is expected in the Accept header."
 
+    cattr_accessor :mount_point
+    @@mount_point = '/__web_console'
+
     cattr_accessor :whiny_requests
     @@whiny_requests = true
 
-    def initialize(app, options = {})
-      @app     = app
-      @options = DEFAULT_OPTIONS.merge(options)
+    def initialize(app)
+      @app = app
     end
 
     def call(env)
@@ -79,23 +76,27 @@ module WebConsole
         whiny_requests ? WhinyRequest.new(request) : request
       end
 
+      def repl_sessions_re
+        @_repl_sessions_re ||= %r{#{mount_point}/repl_sessions/(?<id>[^/]+)}
+      end
+
       def update_re
-        @options[:update_re]
+        @_update_re ||= %r{#{repl_sessions_re}\z}
       end
 
       def binding_change_re
-        @options[:binding_change_re]
+        @_binding_change_re ||= %r{#{repl_sessions_re}/trace\z}
       end
 
       def id_for_repl_session_update(request)
         if request.xhr? && request.put?
-          update_re.match(request.path_info) { |m| m[:id] }
+          update_re.match(request.path) { |m| m[:id] }
         end
       end
 
       def id_for_repl_session_stack_frame_change(request)
         if request.xhr? && request.post?
-          binding_change_re.match(request.path_info) { |m| m[:id] }
+          binding_change_re.match(request.path) { |m| m[:id] }
         end
       end
 

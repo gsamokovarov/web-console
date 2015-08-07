@@ -20,6 +20,7 @@ module WebConsole
     setup do
       Request.stubs(:whitelisted_ips).returns(IPAddr.new('0.0.0.0/0'))
 
+      Middleware.mount_point = ''
       @app = Middleware.new(Application.new)
     end
 
@@ -99,6 +100,15 @@ module WebConsole
       xhr :post, "/repl_sessions/#{session.id}/trace", { frame_id: 1 }
 
       assert_equal({ ok: true }.to_json, response.body)
+    end
+
+    test 'can be changed mount point' do
+      Middleware.mount_point = '/customized/path'
+
+      session, line = Session.new(binding), __LINE__
+      xhr :put, "/customized/path/repl_sessions/#{session.id}", { input: '__LINE__' }
+
+      assert_equal({ output: "=> #{line}\n" }.to_json, response.body)
     end
 
     test 'unavailable sessions respond to the user with a message' do
