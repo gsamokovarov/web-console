@@ -60,15 +60,17 @@ function REPLConsole(config) {
 
   this.commandStorage = new CommandStorage();
   this.prompt = getConfig('promptLabel', ' >>');
-  this.remotePath = getConfig('remotePath');
+  this.mountPoint = getConfig('mountPoint');
+  this.sessionId = getConfig('sessionId');
 }
 
-REPLConsole.prototype.getUrl = function(path) {
+REPLConsole.prototype.getSessionUrl = function(path) {
+  var parts = [ this.mountPoint, 'repl_sessions', this.sessionId ];
   if (path) {
-    return this.remotePath + '/' + path;
-  } else {
-    return this.remotePath;
+    parts.push(path);
   }
+  // Join and remove duplicate slashes.
+  return parts.join('/').replace(/([^:]\/)\/+/g, '$1');
 };
 
 REPLConsole.prototype.commandHandle = function(line, callback) {
@@ -96,7 +98,7 @@ REPLConsole.prototype.commandHandle = function(line, callback) {
     }
   }
 
-  putRequest(self.getUrl(), params, function(xhr) {
+  putRequest(self.getSessionUrl(), params, function(xhr) {
     var response = parseJSON(xhr.responseText);
     var result   = isSuccess(xhr.status);
     if (result) {
@@ -448,7 +450,7 @@ REPLConsole.prototype.scrollToBottom = function() {
 
 // Change the binding of the console
 REPLConsole.prototype.switchBindingTo = function(frameId, callback) {
-  var url = this.remotePath + "/trace";
+  var url = this.getSessionUrl('trace');
   var params = "frame_id=" + encodeURIComponent(frameId);
   postRequest(url, params, callback);
 };
