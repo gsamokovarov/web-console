@@ -23,7 +23,7 @@ module WebConsole
 
     # Determines the remote IP using our much stricter whitelist.
     def strict_remote_ip
-      GetSecureIp.new(env, whitelisted_ips).to_s
+      GetSecureIp.new(self, whitelisted_ips).to_s
     end
 
     # Returns whether the request is from an acceptable content type.
@@ -41,8 +41,13 @@ module WebConsole
     end
 
     class GetSecureIp < ActionDispatch::RemoteIp::GetIp
-      def initialize(env, proxies)
-        @env      = env
+      def initialize(req, proxies)
+        # After rails/rails@07b2ff0 ActionDispatch::RemoteIp::GetIp initializes
+        # with a ActionDispatch::Request object instead of plain Rack
+        # environment hash. Keep both @req and @env here, so we don't if/else
+        # on Rails versions.
+        @req      = req
+        @env      = req.env
         @check_ip = true
         @proxies  = proxies
       end
