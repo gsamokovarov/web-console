@@ -34,13 +34,13 @@ map "/templates" do
   )
 end
 
-map "/mock/repl/result" do
+map "/mock/repl_sessions/result" do
   headers = { 'Content-Type' => 'application/json' }
   body = [ { output: '=> "fake-result"\n' }.to_json ]
   run lambda { |env| [ 200, headers, body ] }
 end
 
-map "/mock/repl/error" do
+map "/mock/repl_sessions/error" do
   headers = { 'Content-Type' => 'application/json' }
   body = [ { output: 'fake-error-message' }.to_json ]
   run lambda { |env| [ 400, headers, body ] }
