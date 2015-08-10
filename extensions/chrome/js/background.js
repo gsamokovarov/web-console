@@ -1,4 +1,4 @@
-var tabInfo = {};
+var sessions = {};
 var ports = {};
 
 initPanelMessage();
@@ -14,8 +14,8 @@ function panelMessage(tabId, type, msg) {
   }
 }
 
-function sendSessionId(tabId) {
-  panelMessage(tabId, 'session-id', { sessionId: tabInfo[tabId].sessionId });
+function sendSession(tabId) {
+  panelMessage(tabId, 'update-session', sessions[tabId]);
 }
 
 function removeConsole(tabId) {
@@ -26,8 +26,8 @@ function initPanelMessage() {
   chrome.runtime.onConnect.addListener(onConnect);
 
   function handleMessage(msg) {
-    if (msg.type === 'session-id') {
-      sendSessionId(msg.tabId);
+    if (msg.type === 'session') {
+      sendSession(msg.tabId);
     }
   }
 
@@ -52,7 +52,7 @@ function initReqRes() {
 
   function handleMessage(req, sender, sendResponse) {
     if (req.type === 'request') {
-      var url = tabInfo[req.tabId].remoteHost + '/' + req.url;
+      var url = sessions[req.tabId].remoteHost + '/' + req.url;
       REPLConsole.request(req.method, url, req.params, function(xhr) {
         sendResponse(extractProps(xhr));
       });
@@ -85,8 +85,9 @@ function initHttpListener() {
     var headers = getHeaders(details);
     var sessionId;
     if (sessionId = headers['X-Web-Console-Session-Id']) {
-      tabInfo[details.tabId] = {
+      sessions[details.tabId] = {
         sessionId: sessionId,
+        mountPoint: headers['X-Web-Console-Mount-Point'],
         remoteHost: details.url.match(/([^:]+:\/\/[^\/]+)\/?/)[1]
       };
     }
@@ -97,12 +98,12 @@ function initNavListener() {
   // Fired when a document is completely loaded and initialized.
   chrome.webNavigation.onCompleted.addListener(function(details) {
     if (filter(details)) {
-      sendSessionId(details.tabId);
+      sendSession(details.tabId);
       removeConsole(details.tabId);
     }
   });
 
   function filter(details) {
-    return details.frameId === 0 && tabInfo[details.tabId];
+    return details.frameId === 0 && sessions[details.tabId];
   }
 }

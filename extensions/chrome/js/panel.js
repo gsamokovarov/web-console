@@ -15,19 +15,20 @@ REPLConsole.request = function(method, url, params, callback) {
 
 // Handle messages from the background script.
 port.onMessage.addListener(function(msg) {
-  if (msg.type === 'session-id') {
-    updateRemotePath(msg.sessionId);
+  if (msg.type === 'update-session') {
+    updateSession(msg);
   } else if (msg.type === 'remove-console') {
     removeConsole();
   }
 });
 
-function updateRemotePath(sessionId) {
-  var remotePath = '__web_console/repl_sessions/' + sessionId;
+function updateSession(info) {
   if (repl) {
-    repl.remotePath = remotePath;
+    repl.sessionId  = info.sessionId;
+    repl.mountPoint = info.mountPoint;
   } else {
-    repl = REPLConsole.installInto('console', { remotePath: remotePath });
+    var options = { sessionId: info.sessionId, mountPoint: info.mountPoint };
+    repl = REPLConsole.installInto('console', options);
   }
 }
 
@@ -36,5 +37,5 @@ function removeConsole() {
   chrome.devtools.inspectedWindow.eval(script);
 }
 
-port.postMessage({ type: 'session-id', tabId: tabId });
+port.postMessage({ type: 'session', tabId: tabId });
 removeConsole();
