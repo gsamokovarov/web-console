@@ -45,3 +45,9 @@ map "/mock/repl/error" do
   body = [ { output: 'fake-error-message' }.to_json ]
   run lambda { |env| [ 400, headers, body ] }
 end
+
+map "/mock/repl_sessions/error.txt" do
+  headers = { 'Content-Type' => 'plain/text' }
+  body = [ 'error message' ]
+  run lambda { |env| [ 400, headers, body ] }
+end
