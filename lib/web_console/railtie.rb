@@ -66,13 +66,5 @@ module WebConsole
         Middleware.whiny_requests = config.web_console.whiny_requests
       end
     end
-
-    # Leave this undocumented so we treat such content type misses as bugs,
-    # while still being able to help the affected users in the meantime.
-    initializer 'web_console.acceptable_content_types' do
-      if acceptable_content_types = config.web_console.acceptable_content_types
-        Request.acceptable_content_types.concat(Array(acceptable_content_types))
-      end
-    end
   end
 end
