@@ -25,13 +25,15 @@ namespace :test do
   task templates: "templates:all"
 
   namespace :templates do
-    task all: [ :daemonize, :npm, :rackup, :mocha, :kill ]
+    task all: [ :daemonize, :npm, :rackup, :mocha, :kill, :exit ]
     task serve: [ :npm, :rackup ]
 
     work_dir    = Pathname(__FILE__).dirname.join("test/templates")
     pid_file    = Pathname(Dir.tmpdir).join("web_console.#{SecureRandom.uuid}.pid")
     server_port = 29292
     rackup_opts = "-p #{server_port}"
+    test_runner = "http://localhost:#{server_port}/html/spec_runner.html"
+    test_result = nil
 
     task :daemonize do
       rackup_opts += " -D -P #{pid_file}"
@@ -46,11 +48,15 @@ namespace :test do
     end
 
     task :mocha do
-      Dir.chdir(work_dir) { system "$(npm bin)/mocha-phantomjs http://localhost:#{server_port}/html/spec_runner.html" }
+      Dir.chdir(work_dir) { test_result = system("$(npm bin)/mocha-phantomjs #{test_runner}") }
     end
 
     task :kill do
       system "kill #{File.read pid_file}"
+    end
+
+    task :exit do
+      exit test_result
     end
   end
 end
