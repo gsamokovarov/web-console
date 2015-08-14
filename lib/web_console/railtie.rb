@@ -66,5 +66,9 @@ module WebConsole
         Middleware.whiny_requests = config.web_console.whiny_requests
       end
     end
+
+    initializer 'i18n.load_path' do
+      config.i18n.load_path.concat(Dir[File.expand_path('../locales/*.yml', __FILE__)])
+    end
   end
 end

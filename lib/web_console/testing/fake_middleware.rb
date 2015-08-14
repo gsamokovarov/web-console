@@ -1,5 +1,6 @@
 require 'action_view'
 require 'action_dispatch'
+require 'active_support/core_ext/string/access'
 require 'json'
 require 'web_console/whitelist'
 require 'web_console/request'
