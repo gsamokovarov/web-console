@@ -14,6 +14,7 @@ require 'web_console/middleware'
 require 'web_console/whitelist'
 require 'web_console/request'
 require 'web_console/response'
+require 'web_console/view'
 
 module WebConsole
   mattr_accessor :logger

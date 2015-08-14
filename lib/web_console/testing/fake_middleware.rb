@@ -3,6 +3,7 @@ require 'action_dispatch'
 require 'json'
 require 'web_console/whitelist'
 require 'web_console/request'
+require 'web_console/view'
 
 module WebConsole
   module Testing
@@ -20,7 +21,7 @@ module WebConsole
       end
 
       def view
-        @view ||= create_view
+        @view ||= View.new(@view_path)
       end
 
       private
@@ -32,18 +33,6 @@ module WebConsole
 
         def render(template)
           view.render(template: template, layout: nil)
-        end
-
-        def create_view
-          lookup_context = ActionView::LookupContext.new(@view_path)
-          lookup_context.cache = false
-          FakeView.new(lookup_context)
-        end
-
-        class FakeView < ActionView::Base
-          def render_inlined_string(template)
-            render(template: template, layout: "layouts/inlined_string")
-          end
         end
     end
   end
