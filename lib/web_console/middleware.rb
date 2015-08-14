@@ -4,16 +4,6 @@ module WebConsole
   class Middleware
     TEMPLATES_PATH = File.expand_path('../templates', __FILE__)
 
-    UNAVAILABLE_SESSION_MESSAGE = <<-END.strip_heredoc
-      Session %{id} is is no longer available in memory.
-
-      If you happen to run on a multi-process server (like Unicorn or Puma) the process
-      this request hit doesn't store %{id} in memory. Consider turning the number of
-      processes/workers to one (1) or using a different server in development.
-    END
-
-    UNACCEPTABLE_REQUEST_MESSAGE = "A supported version is expected in the Accept header."
-
     cattr_accessor :mount_point
     @@mount_point = '/__web_console'
 
@@ -115,13 +105,13 @@ module WebConsole
 
       def respond_with_unavailable_session(id)
         json_response(status: 404) do
-          { output: format(UNAVAILABLE_SESSION_MESSAGE, id: id)}
+          { output: format(I18n.t('errors.unavailable_session'), id: id)}
         end
       end
 
       def respond_with_unacceptable_request
         json_response(status: 406) do
-          { error: UNACCEPTABLE_REQUEST_MESSAGE }
+          { output: I18n.t('errors.unacceptable_request') }
         end
       end
   end

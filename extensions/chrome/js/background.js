@@ -40,11 +40,21 @@ function initPanelMessage() {
 function initReqRes() {
   chrome.runtime.onMessage.addListener(handleMessage);
 
+  function extractProps(xhr) {
+    var props = {};
+    for (var key in xhr) {
+      if (typeof xhr[key] === 'string' || typeof xhr[key] === 'number') {
+        props[key] = xhr[key];
+      }
+    }
+    return props;
+  }
+
   function handleMessage(req, sender, sendResponse) {
     if (req.type === 'request') {
       var url = tabInfo[req.tabId].remoteHost + '/' + req.url;
       REPLConsole.request(req.method, url, req.params, function(xhr) {
-        sendResponse({ status: xhr.status, responseText: xhr.responseText });
+        sendResponse(extractProps(xhr));
       });
     }
     return true;

@@ -51,6 +51,21 @@ describe("REPLConsole", function() {
         assert.ok(hasClass(this.message, 'error-message'));
       });
     });
+
+    context("remotePath: /mock/repl_sessions/error.txt", function() {
+      beforeEach(function(done) {
+        var self = this;
+        var options = { remotePath: '/mock/repl_sessions/error.txt' };
+        self.console = REPLConsole.installInto('console', options);
+        self.console.commandHandle('fake-input', function(result, response) {
+          self.message = self.elm.getElementsByClassName('console-message')[0];
+          done();
+        });
+      });
+      it("should output HTTP status code", function() {
+        assert.match(this.message.innerHTML, /400 Bad Request/);
+      });
+    });
   });
 
   describe(".installInto()", function() {
