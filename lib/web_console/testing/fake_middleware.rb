@@ -5,10 +5,13 @@ require 'json'
 require 'web_console/whitelist'
 require 'web_console/request'
 require 'web_console/view'
+require 'web_console/testing/helper'
 
 module WebConsole
   module Testing
     class FakeMiddleware
+      I18n.load_path.concat(Dir[Helper.gem_root.join('lib/web_console/locales/*.yml')])
+
       DEFAULT_HEADERS = { "Content-Type" => "application/javascript" }
 
       def initialize(opts)
