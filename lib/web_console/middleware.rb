@@ -41,6 +41,7 @@ module WebConsole
         template = Template.new(env, session)
 
         response.headers["X-Web-Console-Session-Id"] = session.id
+        response.headers["X-Web-Console-Mount-Point"] = mount_point
         response.write(template.render('index'))
         response.finish
       else
