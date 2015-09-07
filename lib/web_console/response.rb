@@ -1,37 +1,23 @@
 module WebConsole
-  # Web Console tailored response object.
-  class Response < Rack::Response
-    def initialize(body, status, headers, logger = nil)
-      @logger = logger
-      super(body, status, headers)
-    end
+  # A response object that writes content before the closing </body> tag, if
+  # possible.
+  #
+  # The object quacks like Rack::Response.
+  class Response < Struct.new(:body, :status, :headers)
+    def write(content)
+      raw_body = Array(body).first.to_s
 
-    # Returns whether the response is from an acceptable content type.
-    #
-    # We can render a console only for HTML responses.
-    def acceptable_content_type?
-      if content_type == Mime::HTML
-        true
+      if position = raw_body.rindex('</body>')
+        raw_body.insert(position, content)
       else
-        log_not_acceptable_content_type
-        false
+        raw_body << content
       end
+
+      self.body = raw_body
     end
 
-    def content_type
-      formats = Mime::Type.parse(headers['Content-Type'])
-      formats.first
+    def finish
+      Rack::Response.new(body, status, headers).finish
     end
-
-    private
-
-      attr_reader :logger
-
-      def log_not_acceptable_content_type
-        if logger
-          logger.info "Cannot render console with content type " \
-            "#{content_type}. Console can be rendered only in HTML responses"
-        end
-      end
   end
 end

@@ -8,16 +8,7 @@ module WebConsole
       end
 
       def call(env)
-        Rack::Response.new(<<-HTML.strip_heredoc, status, headers).finish
-          <html>
-            <head>
-              <title>Hello world</title>
-            </head>
-            <body>
-              <p id="hello-world">Hello world</p>
-            </body>
-          </html>
-        HTML
+        [ status, headers, body ]
       end
 
       private
@@ -28,6 +19,19 @@ module WebConsole
 
         def headers
           { 'Content-Type' => "#{@response_content_type}; charset=utf-8" }
+        end
+
+        def body
+          Array(<<-HTML.strip_heredoc)
+            <html>
+              <head>
+                <title>Hello world</title>
+              </head>
+              <body>
+                <p id="hello-world">Hello world</p>
+              </body>
+            </html>
+          HTML
         end
     end
 
@@ -47,7 +51,21 @@ module WebConsole
     test 'render console in an html application from web_console.exception' do
       get '/', nil, 'web_console.exception' => raise_exception
 
+      assert_select 'body > #console'
+    end
+
+    test 'render console if response format is HTML' do
+      @app = Middleware.new(Application.new(response_content_type: Mime::HTML))
+      get '/', nil, 'web_console.binding' => binding
+
       assert_select '#console'
+    end
+
+    test 'does not render console if response format is not HTML' do
+      @app = Middleware.new(Application.new(response_content_type: Mime::JSON))
+      get '/', nil, 'web_console.binding' => binding
+
+      assert_select '#console', 0
     end
 
     test 'returns X-Web-Console-Session-Id as response header' do
