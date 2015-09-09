@@ -6,16 +6,7 @@ module WebConsole
       include Helper
 
       def call(env)
-        Rack::Response.new(<<-HTML.strip_heredoc, status, headers).finish
-          <html>
-            <head>
-              <title>Hello world</title>
-            </head>
-            <body>
-              <p id="hello-world">Hello world</p>
-            </body>
-          </html>
-        HTML
+        [ status, headers, body ] 
       end
 
       private
@@ -30,6 +21,19 @@ module WebConsole
 
         def headers
           { 'Content-Type' => "#{Mime::HTML}; charset=utf-8" }
+        end
+
+        def body
+          Array(<<-HTML.strip_heredoc)
+            <html>
+              <head>
+                <title>Hello world</title>
+              </head>
+              <body>
+                <p id="hello-world">Hello world</p>
+              </body>
+            </html>
+          HTML
         end
     end
 

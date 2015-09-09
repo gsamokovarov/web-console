@@ -8,22 +8,12 @@ module WebConsole
     # Define a vendor MIME type. We can call it using Mime::WEB_CONSOLE_V2 constant.
     Mime::Type.register 'application/vnd.web-console.v2', :web_console_v2
 
-    def initialize(env, logger = nil)
-      @logger = logger
-      super(env)
-    end
-
     # Returns whether a request came from a whitelisted IP.
     #
     # For a request to hit Web Console features, it needs to come from a white
     # listed IP.
     def from_whitelited_ip?
-      if whitelisted_ips.include?(strict_remote_ip)
-        true
-      else
-        log_whilelisted_ip_restriction
-        false
-      end
+      whitelisted_ips.include?(strict_remote_ip)
     end
 
     # Determines the remote IP using our much stricter whitelist.
@@ -37,15 +27,6 @@ module WebConsole
     end
 
     private
-
-      attr_reader :logger
-
-      def log_whilelisted_ip_restriction
-        if logger
-          logger.info "Cannot render console from #{remote_ip}! " \
-            "Allowed networks: #{whitelisted_ips}"
-        end
-      end
 
       class GetSecureIp < ActionDispatch::RemoteIp::GetIp
         def initialize(req, proxies)
