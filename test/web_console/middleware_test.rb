@@ -150,7 +150,7 @@ module WebConsole
       assert_equal(404, response.status)
     end
 
-    test "doesn't accept request for old version and reutrn 406" do
+    test "doesn't accept request for old version and return 406" do
       put "/repl_sessions/no_such_session", xhr: true, params: { input: "__LINE__" },
         headers: {"HTTP_ACCEPT" => "application/vnd.web-console.v0"}
 
