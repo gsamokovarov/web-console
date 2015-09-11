@@ -65,7 +65,7 @@ module WebConsole
     end
 
     test 'renders a console into a view' do
-      get '/', nil, 'CONTENT_TYPE' => 'text/html'
+      get '/', params: nil, headers: { 'CONTENT_TYPE' => 'text/html' }
 
       assert_select '#console'
     end
@@ -74,12 +74,12 @@ module WebConsole
       @app = Middleware.new(MultipleConsolesApplication.new)
 
       assert_raises(DoubleRenderError) do
-        get '/', nil, 'CONTENT_TYPE' => 'text/html'
+        get '/', params: nil, headers: { 'CONTENT_TYPE' => 'text/html' }
       end
     end
 
     test "doesn't hijack current view" do
-      get '/', nil, 'CONTENT_TYPE' => 'text/html'
+      get '/', params: nil, headers: { 'CONTENT_TYPE' => 'text/html' }
 
       assert_select '#hello-world'
       assert_select '#console'
