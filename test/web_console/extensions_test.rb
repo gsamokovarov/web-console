@@ -16,7 +16,7 @@ module ActionDispatch
     end
 
     test "follows ActionView::Template::Error original error in env['web_console.exception']" do
-      get "/", {}, {
+      get "/", params: {}, headers: {
         'action_dispatch.show_detailed_exceptions' => true,
         'action_dispatch.show_exceptions' => true,
         'action_dispatch.logger' => Logger.new(StringIO.new)
