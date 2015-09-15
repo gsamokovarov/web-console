@@ -11,7 +11,7 @@ module WebConsole
     def console(binding = nil)
       raise DoubleRenderError if request.env['web_console.binding']
 
-      request.env['web_console.binding'] = binding || ::Kernel.binding.of_caller(1)
+      request.env['web_console.binding'] = binding || ::WebConsole.caller_bindings.first
 
       # Make sure nothing is rendered from the view helper. Otherwise
       # you're gonna see unexpected #<Binding:0x007fee4302b078> in the
