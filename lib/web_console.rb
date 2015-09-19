@@ -1,5 +1,3 @@
-require 'binding_of_caller'
-
 require 'active_support/lazy_load_hooks'
 require 'active_support/logger'
 
