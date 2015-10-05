@@ -43,7 +43,7 @@ module WebConsole
     end
 
     test '#acceptable? is truthy for current version' do
-      req = xhr('http://example.com', 'HTTP_ACCEPT' => "#{Mime::WEB_CONSOLE_V2}")
+      req = xhr('http://example.com', 'HTTP_ACCEPT' => "#{Mime[:web_console_v2]}")
 
       assert req.acceptable?
     end

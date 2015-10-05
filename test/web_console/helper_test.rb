@@ -20,7 +20,7 @@ module WebConsole
         end
 
         def headers
-          { 'Content-Type' => "#{Mime::HTML}; charset=utf-8" }
+          { 'Content-Type' => "#{Mime[:html]}; charset=utf-8" }
         end
 
         def body

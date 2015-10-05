@@ -4,7 +4,7 @@ module WebConsole
   class MiddlewareTest < ActionDispatch::IntegrationTest
     class Application
       def initialize(options = {})
-        @response_content_type = options[:response_content_type] || Mime::HTML
+        @response_content_type = options[:response_content_type] || Mime[:html]
       end
 
       def call(env)
@@ -55,14 +55,14 @@ module WebConsole
     end
 
     test 'render console if response format is HTML' do
-      @app = Middleware.new(Application.new(response_content_type: Mime::HTML))
+      @app = Middleware.new(Application.new(response_content_type: Mime[:html]))
       get '/', params: nil, headers: { 'web_console.binding' => binding }
 
       assert_select '#console'
     end
 
     test 'does not render console if response format is not HTML' do
-      @app = Middleware.new(Application.new(response_content_type: Mime::JSON))
+      @app = Middleware.new(Application.new(response_content_type: Mime[:json]))
       get '/', params: nil, headers: { 'web_console.binding' => binding }
 
       assert_select '#console', 0
@@ -85,7 +85,7 @@ module WebConsole
     end
 
     test "doesn't render console in non html response" do
-      @app = Middleware.new(Application.new(response_content_type: Mime::JSON))
+      @app = Middleware.new(Application.new(response_content_type: Mime[:json]))
       get '/', params: nil, headers: { 'web_console.binding' => binding }
 
       assert_select '#console', 0
@@ -172,7 +172,7 @@ module WebConsole
 
       def update_path_args(path)
         unless path[:headers]
-          path.merge!(headers: { 'HTTP_ACCEPT' => Mime::WEB_CONSOLE_V2 })
+          path.merge!(headers: { 'HTTP_ACCEPT' => Mime[:web_console_v2] })
         end
       end
 
