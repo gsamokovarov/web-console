@@ -5,7 +5,7 @@ module WebConsole
     cattr_accessor :whitelisted_ips
     @@whitelisted_ips = Whitelist.new
 
-    # Define a vendor MIME type. We can call it using Mime::WEB_CONSOLE_V2 constant.
+    # Define a vendor MIME type. We can call it using Mime[:web_console_v2].
     Mime::Type.register 'application/vnd.web-console.v2', :web_console_v2
 
     # Returns whether a request came from a whitelisted IP.
@@ -23,7 +23,7 @@ module WebConsole
 
     # Returns whether the request is acceptable.
     def acceptable?
-      xhr? && accepts.any? { |mime| Mime::WEB_CONSOLE_V2 == mime }
+      xhr? && accepts.any? { |mime| Mime[:web_console_v2] == mime }
     end
 
     private
