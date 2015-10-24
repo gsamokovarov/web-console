@@ -16,7 +16,7 @@ module WebConsole
 
     def call(env)
       request = create_regular_or_whiny_request(env)
-      return @app.call(env) unless request.from_whitelited_ip?
+      return @app.call(env) unless request.from_whitelisted_ip?
 
       if id = id_for_repl_session_update(request)
         return update_repl_session(id, request)

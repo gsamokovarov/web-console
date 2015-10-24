@@ -2,11 +2,11 @@ require 'test_helper'
 
 module WebConsole
   class WhinyRequestTest < ActiveSupport::TestCase
-    test '#from_whitelited_ip? logs out to stderr' do
+    test '#from_whitelisted_ip? logs out to stderr' do
       Request.stubs(:whitelisted_ips).returns(IPAddr.new('127.0.0.1'))
       assert_output_to_stderr do
         req = request('http://example.com', 'REMOTE_ADDR' => '0.0.0.0')
-        assert_not req.from_whitelited_ip?
+        assert_not req.from_whitelisted_ip?
       end
     end
 
