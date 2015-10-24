@@ -12,7 +12,7 @@ module WebConsole
     #
     # For a request to hit Web Console features, it needs to come from a white
     # listed IP.
-    def from_whitelited_ip?
+    def from_whitelisted_ip?
       whitelisted_ips.include?(strict_remote_ip)
     end
 
