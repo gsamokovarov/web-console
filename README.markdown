@@ -75,7 +75,7 @@ Internal errors like `ZeroDevisionError` aren't caught.
 
 The web console allows you to create an interactive Ruby session in your
 browser. Those sessions are launched automatically in case on an error, but
-they can also be launched manually in in any page.
+they can also be launched manually in any page.
 
 For example, calling `console` in a view will display a console in the current
 page in the context of the view binding.
