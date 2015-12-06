@@ -20,7 +20,7 @@ module WebConsole
     initializer 'web_console.development_only' do
       unless (config.web_console.development_only == false) || Rails.env.development?
         abort <<-END.strip_heredoc
-          Web Console is activated in the #{Rails.env} environment, which is
+          Web Console is activated in the #{Rails.env} environment. This is
           usually a mistake. To ensure it's only activated in development
           mode, move it to the development group of your Gemfile:
 
