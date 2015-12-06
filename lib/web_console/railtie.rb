@@ -5,8 +5,6 @@ module WebConsole
     config.web_console = ActiveSupport::OrderedOptions.new
     config.web_console.whitelisted_ips = %w( 127.0.0.1 ::1 )
 
-    config.web_console.development_only = true
-
     initializer 'web_console.initialize' do
       require 'web_console/extensions'
 
