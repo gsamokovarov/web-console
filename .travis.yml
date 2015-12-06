@@ -24,8 +24,7 @@ script:
 
 matrix:
   include:
-    - gemfile: gemfiles/Gemfile-4-0-stable
-      env: TEST_SUITE=test:templates
+    - env: TEST_SUITE=test:templates
       rvm: 2.2.2
   allow_failures:
     - rvm: ruby-head
