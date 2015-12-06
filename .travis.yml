@@ -1,7 +1,7 @@
 language: ruby
 
 rvm:
-  - 2.2
+  - 2.2.3
   - ruby-head
   - rbx-2
   - jruby
@@ -16,16 +16,10 @@ env:
 
 sudo: false
 
-before_script:
-  - RAILS_ENV=test bundle exec rake --rakefile=test/dummy/Rakefile db:setup
-
 script:
   - bundle exec rake ${TEST_SUITE}
 
 matrix:
-  include:
-    - env: TEST_SUITE=test:templates
-      rvm: 2.2.2
   allow_failures:
     - rvm: ruby-head
     - rvm: rbx-2
