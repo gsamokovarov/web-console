@@ -5,10 +5,6 @@ module WebConsole
     config.web_console = ActiveSupport::OrderedOptions.new
     config.web_console.whitelisted_ips = %w( 127.0.0.1 ::1 )
 
-    # See rails/web-console#150 and rails/rails#20319. Revert when Ruby on
-    # Rails 4.2.4 is released.
-    config.web_console.development_only = false
-
     initializer 'web_console.initialize' do
       require 'web_console/extensions'
 
@@ -24,7 +20,7 @@ module WebConsole
     initializer 'web_console.development_only' do
       unless (config.web_console.development_only == false) || Rails.env.development?
         abort <<-END.strip_heredoc
-          Web Console is activated in the #{Rails.env} environment, which is
+          Web Console is activated in the #{Rails.env} environment. This is
           usually a mistake. To ensure it's only activated in development
           mode, move it to the development group of your Gemfile:
 

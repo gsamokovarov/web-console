@@ -1,9 +1,6 @@
 <p align=right>
   Documentation for:
-  <a href=https://github.com/rails/web-console/tree/v2.0.0>v2.0.0</a>
-  <a href=https://github.com/rails/web-console/tree/v2.1.0>v2.1.0</a>
-  <a href=https://github.com/rails/web-console/tree/v2.1.1>v2.1.1</a>
-  <a href=https://github.com/rails/web-console/tree/v2.1.2>v2.1.2</a>
+  <a href=https://github.com/rails/web-console/tree/v1.0.4>v1.0.4</a>
   <a href=https://github.com/rails/web-console/tree/v2.1.3>v2.1.3</a>
 </p>
 
@@ -28,7 +25,7 @@ application, add the following to your `Gemfile`.
 
 ```ruby
 group :development do
-  gem 'web-console', '~> 2.0'
+  gem 'web-console', '~> 3.0'
 end
 ```
 
@@ -37,35 +34,9 @@ restart your server for the _Web Console_ to kick in.
 
 ## Runtime
 
-_Web Console_ uses [John Mair]'s [binding_of_caller] to spawn a console in a
-specific binding. This comes at the price of limited Ruby runtime support.
-
 ### CRuby
 
-CRuby 1.9.2 and below is **not** supported.
-
-### JRuby
-
-JRuby needs to run in interpreted mode. You can enable it by:
-
-```bash
-export JRUBY_OPTS=-J-Djruby.compile.mode=OFF
-
-# If you run JRuby 1.7.12 and above, you can use:
-export JRUBY_OPTS=--dev
-```
-
-An unstable version of [binding_of_caller] is needed as the latest stable one
-won't compile on _JRuby_. To install it, put the following in your application
-`Gemfile`:
-
-```ruby
-group :development do
-  gem 'binding_of_caller', '0.7.3.pre1'
-end
-```
-
-Only _JRuby_ 1.7, is supported (no JRuby 9K support at the moment).
+CRuby 2.2 and below is **not** supported.
 
 ### Rubinius
 
@@ -215,17 +186,16 @@ Make sure you configuration lives in `config/environments/development.rb`.
 
 ## Credits
 
-* Shoutout to [Charlie Somerville] for [better_errors] and [this] code.
-* Kudos to [John Mair] for [binding_of_caller].
+* Shoutout to [Charlie Somerville] for [better_errors].
+* Kudos to [John Mair] for [debug_inspector].
 * Thanks to [Charles Oliver Nutter] for all the _JRuby_ feedback.
-* Hugs and kisses to all of our [contributors].
+* Hugs and kisses to all of our [contributors]!
 
 [better_errors]: https://github.com/charliesome/better_errors
-[binding_of_caller]: https://github.com/banister/binding_of_caller
+[debug_inspector]: https://github.com/banister/debug_inspector
 [Charlie Somerville]: https://github.com/charliesome
 [John Mair]: https://github.com/banister
 [Charles Oliver Nutter]: https://github.com/headius
 [templates]: https://github.com/rails/web-console/tree/master/lib/web_console/templates
-[this]: https://github.com/rails/web-console/blob/master/lib/web_console/integration/cruby.rb#L20-L32
 [rvt]: https://github.com/gsamokovarov/rvt
 [contributors]: https://github.com/rails/web-console/graphs/contributors
