@@ -20,7 +20,7 @@ _Web Console_ is a debugging tool for your Ruby on Rails applications.
 
 ## Installation
 
-_Web Console_ is meant to work as a Rails 5 plugin. To install it in your current
+_Web Console_ is meant to work as a Rails plugin. To install it in your current
 application, add the following to your `Gemfile`.
 
 ```ruby
@@ -184,22 +184,6 @@ end
 
 Make sure you configuration lives in `config/environments/development.rb`.
 
-### What happened to th JRuby support?
-
-Rails 5 doesn't support JRuby well enough. As soon as the Rails support gets
-better we'll look into re-introducing the JRuby support.
-
-### What about Rails 4.2?
-
-The `2.x` releases will keep on supporting Rails 4.2. You can lock the versions
-with:
-
-```ruby
-group :development do
-  gem 'web-console', '~> 2.0'
-end
-```
-
 ## Credits
 
 * Shoutout to [Charlie Somerville] for [better_errors].
@@ -208,7 +192,7 @@ end
 * Hugs and kisses to all of our [contributors]!
 
 [better_errors]: https://github.com/charliesome/better_errors
-[binding_of_caller]: https://github.com/banister/binding_of_caller
+[debug_inspector]: https://github.com/banister/debug_inspector
 [Charlie Somerville]: https://github.com/charliesome
 [John Mair]: https://github.com/banister
 [Charles Oliver Nutter]: https://github.com/headius
