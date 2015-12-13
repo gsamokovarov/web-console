@@ -2,9 +2,16 @@
 
 ## master (unreleased)
 
+## 3.0.0
+
+* [#173](https://github.com/rails/web-console/pull/173) Revert "Change config.development_only default until 4.2.4 is released" ([@gsamokovarov])
+* [#171](https://github.com/rails/web-console/pull/171) Fixed blocked IP logging ([@gsamokovarov])
+* [#162](https://github.com/rails/web-console/pull/162) Render the console inside the body tag ([@gsamokovarov])
+* [#165](https://github.com/rails/web-console/pull/165) Revamped integrations for CRuby and Rubinius ([@gsamokovarov])
+
 ## 2.2.1
 
-* [#150](https://github.com/rails/web-console/pull/150) Change config.development_only default until 4.2.4 is released.
+* [#150](https://github.com/rails/web-console/pull/150) Change config.development_only default until 4.2.4 is released ([@gsamokovarov])
 
 ## 2.2.0
 
