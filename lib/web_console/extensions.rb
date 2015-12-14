@@ -14,7 +14,7 @@ ActionDispatch::DebugExceptions.class_eval do
       # exception following. The backtrace in the view is generated from
       # reaching out to original_exception in the view.
       if error.is_a?(ActionView::Template::Error)
-        env['web_console.exception'] = error.original_exception
+        env['web_console.exception'] = error.cause
       end
     end
   end
