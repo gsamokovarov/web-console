@@ -19,7 +19,7 @@ class Exception
   #
   # Every integration should the instance variable.
   def bindings
-    @bindings || []
+    (defined?(@bindings) && @bindings) || []
   end
 end
 
