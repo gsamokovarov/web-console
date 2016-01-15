@@ -15,6 +15,10 @@ module WebConsole
       ActiveSupport.on_load(:action_controller) do
         ActionController::Base.send(:include, Helper)
       end
+
+      if logger = ::Rails.logger
+        WebConsole.logger = logger
+      end
     end
 
     initializer 'web_console.development_only' do

@@ -157,6 +157,12 @@ module WebConsole
       assert_equal(406, response.status)
     end
 
+    test 'reraises application errors' do
+      @app = proc { raise }
+
+      assert_raises(RuntimeError) { get '/' }
+    end
+
     private
 
       # Override the put and post testing helper of ActionDispatch to customize http headers
