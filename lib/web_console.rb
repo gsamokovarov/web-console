@@ -1,24 +1,30 @@
+require 'active_support/dependencies/autoload'
 require 'active_support/lazy_load_hooks'
 require 'active_support/logger'
 
-require 'web_console/integration'
-require 'web_console/railtie'
-require 'web_console/errors'
-require 'web_console/template'
-require 'web_console/middleware'
-require 'web_console/whitelist'
-require 'web_console/request'
-
 module WebConsole
-  autoload :View, 'web_console/view'
-  autoload :Helper, 'web_console/helper'
-  autoload :Evaluator, 'web_console/evaluator'
-  autoload :Session, 'web_console/session'
-  autoload :Response, 'web_console/response'
-  autoload :WhinyRequest, 'web_console/whiny_request'
+  extend ActiveSupport::Autoload
+
+  autoload :View
+  autoload :Helper
+  autoload :Evaluator
+  autoload :Session
+  autoload :Response
+  autoload :Request
+  autoload :WhinyRequest
+  autoload :Whitelist
+  autoload :Template
+  autoload :Middleware
+
+  autoload_at 'web_console/errors' do
+    autoload :Error
+    autoload :DoubleRenderError
+  end
 
   mattr_accessor :logger
   @@logger = ActiveSupport::Logger.new($stderr)
 
   ActiveSupport.run_load_hooks(:web_console, self)
 end
+
+require 'web_console/railtie'
