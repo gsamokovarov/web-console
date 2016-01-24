@@ -3,8 +3,6 @@ require 'test_helper'
 module WebConsole
   class HelperTest < ActionDispatch::IntegrationTest
     class BaseApplication
-      include Helper
-
       def call(env)
         [ status, headers, body ] 
       end
@@ -59,6 +57,9 @@ module WebConsole
     end
 
     setup do
+      Thread.current[:__web_console_exception] = nil
+      Thread.current[:__web_console_binding] = nil
+
       Request.stubs(:whitelisted_ips).returns(IPAddr.new('0.0.0.0/0'))
 
       @app = Middleware.new(SingleConsoleApplication.new)

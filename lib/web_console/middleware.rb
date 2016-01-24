@@ -27,13 +27,7 @@ module WebConsole
 
         status, headers, body = call_app(env)
 
-        if exception = env['web_console.exception']
-          session = Session.from_exception(exception)
-        elsif binding = env['web_console.binding']
-          session = Session.from_binding(binding)
-        end
-
-        if session && acceptable_content_type?(headers)
+        if session = Session.from(Thread.current) and acceptable_content_type?(headers)
           response = Response.new(body, status, headers)
           template = Template.new(env, session)
 
@@ -49,6 +43,11 @@ module WebConsole
       WebConsole.logger.error("\n#{e.class}: #{e}\n\tfrom #{e.backtrace.join("\n\tfrom ")}")
       raise e
     ensure
+      # Clean up the fiber locals after the session creation. Object#console
+      # uses those to communicate the current binding or exception to the middleware.
+      Thread.current[:__web_console_exception] = nil
+      Thread.current[:__web_console_binding] = nil
+
       raise app_exception if Exception === app_exception
     end
 

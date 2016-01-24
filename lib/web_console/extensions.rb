@@ -1,24 +1,46 @@
-ActionDispatch::DebugExceptions.class_eval do
-  def render_exception_with_web_console(request, exception)
-    render_exception_without_web_console(request, exception).tap do
-      # Retain superficial Rails 4.2 compatibility.
-      env = Hash === request ? request : request.env
+module Kernel
+  # Instructs Web Console to render a console in the specified binding.
+  #
+  # If +bidning+ isn't explicitly given it will default to the binding of the
+  # previous frame. E.g. the one that invoked +console+.
+  #
+  # Raises DoubleRenderError if a double +console+ invocation per request is
+  # detected.
+  def console(binding = WebConsole.caller_bindings.first)
+    raise WebConsole::DoubleRenderError if Thread.current[:__web_console_binding]
 
-      backtrace_cleaner = env['action_dispatch.backtrace_cleaner']
-      error = ActionDispatch::ExceptionWrapper.new(backtrace_cleaner, exception).exception
+    Thread.current[:__web_console_binding] = binding
 
-      # Get the original exception if ExceptionWrapper decides to follow it.
-      env['web_console.exception'] = error
+    # Make sure nothing is rendered from the view helper. Otherwise
+    # you're gonna see unexpected #<Binding:0x007fee4302b078> in the
+    # templates.
+    nil
+  end
+end
 
-      # ActionView::Template::Error bypass ExceptionWrapper original
-      # exception following. The backtrace in the view is generated from
-      # reaching out to original_exception in the view.
-      if error.is_a?(ActionView::Template::Error)
-        env['web_console.exception'] = error.cause
+module ActionDispatch
+  class DebugExceptions
+    def render_exception_with_web_console(request, exception)
+      render_exception_without_web_console(request, exception).tap do
+        # Retain superficial Rails 4.2 compatibility.
+        env = Hash === request ? request : request.env
+
+        backtrace_cleaner = env['action_dispatch.backtrace_cleaner']
+        error = ExceptionWrapper.new(backtrace_cleaner, exception).exception
+
+        # Get the original exception if ExceptionWrapper decides to follow it.
+        Thread.current[:__web_console_exception] = error
+
+        # ActionView::Template::Error bypass ExceptionWrapper original
+        # exception following. The backtrace in the view is generated from
+        # reaching out to original_exception in the view.
+        if error.is_a?(ActionView::Template::Error)
+          Thread.current[:__web_console_exception] = error.cause
+        end
       end
     end
-  end
 
-  alias_method :render_exception_without_web_console, :render_exception
-  alias_method :render_exception, :render_exception_with_web_console
+    alias_method :render_exception_without_web_console, :render_exception
+    alias_method :render_exception, :render_exception_with_web_console
+  end
 end

@@ -33,24 +33,36 @@ module WebConsole
       assert_equal "=> 42\n", @session.eval('40 + 2')
     end
 
-    test 'can create session from a single binding' do
+    test '#from can create session from a single binding' do
       saved_line, saved_binding = __LINE__, binding
-      session = Session.from_binding(saved_binding)
+      Thread.current[:__web_console_binding] = saved_binding
+
+      session = Session.from(__web_console_binding: saved_binding)
 
       assert_equal "=> #{saved_line}\n", session.eval('__LINE__')
     end
 
-    test 'can create session from an exception' do
+    test '#from can create session from an exception' do
       exc = LineAwareError.raise
-      session = Session.from_exception(exc)
+
+      session = Session.from(__web_console_exception: exc)
 
       assert_equal "=> #{exc.line}\n", session.eval('__LINE__')
     end
 
-    test 'can switch to bindings' do
+    test '#from can switch to bindings' do
       exc, saved_line = LineAwareError.raise, __LINE__
 
-      session = Session.from_exception(exc)
+      session = Session.from(__web_console_exception: exc)
+      session.switch_binding_to(1)
+
+      assert_equal "=> #{saved_line}\n", session.eval('__LINE__')
+    end
+
+    test '#from prioritizes exceptions over bindings' do
+      exc, saved_line = LineAwareError.raise, __LINE__
+
+      session = Session.from(__web_console_exception: exc, __web_console_binding: binding)
       session.switch_binding_to(1)
 
       assert_equal "=> #{saved_line}\n", session.eval('__LINE__')
