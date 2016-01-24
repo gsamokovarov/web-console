@@ -6,7 +6,6 @@ module WebConsole
   extend ActiveSupport::Autoload
 
   autoload :View
-  autoload :Helper
   autoload :Evaluator
   autoload :Session
   autoload :Response

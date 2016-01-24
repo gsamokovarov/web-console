@@ -1,9 +1,9 @@
 module WebConsole
-  # A session lets you persist wrap an +Evaluator+ instance in memory
-  # associated with multiple bindings.
+  # A session lets you persist an +Evaluator+ instance in memory associated
+  # with multiple bindings.
   #
   # Each newly created session is persisted into memory and you can find it
-  # later its +id+.
+  # later by its +id+.
   #
   # A session may be associated with multiple bindings. This is used by the
   # error pages only, as currently, this is the only client that needs to do
@@ -21,14 +21,19 @@ module WebConsole
         inmemory_storage[id]
       end
 
-      # Create a Session from an exception.
-      def from_exception(exc)
-        new(exc.bindings)
-      end
-
-      # Create a Session from a single binding.
-      def from_binding(binding)
-        new(binding)
+      # Create a Session from an binding or exception in a storage.
+      #
+      # The storage is expected to respond to #[]. The binding is expected in
+      # :__web_console_binding and the exception in :__web_console_exception.
+      #
+      # Can return nil, if no binding or exception have been preserved in the
+      # storage.
+      def from(storage)
+        if exc = storage[:__web_console_exception]
+          new(exc.bindings)
+        elsif binding = storage[:__web_console_binding]
+          new(binding)
+        end
       end
     end
 

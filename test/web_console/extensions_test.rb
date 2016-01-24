@@ -15,14 +15,14 @@ module ActionDispatch
       @app = DebugExceptions.new(Application.new)
     end
 
-    test "follows ActionView::Template::Error original error in env['web_console.exception']" do
+    test "follows ActionView::Template::Error original error in Thread.current[:__web_console_exception]" do
       get "/", params: {}, headers: {
         'action_dispatch.show_detailed_exceptions' => true,
         'action_dispatch.show_exceptions' => true,
         'action_dispatch.logger' => Logger.new(StringIO.new)
       }
 
-      assert_equal 42, request.env['web_console.exception'].bindings.first.eval('@ivar')
+      assert_equal 42, Thread.current[:__web_console_exception].bindings.first.eval('@ivar')
     end
   end
 end

@@ -9,14 +9,6 @@ module WebConsole
       require 'web_console/integration'
       require 'web_console/extensions'
 
-      ActiveSupport.on_load(:action_view) do
-        ActionView::Base.send(:include, Helper)
-      end
-
-      ActiveSupport.on_load(:action_controller) do
-        ActionController::Base.send(:include, Helper)
-      end
-
       if logger = ::Rails.logger
         WebConsole.logger = logger
       end
