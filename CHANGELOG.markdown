@@ -2,9 +2,14 @@
 
 ## master (unreleased)
 
+## 2.3.0
+
+* [#181](https://github.com/rails/web-console/pull/181) Log internal Web Console errors ([@schneems])
+* [#150](https://github.com/rails/web-console/pull/150) Revert #150. ([@gsamokovarov])
+
 ## 2.2.1
 
-* [#150](https://github.com/rails/web-console/pull/150) Change config.development_only default until 4.2.4 is released.
+* [#150](https://github.com/rails/web-console/pull/150) Change config.development_only default until 4.2.4 is released. ([@gsamokovarov])
 
 ## 2.2.0
 
@@ -48,3 +53,4 @@
 [@parterburn]: https://github.com/parterburn
 [@sh19910711]: https://github.com/sh19910711
 [@frenesim]: https://github.com/frenesim
+[@schneems]: https://github.com/schneems

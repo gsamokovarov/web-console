@@ -1,6 +1,9 @@
 ActionDispatch::DebugExceptions.class_eval do
-  def render_exception_with_web_console(env, exception)
-    render_exception_without_web_console(env, exception).tap do
+  def render_exception_with_web_console(request, exception)
+    render_exception_without_web_console(request, exception).tap do
+      # Retain superficial Rails 5 compatibility.
+      env = Hash === request ? request : request.env
+
       error = ActionDispatch::ExceptionWrapper.new(env, exception).exception
 
       # Get the original exception if ExceptionWrapper decides to follow it.
