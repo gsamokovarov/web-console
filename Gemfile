@@ -6,6 +6,10 @@ gem 'rails', github: 'rails/rails'
 gem 'arel', github: 'rails/arel'
 gem 'rack', github: 'rack/rack'
 
+group :development do
+  gem 'puma'
+end
+
 group :test do
   gem 'rake'
   gem 'mocha', require: false
