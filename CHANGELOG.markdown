@@ -4,9 +4,9 @@
 
 ## 3.1.0
 
-* [#182](https://github.com/rails/web-console/pull/182) Let `#console` live in `Kernel` ([@gsamokovarov])
+* [#182](https://github.com/rails/web-console/pull/182) Let `#console` live in `Kernel` ([@schneems])
 * [#181](https://github.com/rails/web-console/pull/181) Log internal Web Console errors ([@gsamokovarov])
-* [#180](https://github.com/rails/web-console/pull/180) Autoload Web Console constants for faster Rails boot time ([@schneems])
+* [#180](https://github.com/rails/web-console/pull/180) Autoload Web Console constants for faster Rails boot time ([@herminiotorres])
 
 ## 3.0.0
 
