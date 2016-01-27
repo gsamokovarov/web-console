@@ -67,8 +67,10 @@ class PostsController < ApplicationController
 end
 ```
 
-Only one `console` invocation is allowed per request. If you happen to have
-multiple ones, a `WebConsole::DoubleRenderError` is raised.
+The method is defined in `Kernel` and you can invoke it any application code.
+
+Only one `console` invocation is allowed once per request. If you happen to
+have multiple ones, a `WebConsole::DoubleRenderError` will be raised.
 
 ## Configuration
 

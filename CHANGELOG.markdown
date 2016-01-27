@@ -2,6 +2,12 @@
 
 ## master (unreleased)
 
+## 3.1.0
+
+* [#182](https://github.com/rails/web-console/pull/182) Let `#console` live in `Kernel` ([@gsamokovarov])
+* [#181](https://github.com/rails/web-console/pull/181) Log internal Web Console errors ([@gsamokovarov])
+* [#180](https://github.com/rails/web-console/pull/180) Autoload Web Console constants for faster Rails boot time ([@schneems])
+
 ## 3.0.0
 
 * [#173](https://github.com/rails/web-console/pull/173) Revert "Change config.development_only default until 4.2.4 is released" ([@gsamokovarov])
@@ -55,3 +61,5 @@
 [@parterburn]: https://github.com/parterburn
 [@sh19910711]: https://github.com/sh19910711
 [@frenesim]: https://github.com/frenesim
+[@herminiotorres]: https://github.com/herminiotorres
+[@schneems]: https://github.com/schneems
