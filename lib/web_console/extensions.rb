@@ -1,4 +1,6 @@
 module Kernel
+  module_function
+
   # Instructs Web Console to render a console in the specified binding.
   #
   # If +bidning+ isn't explicitly given it will default to the binding of the
