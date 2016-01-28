@@ -1,7 +1,7 @@
 <p align=right>
   Documentation for:
   <a href=https://github.com/rails/web-console/tree/v1.0.4>v1.0.4</a>
-  <a href=https://github.com/rails/web-console/tree/v2.2.1>v2.1.3</a>
+  <a href=https://github.com/rails/web-console/tree/v2.2.1>v2.2.1</a>
   <a href=https://github.com/rails/web-console/tree/v3.0.0>v3.0.0</a>
 </p>
 

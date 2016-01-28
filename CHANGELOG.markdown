@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+## 3.1.1
+
+* [#185](https://github.com/rails/web-console/pull/185) Fix `rails console` startup ([@gsamokovarov])
+
 ## 3.1.0
 
 * [#182](https://github.com/rails/web-console/pull/182) Let `#console` live in `Kernel` ([@schneems])
