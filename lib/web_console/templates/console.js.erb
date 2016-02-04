@@ -92,7 +92,7 @@ REPLConsole.prototype.commandHandle = function(line, callback) {
 
   function getErrorText(xhr) {
     if (!xhr.status) {
-      return "<%= t 'errors.connection_refused' %>";
+      return "Connection Refused";
     } else {
       return xhr.status + ' ' + xhr.statusText;
     }
