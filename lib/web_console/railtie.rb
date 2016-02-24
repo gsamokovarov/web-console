@@ -12,6 +12,8 @@ module WebConsole
       if logger = ::Rails.logger
         WebConsole.logger = logger
       end
+
+      ActionDispatch::DebugExceptions.register_interceptor(Interceptor.new)
     end
 
     initializer 'web_console.development_only' do
