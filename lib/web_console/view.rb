@@ -25,6 +25,14 @@ module WebConsole
       render(template: template, layout: 'layouts/inlined_string')
     end
 
+    # Custom ActionView::Base#render wrapper which silences all the log
+    # printings.
+    #
+    # Helps to keep the Rails logs clean during errors.
+    def render(*)
+      WebConsole.logger.silence { super }
+    end
+
     # Override method for ActionView::Helpers::TranslationHelper#t.
     #
     # This method escapes the original return value for JavaScript, since the
