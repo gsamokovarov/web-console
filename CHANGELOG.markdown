@@ -19,6 +19,14 @@
 * [#162](https://github.com/rails/web-console/pull/162) Render the console inside the body tag ([@gsamokovarov])
 * [#165](https://github.com/rails/web-console/pull/165) Revamped integrations for CRuby and Rubinius ([@gsamokovarov])
 
+## 2.3.0
+
+This is mainly a Rails 5 compatibility release. If you have the chance, please
+go to 3.1.0 instead.
+
+* [#181](https://github.com/rails/web-console/pull/181) Log internal Web Console errors (@schneems)
+* [#150](https://github.com/rails/web-console/pull/150) Revert #150. (@gsamokovarov)
+
 ## 2.2.1
 
 * [#150](https://github.com/rails/web-console/pull/150) Change config.development_only default until 4.2.4 is released ([@gsamokovarov])
