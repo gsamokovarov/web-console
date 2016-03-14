@@ -37,7 +37,7 @@ restart your server for the _Web Console_ to kick in.
 
 ### CRuby
 
-CRuby 2.2 and below is **not** supported.
+CRuby 2.2 and above is required.
 
 ### Rubinius
 
