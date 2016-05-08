@@ -58,6 +58,14 @@ module WebConsole
       assert_select 'body > #console'
     end
 
+    test 'render error_page.js from web_console.exception' do
+      Thread.current[:__web_console_exception] = raise_exception
+
+      get '/', params: nil
+
+      assert_select 'body > script[data-template=error_page]'
+    end
+
     test 'render console if response format is HTML' do
       Thread.current[:__web_console_binding] = binding
       @app = Middleware.new(Application.new(response_content_type: Mime[:html]))
