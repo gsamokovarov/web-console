@@ -14,6 +14,7 @@ module WebConsole
     # script tag and enclosed in a closure, so you don't have to worry for
     # leaking globals, unless you explicitly want to.
     def render_javascript(template)
+      assign(template: template)
       render(template: template, layout: 'layouts/javascript')
     end
 
