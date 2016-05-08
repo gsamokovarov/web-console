@@ -5,7 +5,7 @@ module WebConsole
     # The error pages are special, because they are the only pages that
     # currently require multiple bindings. We get those from exceptions.
     def only_on_error_page(*args)
-      yield if @env['web_console.exception'].present?
+      yield if Thread.current[:__web_console_exception].present?
     end
 
     # Render JavaScript inside a script tag and a closure.
