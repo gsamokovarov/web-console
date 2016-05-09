@@ -1,11 +1,7 @@
 require 'action_view'
-require 'action_dispatch'
-require 'active_support/core_ext/string/access'
-require 'json'
-require 'web_console/whitelist'
-require 'web_console/request'
-require 'web_console/view'
+require 'web_console'
 require 'web_console/testing/helper'
+Mime = { web_console_v2: 'fake' }
 
 module WebConsole
   module Testing
