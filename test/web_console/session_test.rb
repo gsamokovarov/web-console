@@ -34,6 +34,11 @@ module WebConsole
       assert_equal "=> 42\n", @session.eval('40 + 2')
     end
 
+    test 'find first binding of the rails app' do
+      session = Session.new(External.exception.bindings)
+      assert_equal session.eval('__FILE__'), "=> \"#{__FILE__}\"\n"
+    end
+
     test '#from can create session from a single binding' do
       saved_line, saved_binding = __LINE__, binding
       Thread.current[:__web_console_binding] = saved_binding
