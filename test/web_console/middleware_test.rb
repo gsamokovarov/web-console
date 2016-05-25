@@ -36,6 +36,7 @@ module WebConsole
     end
 
     setup do
+      Rails.stubs(:root).returns Pathname(__FILE__).parent
       Request.stubs(:whitelisted_ips).returns(IPAddr.new('0.0.0.0/0'))
 
       Middleware.mount_point = ''
