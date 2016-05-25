@@ -133,7 +133,7 @@ module WebConsole
     end
 
     test 'can switch bindings on error pages' do
-      session = Session.new(exception = raise_exception)
+      session = Session.new(raise_exception.bindings)
 
       Session.stubs(:from).returns(session)
 
