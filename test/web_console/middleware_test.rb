@@ -36,6 +36,7 @@ module WebConsole
     end
 
     setup do
+      Rails.stubs(:root).returns Pathname(__FILE__).parent
       Request.stubs(:whitelisted_ips).returns(IPAddr.new('0.0.0.0/0'))
 
       Middleware.mount_point = ''
@@ -132,7 +133,7 @@ module WebConsole
     end
 
     test 'can switch bindings on error pages' do
-      session = Session.new(exception = raise_exception)
+      session = Session.new(raise_exception.bindings)
 
       Session.stubs(:from).returns(session)
 

@@ -43,7 +43,7 @@ module WebConsole
     def initialize(bindings)
       @id = SecureRandom.hex(16)
       @bindings = Array(bindings)
-      @evaluator = Evaluator.new(@bindings[0])
+      @evaluator = Evaluator.new(initial_binding)
 
       store_into_memory
     end
@@ -63,6 +63,10 @@ module WebConsole
     end
 
     private
+
+      def initial_binding
+        @bindings.find { |b| b.eval('__FILE__').to_s.start_with?(Rails.root.to_s) }
+      end
 
       def store_into_memory
         inmemory_storage[id] = self

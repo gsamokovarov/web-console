@@ -17,8 +17,9 @@ module WebConsole
     end
 
     setup do
+      Rails.stubs(:root).returns Pathname(__FILE__).parent
       Session.inmemory_storage.clear
-      @session = Session.new TOPLEVEL_BINDING
+      @session = Session.new(binding)
     end
 
     test 'returns nil when a session is not found' do
@@ -31,6 +32,11 @@ module WebConsole
 
     test 'can evaluate code in the currently selected binding' do
       assert_equal "=> 42\n", @session.eval('40 + 2')
+    end
+
+    test 'find first binding of the rails app' do
+      session = Session.new(External.exception.bindings)
+      assert_equal session.eval('__FILE__'), "=> \"#{__FILE__}\"\n"
     end
 
     test '#from can create session from a single binding' do

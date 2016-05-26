@@ -76,3 +76,11 @@ if ActiveSupport::TestCase.method_defined?(:fixture_path=)
 end
 
 require 'mocha/mini_test'
+
+module External
+  def self.exception
+    raise
+  rescue => exc
+    exc
+  end
+end
