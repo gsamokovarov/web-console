@@ -2,6 +2,11 @@
 
 ## master (unreleased)
 
+## 3.2.0
+
+* [#198](https://github.com/rails/web-console/pull/198) Pick the first application trace binding on errors ([@sh19910711])
+* [#189](https://github.com/rails/web-console/pull/189) Silence ActionView rendering information ([@gsamokovarov])
+
 ## 3.1.1
 
 * [#185](https://github.com/rails/web-console/pull/185) Fix `rails console` startup ([@gsamokovarov])
