@@ -36,6 +36,8 @@ module WebConsole
     end
 
     setup do
+      Thread.current[:__web_console_exception] = nil
+      Thread.current[:__web_console_binding] = nil
       Rails.stubs(:root).returns Pathname(__FILE__).parent
       Request.stubs(:whitelisted_ips).returns(IPAddr.new('0.0.0.0/0'))
 
