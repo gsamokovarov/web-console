@@ -10,6 +10,6 @@ class ExceptionTestController < ApplicationController
 
   def test_method
     test2 = "Test2"
-    raise StandardError
+    params.fetch(:error_in_library_code)
   end
 end
