@@ -39,6 +39,15 @@ module WebConsole
       assert_equal session.eval('__FILE__'), "=> \"#{__FILE__}\"\n"
     end
 
+    test 'use first binding if no application bindings' do
+      binding = Object.new
+      binding.expects(:eval).with('__FILE__').returns 'framework'
+      binding.expects(:eval).with('called?').returns 'yes'
+
+      session = Session.new(binding)
+      assert_equal session.eval('called?'), "=> \"yes\"\n"
+    end
+
     test '#from can create session from a single binding' do
       saved_line, saved_binding = __LINE__, binding
       Thread.current[:__web_console_binding] = saved_binding

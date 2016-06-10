@@ -43,7 +43,7 @@ module WebConsole
     def initialize(bindings)
       @id = SecureRandom.hex(16)
       @bindings = Array(bindings)
-      @evaluator = Evaluator.new(initial_binding)
+      @evaluator = Evaluator.new(application_binding || @bindings.first)
 
       store_into_memory
     end
@@ -64,7 +64,7 @@ module WebConsole
 
     private
 
-      def initial_binding
+      def application_binding
         @bindings.find { |b| b.eval('__FILE__').to_s.start_with?(Rails.root.to_s) }
       end
 
