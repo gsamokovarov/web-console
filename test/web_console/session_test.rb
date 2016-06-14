@@ -17,9 +17,8 @@ module WebConsole
     end
 
     setup do
-      Rails.stubs(:root).returns Pathname(__FILE__).parent
       Session.inmemory_storage.clear
-      @session = Session.new(binding)
+      @session = Session.new([binding])
     end
 
     test 'returns nil when a session is not found' do
@@ -34,17 +33,19 @@ module WebConsole
       assert_equal "=> 42\n", @session.eval('40 + 2')
     end
 
-    test 'find first binding of the rails app' do
-      session = Session.new(External.exception.bindings)
-      assert_equal session.eval('__FILE__'), "=> \"#{__FILE__}\"\n"
-    end
-
     test 'use first binding if no application bindings' do
-      binding = Object.new
-      binding.expects(:eval).with('__FILE__').returns 'framework'
-      binding.expects(:eval).with('called?').returns 'yes'
+      binding = Object.new.instance_eval do
+        def eval(string)
+          case string
+          when '__FILE__' then framework
+          when 'called?' then 'yes'
+          end
+        end
 
-      session = Session.new(binding)
+        self
+      end
+
+      session = Session.new([binding])
       assert_equal session.eval('called?'), "=> \"yes\"\n"
     end
 
