@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+## 3.2.1
+
+* [#202](https://github.com/rails/web-console/pull/202) Use first binding when there is no application binding ([@sh19910711])
+
 ## 3.2.0
 
 * [#198](https://github.com/rails/web-console/pull/198) Pick the first application trace binding on errors ([@sh19910711])
