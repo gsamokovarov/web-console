@@ -26,7 +26,7 @@ application, add the following to your `Gemfile`.
 
 ```ruby
 group :development do
-  gem 'web-console', '~> 3.0'
+  gem 'web-console'
 end
 ```
 
