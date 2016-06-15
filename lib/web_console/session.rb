@@ -30,9 +30,9 @@ module WebConsole
       # storage.
       def from(storage)
         if exc = storage[:__web_console_exception]
-          new(exc.bindings)
+          new(ExceptionMapper.new(exc))
         elsif binding = storage[:__web_console_binding]
-          new(binding)
+          new([binding])
         end
       end
     end
@@ -42,8 +42,8 @@ module WebConsole
 
     def initialize(bindings)
       @id = SecureRandom.hex(16)
-      @bindings = Array(bindings)
-      @evaluator = Evaluator.new(application_binding || @bindings.first)
+      @bindings = bindings
+      @evaluator = Evaluator.new(bindings.first)
 
       store_into_memory
     end
@@ -63,10 +63,6 @@ module WebConsole
     end
 
     private
-
-      def application_binding
-        @bindings.find { |b| b.eval('__FILE__').to_s.start_with?(Rails.root.to_s) }
-      end
 
       def store_into_memory
         inmemory_storage[id] = self

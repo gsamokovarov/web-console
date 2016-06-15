@@ -7,6 +7,7 @@ module WebConsole
 
   autoload :View
   autoload :Evaluator
+  autoload :ExceptionMapper
   autoload :Session
   autoload :Response
   autoload :Request

@@ -124,7 +124,7 @@ module WebConsole
     end
 
     test 'can evaluate code and return it as a JSON' do
-      session, line = Session.new(binding), __LINE__
+      session, line = Session.new([binding]), __LINE__
 
       Session.stubs(:from).returns(session)
 
@@ -148,7 +148,7 @@ module WebConsole
     test 'can be changed mount point' do
       Middleware.mount_point = '/customized/path'
 
-      session, line = Session.new(binding), __LINE__
+      session, line = Session.new([binding]), __LINE__
       put "/customized/path/repl_sessions/#{session.id}", params: { input: '__LINE__' }, xhr: true
 
       assert_equal({ output: "=> #{line}\n" }.to_json, response.body)
