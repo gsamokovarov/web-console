@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+## 3.3.0
+
+* [203](https://github.com/rails/web-console/pull/203) Map bindings to traces based on the trace __FILE__ and __LINE__ ([@gsamokovarov])
+
 ## 3.2.1
 
 * [#202](https://github.com/rails/web-console/pull/202) Use first binding when there is no application binding ([@sh19910711])
