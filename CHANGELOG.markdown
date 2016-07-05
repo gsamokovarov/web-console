@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+## 3.3.1
+
+Drop support for Rails `4.2.0`.
+
 ## 3.3.0
 
 * [203](https://github.com/rails/web-console/pull/203) Map bindings to traces based on the trace __FILE__ and __LINE__ ([@gsamokovarov])

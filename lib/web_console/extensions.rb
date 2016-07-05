@@ -24,10 +24,7 @@ module ActionDispatch
   class DebugExceptions
     def render_exception_with_web_console(request, exception)
       render_exception_without_web_console(request, exception).tap do
-        # Retain superficial Rails 4.2 compatibility.
-        env = Hash === request ? request : request.env
-
-        backtrace_cleaner = env['action_dispatch.backtrace_cleaner']
+        backtrace_cleaner = request.get_header('action_dispatch.backtrace_cleaner')
         error = ExceptionWrapper.new(backtrace_cleaner, exception).exception
 
         # Get the original exception if ExceptionWrapper decides to follow it.
