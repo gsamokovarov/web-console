@@ -43,7 +43,7 @@ module WebConsole
     def initialize(bindings)
       @id = SecureRandom.hex(16)
       @bindings = bindings
-      @evaluator = Evaluator.new(bindings.first)
+      @evaluator = Evaluator.new(@current_binding = bindings.first)
 
       store_into_memory
     end
@@ -59,7 +59,12 @@ module WebConsole
     #
     # Returns nothing.
     def switch_binding_to(index)
-      @evaluator = Evaluator.new(@bindings[index.to_i])
+      @evaluator = Evaluator.new(@current_binding = @bindings[index.to_i])
+    end
+
+    # Returns context of the current binding
+    def context(objpath)
+      Context.new(@current_binding).extract(objpath)
     end
 
     private
