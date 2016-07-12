@@ -11,7 +11,7 @@
     <script src="/node_modules/mocha/mocha.js"></script>
     <script src="/node_modules/chai/chai.js"></script>
     <script>
-      mocha.setup('bdd');
+      mocha.setup('tdd');
       mocha.reporter('html');
     </script>
 
@@ -20,7 +20,7 @@
 
     <!-- find and load test cases -->
     <script src="/spec/spec_helper.js"></script>
-    <% Pathname.glob(TEST_ROOT.join "spec/**/*_spec.js") do |t| %>
+    <% Pathname.glob(TEST_ROOT.join "test/**/*_test.js") do |t| %>
     <script src="/<%= t.relative_path_from TEST_ROOT %>"></script>
     <% end %>
 
