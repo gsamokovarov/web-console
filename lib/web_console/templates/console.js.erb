@@ -44,6 +44,134 @@ function CommandStorage() {
   }
 }
 
+function Autocomplete(words, prefix) {
+  this.words = words.concat(); // to clone object
+  this.words.sort(); // by alphabetically order
+  this.current = -1;
+  this.left = 0; // [left, right)
+  this.right = words.length;
+  this.confirmed = false;
+
+  function createKeyword(label) {
+    var el = document.createElement('span');
+    el.innerText = label;
+    addClass(el, 'keyword');
+    return el;
+  }
+
+  this.view = document.createElement('pre');
+  addClass(this.view, 'console-message');
+  addClass(this.view, 'auto-complete');
+  for (var key in this.words) {
+    this.view.appendChild(createKeyword(this.words[key]));
+  }
+
+  this.refine(prefix || '');
+}
+
+Autocomplete.prototype.onFinished = function(callback) {
+  this.onFinishedCallback = callback;
+  if (this.confirmed) callback(this.confirmed);
+};
+
+Autocomplete.prototype.onKeyDown = function(ev) {
+  var self = this;
+
+  function move(nextCurrent) {
+    if (0 <= self.current && self.current < self.words.length) removeClass(self.view.children[self.current], 'selected');
+    addClass(self.view.children[nextCurrent], 'selected');
+    self.current = nextCurrent;
+  }
+
+  switch (ev.keyCode) {
+    case 9: // Tab
+      if (ev.shiftKey) { // move back
+        move(self.current - 1 < self.left ? self.right - 1 : self.current - 1);
+      } else { // move next
+        move(self.current + 1 >= self.right ? self.left : self.current + 1);
+      }
+      return true;
+    case 13: // Enter
+      this.finish();
+      return true;
+    case 27: // Esc
+      this.cancel();
+      return true;
+  }
+
+  return false;
+};
+
+Autocomplete.prototype.refine = function(prefix) {
+  var inc = !this.prev || (prefix.length >= this.prev.length);
+  this.prev = prefix;
+  var self = this;
+
+  function toggle(el) {
+    if (hasClass(el, 'selected')) removeClass(el, 'selected');
+    return inc ? addClass(el, 'hidden') : removeClass(el, 'hidden');
+  }
+
+  function startsWith(str, prefix) {
+    return !prefix || str.substr(0, prefix.length) === prefix;
+  }
+
+  function moveRight(l, r) {
+    while (l < r && inc !== startsWith(self.words[l], prefix)) {
+      toggle(self.view.children[l]);
+      ++ l;
+    }
+    return l;
+  }
+
+  function moveLeft(l, r) {
+    while (l < r - 1 && inc !== startsWith(self.words[r - 1], prefix)) {
+      toggle(self.view.children[r - 1]);
+      -- r;
+    }
+    return r;
+  }
+
+  if (inc) {
+    self.left = moveRight(self.left, self.right);
+    self.right = moveLeft(self.left, self.right);
+  } else {
+    self.left = moveLeft(-1, self.left);
+    self.right = moveRight(self.right, self.words.length);
+  }
+
+  if (self.current < self.left) {
+    self.current = self.left - 1;
+  } else if (self.current > self.right) {
+    self.current = self.right;
+  }
+
+  if (self.left + 1 >= self.right) {
+    self.current = self.left;
+    self.finish();
+  }
+};
+
+Autocomplete.prototype.finish = function() {
+  if (this.left <= this.current && this.current < this.right) {
+    if (this.onFinishedCallback) this.onFinishedCallback(this.words[this.current]);
+    this.removeView();
+    this.confirmed = this.words[this.current];
+  } else {
+    this.cancel();
+  }
+};
+
+Autocomplete.prototype.cancel = function() {
+  if (this.onFinishedCallback) this.onFinishedCallback();
+  this.removeView();
+};
+
+Autocomplete.prototype.removeView = function() {
+  if (this.view.parentNode) this.view.parentNode.removeChild(this.view);
+  removeAllChildren(this.view);
+}
+
 // HTML strings for dynamic elements.
 var consoleInnerHtml = <%= render_inlined_string '_inner_console_markup.html' %>;
 var promptBoxHtml = <%= render_inlined_string '_prompt_box_markup.html' %>;
