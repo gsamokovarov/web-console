@@ -4,6 +4,7 @@ module WebConsole
   class RailtieTest < ActiveSupport::TestCase
     setup do
       Railtie.any_instance.stubs(:abort)
+      Middleware.mount_point = '/__web_console'
     end
 
     test 'config.whitelisted_ips sets whitelisted networks' do
@@ -45,7 +46,26 @@ module WebConsole
         app.config.web_console.mount_point = '/customized/path'
         app.initialize!
 
-        assert_equal Middleware.mount_point, '/customized/path'
+        assert_equal '/customized/path', Middleware.mount_point
+      end
+    end
+
+    test 'config.mount_point supports the relative url root' do
+      new_uninitialized_app do |app|
+        app.config.relative_url_root = '/relative/path'
+        app.initialize!
+
+        assert_equal '/relative/path/__web_console', Middleware.mount_point
+      end
+    end
+
+    test 'config.mount_point inserts after the relative url root' do
+      new_uninitialized_app do |app|
+        app.config.web_console.mount_point = '/customized/path'
+        app.config.relative_url_root = '/relative/path'
+        app.initialize!
+
+        assert_equal '/relative/path/customized/path', Middleware.mount_point
       end
     end
 
@@ -88,6 +108,7 @@ module WebConsole
           Rails.application = nil
 
           app = Class.new(Rails::Application)
+          app.config.web_console = ActiveSupport::OrderedOptions.new
           app.config.eager_load = false
           app.config.time_zone = 'UTC'
           app.config.middleware ||= Rails::Configuration::MiddlewareStackProxy.new
