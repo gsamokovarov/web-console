@@ -131,7 +131,7 @@ module WebConsole
       get '/', params: nil
       put "/repl_sessions/#{session.id}", xhr: true, params: { input: '__LINE__' }
 
-      assert_equal({ output: "=> #{line}\n" }.to_json, response.body)
+      assert_equal("=> #{line}\n", JSON.parse(response.body)["output"])
     end
 
     test 'can switch bindings on error pages' do
@@ -151,7 +151,7 @@ module WebConsole
       session, line = Session.new([binding]), __LINE__
       put "/customized/path/repl_sessions/#{session.id}", params: { input: '__LINE__' }, xhr: true
 
-      assert_equal({ output: "=> #{line}\n" }.to_json, response.body)
+      assert_equal("=> #{line}\n", JSON.parse(response.body)["output"])
     end
 
     test 'unavailable sessions respond to the user with a message' do

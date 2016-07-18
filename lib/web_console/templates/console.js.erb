@@ -44,6 +44,134 @@ function CommandStorage() {
   }
 }
 
+function Autocomplete(words, prefix) {
+  this.words = words.concat(); // to clone object
+  this.words.sort(); // by alphabetically order
+  this.current = -1;
+  this.left = 0; // [left, right)
+  this.right = words.length;
+  this.confirmed = false;
+
+  function createKeyword(label) {
+    var el = document.createElement('span');
+    el.innerText = label;
+    addClass(el, 'keyword');
+    return el;
+  }
+
+  this.view = document.createElement('pre');
+  addClass(this.view, 'console-message');
+  addClass(this.view, 'auto-complete');
+  for (var key in this.words) {
+    this.view.appendChild(createKeyword(this.words[key]));
+  }
+
+  this.refine(prefix || '');
+}
+
+Autocomplete.prototype.onFinished = function(callback) {
+  this.onFinishedCallback = callback;
+  if (this.confirmed) callback(this.confirmed);
+};
+
+Autocomplete.prototype.onKeyDown = function(ev) {
+  var self = this;
+
+  function move(nextCurrent) {
+    if (0 <= self.current && self.current < self.words.length) removeClass(self.view.children[self.current], 'selected');
+    addClass(self.view.children[nextCurrent], 'selected');
+    self.current = nextCurrent;
+  }
+
+  switch (ev.keyCode) {
+    case 9: // Tab
+      if (ev.shiftKey) { // move back
+        move(self.current - 1 < self.left ? self.right - 1 : self.current - 1);
+      } else { // move next
+        move(self.current + 1 >= self.right ? self.left : self.current + 1);
+      }
+      return true;
+    case 13: // Enter
+      this.finish();
+      return true;
+    case 27: // Esc
+      this.cancel();
+      return true;
+  }
+
+  return false;
+};
+
+Autocomplete.prototype.refine = function(prefix) {
+  var inc = !this.prev || (prefix.length >= this.prev.length);
+  this.prev = prefix;
+  var self = this;
+
+  function toggle(el) {
+    if (hasClass(el, 'selected')) removeClass(el, 'selected');
+    return inc ? addClass(el, 'hidden') : removeClass(el, 'hidden');
+  }
+
+  function startsWith(str, prefix) {
+    return !prefix || str.substr(0, prefix.length) === prefix;
+  }
+
+  function moveRight(l, r) {
+    while (l < r && inc !== startsWith(self.words[l], prefix)) {
+      toggle(self.view.children[l]);
+      ++ l;
+    }
+    return l;
+  }
+
+  function moveLeft(l, r) {
+    while (l < r - 1 && inc !== startsWith(self.words[r - 1], prefix)) {
+      toggle(self.view.children[r - 1]);
+      -- r;
+    }
+    return r;
+  }
+
+  if (inc) {
+    self.left = moveRight(self.left, self.right);
+    self.right = moveLeft(self.left, self.right);
+  } else {
+    self.left = moveLeft(-1, self.left);
+    self.right = moveRight(self.right, self.words.length);
+  }
+
+  if (self.current < self.left) {
+    self.current = self.left - 1;
+  } else if (self.current > self.right) {
+    self.current = self.right;
+  }
+
+  if (self.left + 1 >= self.right) {
+    self.current = self.left;
+    self.finish();
+  }
+};
+
+Autocomplete.prototype.finish = function() {
+  if (this.left <= this.current && this.current < this.right) {
+    if (this.onFinishedCallback) this.onFinishedCallback(this.words[this.current]);
+    this.removeView();
+    this.confirmed = this.words[this.current];
+  } else {
+    this.cancel();
+  }
+};
+
+Autocomplete.prototype.cancel = function() {
+  if (this.onFinishedCallback) this.onFinishedCallback();
+  this.removeView();
+};
+
+Autocomplete.prototype.removeView = function() {
+  if (this.view.parentNode) this.view.parentNode.removeChild(this.view);
+  removeAllChildren(this.view);
+}
+
 // HTML strings for dynamic elements.
 var consoleInnerHtml = <%= render_inlined_string '_inner_console_markup.html' %>;
 var promptBoxHtml = <%= render_inlined_string '_prompt_box_markup.html' %>;
@@ -62,6 +190,7 @@ function REPLConsole(config) {
   this.prompt = getConfig('promptLabel', ' >>');
   this.mountPoint = getConfig('mountPoint');
   this.sessionId = getConfig('sessionId');
+  this.autocomplete = false;
 }
 
 REPLConsole.prototype.getSessionUrl = function(path) {
@@ -96,6 +225,19 @@ REPLConsole.prototype.commandHandle = function(line, callback) {
     } else {
       return xhr.status + ' ' + xhr.statusText;
     }
+  }
+
+  function getContext() {
+    var s = self.getCurrentWord();
+    var methodOp = s.lastIndexOf('.');
+    var moduleOp = s.lastIndexOf('::');
+    var x = methodOp > moduleOp ? methodOp : moduleOp;
+    if (x !== -1) return s.substr(0, x);
+  }
+
+  if (this.autocomplete) {
+    var c = getContext();
+    params += c ? '&context=' + c : '';
   }
 
   putRequest(self.getSessionUrl(), params, function(xhr) {
@@ -268,6 +410,7 @@ REPLConsole.prototype.removeCaretFromPrompt = function() {
 };
 
 REPLConsole.prototype.setInput = function(input, caretPos) {
+  if (input == null) return; // keep value if input is undefined
   this._caretPos = caretPos === undefined ? input.length : caretPos;
   this._input = input;
   this.renderInput();
@@ -316,6 +459,7 @@ REPLConsole.prototype.renderInput = function() {
 };
 
 REPLConsole.prototype.writeOutput = function(output) {
+  if (this.autocomplete) return;
   var consoleMessage = document.createElement('pre');
   consoleMessage.className = "console-message";
   consoleMessage.innerHTML = escapeHTML(output);
@@ -325,6 +469,7 @@ REPLConsole.prototype.writeOutput = function(output) {
 };
 
 REPLConsole.prototype.writeError = function(output) {
+  if (this.autocomplete) return;
   var consoleMessage = this.writeOutput(output);
   addClass(consoleMessage, "error-message");
   return consoleMessage;
@@ -340,6 +485,24 @@ REPLConsole.prototype.onEnterKey = function() {
   this.commandHandle(input);
 };
 
+REPLConsole.prototype.onTabKey = function() {
+  var self = this;
+
+  if (self.autocomplete) return;
+  self.autocomplete = new Autocomplete([]);
+
+  self.commandHandle("nil", function(ok, obj) {
+    if (!ok) return self.autocomplete = false;
+    self.autocomplete = new Autocomplete(obj['context'], self.getCurrentWord());
+    self.inner.appendChild(self.autocomplete.view);
+    self.autocomplete.onFinished(function(word) {
+      self.swapCurrentWord(word);
+      self.autocomplete = false;
+    });
+    self.scrollToBottom();
+  });
+};
+
 REPLConsole.prototype.onNavigateHistory = function(offset) {
   var command = this.commandStorage.navigate(offset) || "";
   this.setInput(command);
@@ -349,7 +512,18 @@ REPLConsole.prototype.onNavigateHistory = function(offset) {
  * Handle control keys like up, down, left, right.
  */
 REPLConsole.prototype.onKeyDown = function(ev) {
+  if (this.autocomplete && this.autocomplete.onKeyDown(ev)) {
+    ev.preventDefault();
+    ev.stopPropagation();
+    return;
+  }
+
   switch (ev.keyCode) {
+    case 9:
+      // Tab
+      this.onTabKey();
+      ev.preventDefault();
+      break;
     case 13:
       // Enter key
       this.onEnterKey();
@@ -387,6 +561,7 @@ REPLConsole.prototype.onKeyDown = function(ev) {
     case 8:
       // Delete
       this.deleteAtCurrent();
+      if (this.autocomplete) this.autocomplete.refine(this.getCurrentWord());
       ev.preventDefault();
       break;
     default:
@@ -419,6 +594,7 @@ REPLConsole.prototype.onKeyPress = function(ev) {
   if (ev.ctrlKey || ev.metaKey) { return; }
   var keyCode = ev.keyCode || ev.which;
   this.insertAtCurrent(String.fromCharCode(keyCode));
+  if (this.autocomplete) this.autocomplete.refine(this.getCurrentWord());
   ev.stopPropagation();
   ev.preventDefault();
 };
@@ -442,6 +618,31 @@ REPLConsole.prototype.insertAtCurrent = function(char) {
   var before = this._input.substring(0, this._caretPos);
   var after = this._input.substring(this._caretPos, this._input.length);
   this.setInput(before + char + after, this._caretPos + 1);
+};
+
+REPLConsole.prototype.swapCurrentWord = function(next) {
+  function right(s, pos) {
+    var x = s.indexOf(' ', pos);
+    return x === -1 ? s.length : x;
+  }
+
+  function swap(s, pos) {
+    return s.substr(0, s.lastIndexOf(' ', pos) + 1) + next + s.substr(right(s, pos))
+  }
+
+  if (!next) return;
+  var swapped = swap(this._input, this._caretPos);
+  this.setInput(swapped, this._caretPos + swapped.length - this._input.length);
+};
+
+REPLConsole.prototype.getCurrentWord = function() {
+  return (function(s, pos) {
+    var left = s.lastIndexOf(' ', pos);
+    if (left === -1) left = 0;
+    var right = s.indexOf(' ', pos)
+    if (right === -1) right = s.length - 1;
+    return s.substr(left, right - left + 1).replace(/^\s+|\s+$/g,'');
+  })(this._input, this._caretPos);
 };
 
 REPLConsole.prototype.scrollToBottom = function() {

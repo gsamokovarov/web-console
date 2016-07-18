@@ -15,6 +15,7 @@ module WebConsole
   autoload :Whitelist
   autoload :Template
   autoload :Middleware
+  autoload :Context
 
   autoload_at 'web_console/errors' do
     autoload :Error
