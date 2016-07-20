@@ -1,5 +1,7 @@
 (function() {
-  var SpecHelper = {
+  'use strict';
+
+  var TestHelper = {
     triggerEvent: function(el, eventName) {
       var event = document.createEvent("MouseEvents");
       event.initEvent(eventName, true, true); // type, bubbles, cancelable
@@ -20,6 +22,6 @@
     }
   };
 
-  window.SpecHelper = SpecHelper;
+  window.TestHelper = TestHelper;
   window.assert = chai.assert;
 })();
