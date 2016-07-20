@@ -20,7 +20,7 @@ matrix:
     - rvm: ruby-head
     - rvm: rbx-2
     - rvm: jruby
-    - env: TEST_SUITE=test:templates
+    - env: TEST_SUITE=templates:test
   include:
-    - env: TEST_SUITE=test:templates
+    - env: TEST_SUITE=templates:test
       rvm: 2.2.5
