@@ -135,5 +135,22 @@ suite('REPLCosnole', function() {
       this.console._caretPos = 6;
       assert.equal(this.console.getCurrentWord(), 'world');
     });
+
+    test('console can start auto completion by typing tab key', function(done) {
+      this.console.setInput('some');
+      assert.notOk(this.console.autocomplete);
+      this.console.onKeyDown(TestHelper.keyDown(9)); // tab
+      assert.ok(this.console.autocomplete);
+
+      var self = this;
+      setTimeout(function() {
+        self.console.autocomplete.onFinished(function(word) {
+          assert.equal('something', word);
+          done();
+        });
+        self.console.onKeyDown(TestHelper.keyDown(9)); // tab
+        self.console.onKeyDown(TestHelper.keyDown(13)); // enter
+      }, 100);
+    });
   });
 });
