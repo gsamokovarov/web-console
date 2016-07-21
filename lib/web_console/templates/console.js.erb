@@ -45,8 +45,7 @@ function CommandStorage() {
 }
 
 function Autocomplete(words, prefix) {
-  this.words = words.concat(); // to clone object
-  this.words.sort(); // by alphabetically order
+  this.words = words;
   this.current = -1;
   this.left = 0; // [left, right)
   this.right = words.length;
