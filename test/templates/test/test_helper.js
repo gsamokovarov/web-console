@@ -15,19 +15,6 @@
     },
     keyDown: function(keyCode) {
       return new FakeKeyEvent(keyCode);
-    },
-    randomString: function() {
-      Math.random().toString(36).substring(2);
-    },
-    prepareStageElement: function() {
-      before(function() {
-        this.stageElement = document.createElement("div");
-        this.stageElement.style.display = "none";
-        document.body.appendChild(this.stageElement);
-      });
-      afterEach(function() {
-        this.stageElement.innerHTML = "";
-      });
     }
   };
 
