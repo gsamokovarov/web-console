@@ -148,8 +148,8 @@ suite('REPLCosnole', function() {
           assert.equal('something', word);
           done();
         });
-        self.console.onKeyDown(TestHelper.keyDown(9)); // tab
-        self.console.onKeyDown(TestHelper.keyDown(13)); // enter
+        self.console.onKeyDown(TestHelper.keyDown(TestHelper.KEY_TAB));
+        self.console.onKeyDown(TestHelper.keyDown(TestHelper.KEY_ENTER));
       }, 100);
     });
   });

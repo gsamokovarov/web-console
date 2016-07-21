@@ -77,6 +77,7 @@ Autocomplete.prototype.onKeyDown = function(ev) {
   var self = this;
 
   function move(nextCurrent) {
+    if (! self.words.length) return;
     if (0 <= self.current && self.current < self.words.length) removeClass(self.view.children[self.current], 'selected');
     addClass(self.view.children[nextCurrent], 'selected');
     self.current = nextCurrent;
