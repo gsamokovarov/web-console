@@ -29,11 +29,11 @@ module WebConsole
       ]
 
       def global
-        GLOBAL_OBJECTS.map { |cmd| eval(cmd) }.flatten
+        SortedSet.new GLOBAL_OBJECTS.map { |cmd| eval(cmd) }.flatten
       end
 
       def local(objpath)
-        [
+        SortedSet.new [
           eval("#{objpath}.methods").map { |m| "#{objpath}.#{m}" },
           eval("#{objpath}.constants").map { |c| "#{objpath}::#{c}" },
         ].flatten

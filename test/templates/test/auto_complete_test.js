@@ -4,6 +4,14 @@ suite('Autocomplete', function() {
     this.refine = function(prefix) { this.ac.refine(prefix); };
   });
 
+  test('does nothing if the word list is empty', function() {
+    var ac = new Autocomplete([]);
+    assert.doesNotThrow(function() {
+      ac.onKeyDown(TestHelper.keyDown(TestHelper.KEY_TAB));
+      ac.onKeyDown(TestHelper.keyDown(TestHelper.KEY_ENTER));
+    });
+  });
+
   test('empty string', function() {
     this.refine('');
 

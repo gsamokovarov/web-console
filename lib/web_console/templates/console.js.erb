@@ -45,8 +45,7 @@ function CommandStorage() {
 }
 
 function Autocomplete(words, prefix) {
-  this.words = words.concat(); // to clone object
-  this.words.sort(); // by alphabetically order
+  this.words = words;
   this.current = -1;
   this.left = 0; // [left, right)
   this.right = words.length;
@@ -78,6 +77,7 @@ Autocomplete.prototype.onKeyDown = function(ev) {
   var self = this;
 
   function move(nextCurrent) {
+    if (! self.words.length) return;
     if (0 <= self.current && self.current < self.words.length) removeClass(self.view.children[self.current], 'selected');
     addClass(self.view.children[nextCurrent], 'selected');
     self.current = nextCurrent;
