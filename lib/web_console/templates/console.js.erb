@@ -50,23 +50,31 @@ function Autocomplete(words, prefix) {
   this.left = 0; // [left, right)
   this.right = words.length;
   this.confirmed = false;
+  this.prefix = createSpan('...');
+  this.suffix = createSpan('...');
 
-  function createKeyword(label) {
+  function createSpan(label) {
     var el = document.createElement('span');
     el.innerText = label;
-    addClass(el, 'keyword');
     return el;
   }
 
   this.view = document.createElement('pre');
-  addClass(this.view, 'console-message');
-  addClass(this.view, 'auto-complete');
+  addClass(this.view, 'auto-complete console-message');
+
+  this.view.appendChild(this.prefix);
   for (var key in this.words) {
-    this.view.appendChild(createKeyword(this.words[key]));
+    this.view.appendChild(createSpan(this.words[key]));
   }
+  this.view.appendChild(this.suffix);
+  addClass(this.view.children, 'trimmed keyword');
 
   this.refine(prefix || '');
 }
+
+Autocomplete.prototype.item = function(x) {
+  return this.view.children[x+1];
+};
 
 Autocomplete.prototype.onFinished = function(callback) {
   this.onFinishedCallback = callback;
@@ -78,8 +86,10 @@ Autocomplete.prototype.onKeyDown = function(ev) {
 
   function move(nextCurrent) {
     if (! self.words.length) return;
-    if (0 <= self.current && self.current < self.words.length) removeClass(self.view.children[self.current], 'selected');
-    addClass(self.view.children[nextCurrent], 'selected');
+    if (0 <= self.current && self.current < self.words.length) removeClass(self.item(self.current), 'selected');
+    addClass(self.item(nextCurrent), 'selected');
+    self.trim(self.current, true);
+    self.trim(nextCurrent, false);
     self.current = nextCurrent;
   }
 
@@ -146,7 +156,7 @@ Autocomplete.prototype.refine = function(prefix) {
 
   function moveRight(l, r) {
     while (l < r && inc !== startsWith(self.words[l], prefix)) {
-      toggle(self.view.children[l]);
+      toggle(self.item(l));
       ++ l;
     }
     return l;
@@ -154,12 +164,13 @@ Autocomplete.prototype.refine = function(prefix) {
 
   function moveLeft(l, r) {
     while (l < r - 1 && inc !== startsWith(self.words[r - 1], prefix)) {
-      toggle(self.view.children[r - 1]);
+      toggle(self.item(r - 1));
       -- r;
     }
     return r;
   }
 
+  self.trim(self.current, true);
   if (inc) {
     self.left = moveRight(self.left, self.right);
     self.right = moveLeft(self.left, self.right);
@@ -167,12 +178,10 @@ Autocomplete.prototype.refine = function(prefix) {
     self.left = moveLeft(-1, self.left);
     self.right = moveRight(self.right, self.words.length);
   }
-
-  if (self.current < self.left) {
-    self.current = self.left - 1;
-  } else if (self.current > self.right) {
-    self.current = self.right;
+  if (this.current < this.left || this.current >= this.right) {
+    this.current = this.left - 1;
   }
+  self.trim(this.current, false);
 
   if (self.left + 1 >= self.right) {
     self.current = self.left;
@@ -743,7 +752,7 @@ function addClass(el, className) {
     for (var i = 0; i < el.length; ++ i) {
       addClass(el[i], className);
     }
-  } else {
+  } else if (!hasClass(el, className)) {
     el.className += " " + className;
   }
 }
