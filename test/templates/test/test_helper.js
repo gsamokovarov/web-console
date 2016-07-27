@@ -9,9 +9,11 @@
       event.initEvent(eventName, true, true); // type, bubbles, cancelable
       el.dispatchEvent(event);
     },
-    keyDown: function(keyCode) {
+    keyDown: function(keyCode, options) {
+      options = options || {};
       return {
         keyCode: keyCode,
+        shiftKey: options.shiftKey,
         preventDefault: function() {},
         stopPropagation: function() {}
       };
