@@ -102,6 +102,34 @@ Autocomplete.prototype.onKeyDown = function(ev) {
   return false;
 };
 
+Autocomplete.prototype.trim = function(from, needToTrim) {
+  var self = this;
+  var num = 5;
+
+  if (this.right - this.left > num) {
+    (this.left < from ? removeClass : addClass)(this.prefix, 'trimmed');
+    (from + num < this.right? removeClass : addClass)(this.suffix, 'trimmed');
+  } else {
+    addClass(this.prefix, 'trimmed');
+    addClass(this.suffix, 'trimmed');
+  }
+
+  function iterate(x) {
+    for (var i = 0; i < num; ++i, ++x) if (self.left <= x && x < self.right) {
+      toggleClass(self.item(x), 'trimmed');
+    }
+  }
+
+  var toggleClass = needToTrim ? addClass : removeClass;
+  if (from < this.left) {
+    iterate(this.left);
+  } else if (from + num - 1 >= this.right) {
+    iterate(this.right - num);
+  } else {
+    iterate(from);
+  }
+};
+
 Autocomplete.prototype.refine = function(prefix) {
   var inc = !this.prev || (prefix.length >= this.prev.length);
   this.prev = prefix;
