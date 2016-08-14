@@ -43,7 +43,7 @@ end
 
 map "/mock/repl_sessions/result" do
   headers = { 'Content-Type' => 'application/json' }
-  body = [ { output: '=> "fake-result"\n', context: [ :something, :somewhat, :somewhere ] }.to_json ]
+  body = [ { output: '=> "fake-result"\n', context: [ [ :something, :somewhat, :somewhere ] ] }.to_json ]
   run lambda { |env| [ 200, headers, body ] }
 end
 

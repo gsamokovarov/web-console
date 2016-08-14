@@ -1,11 +1,7 @@
 suite('Autocomplete', function() {
   suite('Trimming', function() {
     test('prefix and suffix stands for that the list includes trimmed elements', function() {
-      var ac = new Autocomplete(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']);
-      assert.equal(ac.prefix, ac.view.children[0]);
-      assert.equal(ac.prefix.innerText, ac.view.children[0].innerText);
-      assert.equal(ac.suffix, ac.view.children[ac.words.length + 1]);
-      assert.equal(ac.suffix.innerText, ac.view.children[ac.words.length + 1].innerText);
+      var ac = new Autocomplete([['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']]);
       assertTrimmed(ac.prefix);
       assertNotTrimmed(ac.suffix);
 
@@ -25,13 +21,13 @@ suite('Autocomplete', function() {
       assertNotTrimmed(ac.suffix);
 
       // ... D E F G H
-      for (var i = 0; i <= ac.words.indexOf('D'); ++i) ac.onKeyDown(TestHelper.keyDown(TestHelper.KEY_TAB));
+      for (var i = 0; i < 4; ++i) ac.onKeyDown(TestHelper.keyDown(TestHelper.KEY_TAB));
       assertNotTrimmed(ac.prefix);
       assertTrimmed(ac.suffix);
     });
 
     test('prefix and suffix are always trimmed if the list has few items', function() {
-      var ac = new Autocomplete(['A', 'B', 'C']);
+      var ac = new Autocomplete([['A', 'B', 'C']]);
       assertTrimmed(ac.prefix);
       assertTrimmed(ac.suffix);
 
@@ -52,7 +48,7 @@ suite('Autocomplete', function() {
     });
 
     test('shows only five elements after the current element', function() {
-      var ac = new Autocomplete(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']);
+      var ac = new Autocomplete([['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']]);
 
       // A B C D E ...
       assert.equal(-1, ac.current);
@@ -78,10 +74,10 @@ suite('Autocomplete', function() {
     });
 
     test('keeps to show the last five elements', function() {
-      var ac = new Autocomplete(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']);
+      var ac = new Autocomplete([['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']]);
 
       // G: D E F G H
-      for (var i = 0; i <= ac.words.indexOf('G'); ++i) ac.onKeyDown(TestHelper.keyDown(TestHelper.KEY_TAB));
+      for (var i = 0; i < 7; ++i) ac.onKeyDown(TestHelper.keyDown(TestHelper.KEY_TAB));
       assert.equal(6, ac.current);
       assertClass(ac, 0, 3, 'trimmed');
       assertNotClass(ac, 3, ac.words.length, 'trimmed');
@@ -104,24 +100,22 @@ suite('Autocomplete', function() {
       assertNotClass(ac, 3, ac.words.length, 'trimmed');
     });
 
-    test('shows five elements if prefix is passed', function() {
-      var ac = new Autocomplete(['A', 'B1', 'B2', 'B3', 'C'], 'B');
-      assert.equal(0, ac.current);
-      assertClass(ac, 0, 1, 'trimmed');
-      assertNotClass(ac, 1, 4, 'trimmed');
-      assertClass(ac, 4, ac.words.length, 'trimmed');
+    test('handles five elements with prefix', function() {
+      var ac = new Autocomplete([['A', 'B1', 'B2', 'B3', 'C']], 'B');
+      assert.equal(-1, ac.current);
+      assert.equal(3, ac.elements.length);
+      assertNotClass(ac, 0, 3, 'trimmed');
 
       ac.onKeyDown(TestHelper.keyDown(TestHelper.KEY_TAB));
-      assert.equal(1, ac.current);
-      assertClass(ac, 0, 1, 'trimmed');
-      assertNotClass(ac, 1, 4, 'trimmed');
-      assertClass(ac, 4, ac.words.length, 'trimmed');
+      assert.equal(0, ac.current);
+      assert.equal(3, ac.elements.length);
+      assertNotClass(ac, 0, 3, 'trimmed');
     });
   });
 
   suite('Refinements', function() {
     setup(function() {
-      this.ac = new Autocomplete(['other', 'other2', 'something', 'somewhat', 'somewhere', 'test']);
+      this.ac = new Autocomplete([['other', 'other2', 'something', 'somewhat', 'somewhere', 'test']]);
       this.refine = function(prefix) { this.ac.refine(prefix); };
     });
 
@@ -136,7 +130,7 @@ suite('Autocomplete', function() {
       this.refine('some');
 
       assert(!this.ac.confirmed);
-      assertRange(this, 2, this.ac.words.length - 1, 3);
+      assert.equal(3, this.ac.elements.length);
     });
 
     test('confirmable', function() {
@@ -158,7 +152,7 @@ suite('Autocomplete', function() {
       this.refine('');
       this.refine('some');
 
-      assertRange(this, 2, this.ac.words.length - 1, 3);
+      assert.equal(3, this.ac.elements.length);
     });
 
     test('some => empty', function() {
@@ -181,13 +175,13 @@ suite('Autocomplete', function() {
 
   function assertClass(ac, left, right, className) {
     for (var i = left; i < right; ++i) {
-      assert.ok(hasClass(ac.item(i), className), i + '-th element shuold have ' + className);
+      assert.ok(hasClass(ac.elements[i], className), i + '-th element shuold have ' + className);
     }
   }
 
   function assertNotClass(ac, left, right, className) {
     for (var i = left; i < right; ++i) {
-      assert.notOk(hasClass(ac.item(i), className), i + '-th element should not have ' + className);
+      assert.notOk(hasClass(ac.elements[i], className), i + '-th element should not have ' + className);
     }
   }
 
