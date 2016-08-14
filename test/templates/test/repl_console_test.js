@@ -153,4 +153,40 @@ suite('REPLCosnole', function() {
       }, 100);
     });
   });
+
+  suite('Auto Suggestion', function() {
+    test('shows first matched word in current context', function(done) {
+      var c = this.console;
+      c.setInput('some');
+      setTimeout(function() {
+        assert.match(c.promptDisplay.innerText, /^something/);
+        done();
+      }, 100);
+    });
+
+    test('hides automatically in a few seconds', function(done) {
+      var c = this.console;
+      c.suggestWait = 200;
+      c.setInput('some');
+
+      assert.equal('some\u00A0', c.promptDisplay.innerText);
+      setTimeout(function() {
+        assert.match(c.promptDisplay.innerText, /something/);
+        setTimeout(function() {
+          assert.equal('some\u00A0', c.promptDisplay.innerText);
+          done();
+        }, 200);
+      }, 100);
+    });
+
+    test('inserts the current word if tab key is pressed', function() {
+      var c = this.console;
+      c.setInput('some');
+
+      setTimeout(function() {
+        c.onKeyDown(TestHelper.KeyDown(TestHelper.KEY_TAB));
+        assert.equal('something', c._input);
+      }, 100);
+    });
+  });
 });

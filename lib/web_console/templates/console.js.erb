@@ -129,6 +129,8 @@ Autocomplete.prototype.onKeyDown = function(ev) {
     case 27: // Esc
       this.cancel();
       return true;
+    case 37: case 38: case 39: case 40: // disable using arrow keys on completing
+      return true;
   }
 
   return false;
@@ -414,6 +416,7 @@ REPLConsole.prototype.install = function(container) {
   this.outer = consoleOuter;
   this.inner = findChild(this.outer, 'console-inner');
   this.clipboard = findChild(container, 'clipboard');
+  this.suggestWait = 1500;
   this.newPromptBox();
   this.insertCss();
 
@@ -482,12 +485,63 @@ REPLConsole.prototype.removeCaretFromPrompt = function() {
   this.setInput(this._input, -1);
 };
 
+REPLConsole.prototype.getSuggestion = function(keyword) {
+  var self = this;
+
+  function show(found) {
+    if (!found) return;
+    var hint = self.promptDisplay.childNodes[1];
+    hint.className = 'console-hint';
+    hint.dataset.keyword = found;
+    hint.innerText = found.substr(self.suggestKeyword.length);
+    // clear hinting information after timeout in a few time 
+    if (self.suggestTimeout) clearTimeout(self.suggestTimeout);
+    self.suggestTimeout = setTimeout(function() { self.renderInput() }, self.suggestWait);
+  }
+
+  function find(context) {
+    var k = self.suggestKeyword;
+    for (var i = 0; i < context.length; ++i) if (context[i].substr(0, k.length) === k) {
+      if (context[i] === k) return;
+      return context[i];
+    }
+  }
+
+  function request(keyword, callback) {
+    self.contextRequest(keyword, function(err, res) {
+      if (err) throw new Error(err);
+      var c = flatten(res['context']);
+      c.sort();
+      callback(c);
+    });
+  }
+
+  self.suggestKeyword = keyword;
+  var input = getContext(keyword);
+  if (keyword.length - input.length < 3) return;
+
+  if (self.suggestInput !== input) {
+    self.suggestInput = input;
+    request(keyword, function(c) {
+      show(find(self.suggestContext = c));
+    });
+  } else if (self.suggestContext) {
+    show(find(self.suggestContext));
+  }
+};
+
+REPLConsole.prototype.getHintKeyword = function() {
+  var hint = this.promptDisplay.childNodes[1];
+  return hint.className === 'console-hint' && hint.dataset.keyword;
+};
+
 REPLConsole.prototype.setInput = function(input, caretPos) {
   if (input == null) return; // keep value if input is undefined
   this._caretPos = caretPos === undefined ? input.length : caretPos;
   this._input = input;
   if (this.autocomplete) this.autocomplete.refine(this.getCurrentWord());
   this.renderInput();
+  if (!this.autocomplete && input.length == this._caretPos) this.getSuggestion(this.getCurrentWord());
 };
 
 /**
@@ -509,9 +563,8 @@ REPLConsole.prototype.renderInput = function() {
   // Clear the current input.
   removeAllChildren(this.promptDisplay);
 
-  var promptCursor = document.createElement('span');
-  promptCursor.className = "console-cursor";
   var before, current, after;
+  var center = document.createElement('span');
 
   if (this._caretPos < 0) {
     before = this._input;
@@ -527,9 +580,12 @@ REPLConsole.prototype.renderInput = function() {
   }
 
   this.promptDisplay.appendChild(document.createTextNode(before));
-  promptCursor.appendChild(document.createTextNode(current));
-  this.promptDisplay.appendChild(promptCursor);
+  this.promptDisplay.appendChild(center);
   this.promptDisplay.appendChild(document.createTextNode(after));
+
+  var hint = this.autocomplete && this.autocomplete.getSelectedWord();
+  addClass(center, hint ? 'console-hint' : 'console-cursor');
+  center.appendChild(document.createTextNode(hint ? hint.substr(this.getCurrentWord().length) : current));
 };
 
 REPLConsole.prototype.writeOutput = function(output) {
@@ -560,6 +616,12 @@ REPLConsole.prototype.onEnterKey = function() {
 REPLConsole.prototype.onTabKey = function() {
   var self = this;
 
+  var hintKeyword;
+  if (hintKeyword = self.getHintKeyword()) {
+    self.swapCurrentWord(hintKeyword);
+    return;
+  }
+
   if (self.autocomplete) return;
   self.autocomplete = new Autocomplete([]);
 
@@ -585,6 +647,7 @@ REPLConsole.prototype.onNavigateHistory = function(offset) {
  */
 REPLConsole.prototype.onKeyDown = function(ev) {
   if (this.autocomplete && this.autocomplete.onKeyDown(ev)) {
+    this.renderInput();
     ev.preventDefault();
     ev.stopPropagation();
     return;
