@@ -154,6 +154,17 @@ module WebConsole
       assert_equal("=> #{line}\n", JSON.parse(response.body)["output"])
     end
 
+    test 'can return context information by passing a context param' do
+      hello = 'world'
+      session = Session.new([binding])
+      Session.stubs(:from).returns(session)
+
+      get '/'
+      put "/repl_sessions/#{session.id}", xhr: true, params: { context: '' }
+
+      assert_includes(JSON.parse(response.body)["context"], local_variables.map(&:to_s))
+    end
+
     test 'unavailable sessions respond to the user with a message' do
       put '/repl_sessions/no_such_session', xhr: true, params: { input: '__LINE__' }
 

@@ -239,6 +239,16 @@ REPLConsole.prototype.getSessionUrl = function(path) {
   return parts.join('/').replace(/([^:]\/)\/+/g, '$1');
 };
 
+REPLConsole.prototype.contextRequest = function(keyword, callback) {
+  putRequest(this.getSessionUrl(), 'context=' + getContext(keyword), function(xhr) {
+    if (xhr.status == 200) {
+      callback(null, JSON.parse(xhr.responseText));
+    } else {
+      callback(xhr.statusText);
+    }
+  });
+};
+
 REPLConsole.prototype.commandHandle = function(line, callback) {
   var self = this;
   var params = 'input=' + encodeURIComponent(line);
@@ -262,19 +272,6 @@ REPLConsole.prototype.commandHandle = function(line, callback) {
     } else {
       return xhr.status + ' ' + xhr.statusText;
     }
-  }
-
-  function getContext() {
-    var s = self.getCurrentWord();
-    var methodOp = s.lastIndexOf('.');
-    var moduleOp = s.lastIndexOf('::');
-    var x = methodOp > moduleOp ? methodOp : moduleOp;
-    if (x !== -1) return s.substr(0, x);
-  }
-
-  if (this.autocomplete) {
-    var c = getContext();
-    params += c ? '&context=' + c : '';
   }
 
   putRequest(self.getSessionUrl(), params, function(xhr) {
@@ -528,8 +525,8 @@ REPLConsole.prototype.onTabKey = function() {
   if (self.autocomplete) return;
   self.autocomplete = new Autocomplete([]);
 
-  self.commandHandle("nil", function(ok, obj) {
-    if (!ok) return self.autocomplete = false;
+  self.contextRequest(self.getCurrentWord(), function(err, obj) {
+    if (err) return self.autocomplete = false;
     self.autocomplete = new Autocomplete(obj['context'], self.getCurrentWord());
     self.inner.appendChild(self.autocomplete.view);
     self.autocomplete.onFinished(function(word) {
@@ -799,4 +796,12 @@ if (typeof exports === 'object') {
   exports.REPLConsole = REPLConsole;
 } else {
   window.REPLConsole = REPLConsole;
+}
+
+// Split string by module operators of ruby
+function getContext(s) {
+  var methodOp = s.lastIndexOf('.');
+  var moduleOp = s.lastIndexOf('::');
+  var x = methodOp > moduleOp ? methodOp : moduleOp;
+  return x !== -1 ? s.substr(0, x) : '';
 }
