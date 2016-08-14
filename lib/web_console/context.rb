@@ -26,14 +26,14 @@ module WebConsole
       ]
 
       def global
-        GLOBAL_OBJECTS.map { |cmd| eval(cmd) }.flatten
+        GLOBAL_OBJECTS.map { |cmd| eval(cmd) }
       end
 
       def local(input)
         [
           eval("#{input}.methods").map { |m| "#{input}.#{m}" },
           eval("#{input}.constants").map { |c| "#{input}::#{c}" },
-        ].flatten
+        ]
       end
 
       def eval(cmd)
