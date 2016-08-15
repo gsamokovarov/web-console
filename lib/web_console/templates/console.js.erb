@@ -110,6 +110,12 @@ Autocomplete.prototype.onKeyDown = function(ev) {
   }
 
   switch (ev.keyCode) {
+    case 69:
+      if (ev.ctrlKey) {
+        move(this.current + 1 >= this.elements.length ? 0 : this.current + 1);
+        return true;
+      }
+      return false;
     case 9: // Tab
       if (ev.shiftKey) { // move back
         move(this.current - 1 < 0 ? this.elements.length - 1 : this.current - 1);
@@ -585,6 +591,13 @@ REPLConsole.prototype.onKeyDown = function(ev) {
   }
 
   switch (ev.keyCode) {
+    case 69:
+      // Ctrl-E
+      if (ev.ctrlKey) {
+        this.onTabKey();
+        ev.preventDefault();
+      }
+      break;
     case 9:
       // Tab
       this.onTabKey();
@@ -672,6 +685,11 @@ REPLConsole.prototype.deleteAtCurrent = function() {
     var before = this._input.substring(0, caretPos);
     var after = this._input.substring(this._caretPos, this._input.length);
     this.setInput(before + after, caretPos);
+
+    if (!this._input) {
+      this.autocomplete && this.autocomplete.cancel();
+      this.autocomplete = false;
+    }
   }
 };
 

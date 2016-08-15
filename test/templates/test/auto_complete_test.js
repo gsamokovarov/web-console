@@ -111,6 +111,23 @@ suite('Autocomplete', function() {
       assert.equal(3, ac.elements.length);
       assertNotClass(ac, 0, 3, 'trimmed');
     });
+
+    test('can select item with the Ctrl-E key', function() {
+      var ac = new Autocomplete([['A', 'B', 'C']]);
+      assert.equal(-1, ac.current);
+
+      ac.onKeyDown(TestHelper.keyDown(TestHelper.KEY_E, { ctrlKey: true }));
+      assert.equal(0, ac.current);
+
+      ac.onKeyDown(TestHelper.keyDown(TestHelper.KEY_E, { ctrlKey: true }));
+      assert.equal(1, ac.current);
+
+      ac.onKeyDown(TestHelper.keyDown(TestHelper.KEY_E, { ctrlKey: true }));
+      assert.equal(2, ac.current);
+
+      ac.onKeyDown(TestHelper.keyDown(TestHelper.KEY_E, { ctrlKey: true }));
+      assert.equal(0, ac.current);
+    });
   });
 
   suite('Refinements', function() {
