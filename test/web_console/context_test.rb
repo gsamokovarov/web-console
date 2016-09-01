@@ -4,25 +4,30 @@ module WebConsole
   class ContextTest < ActiveSupport::TestCase
     test '#extract(empty) includes local variables' do
       local_var = 'local'
-      assert Context.new(binding).extract('').include?(:local_var)
+      assert context(binding).include?(:local_var)
     end
 
     test '#extract(empty) includes instance variables' do
       @instance_var = 'instance'
-      assert Context.new(binding).extract('').include?(:@instance_var)
+      assert context(binding).include?(:@instance_var)
     end
 
     test '#extract(empty) includes global variables' do
       $global_var = 'global'
-      assert Context.new(binding).extract('').include?(:$global_var)
+      assert context(binding).include?(:$global_var)
     end
 
     test '#extract(obj) returns methods' do
-      assert Context.new(binding).extract('Rails').include?('Rails.root')
+      assert context(binding, 'Rails').include?('Rails.root')
     end
 
     test '#extract(obj) returns constants' do
-      assert Context.new(binding).extract('WebConsole').include?('WebConsole::Middleware')
+      assert context(binding, 'WebConsole').include?('WebConsole::Middleware')
     end
+
+    private
+      def context(b, o = '')
+        Context.new(b).extract(o).flatten
+      end
   end
 end

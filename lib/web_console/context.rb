@@ -5,38 +5,35 @@ module WebConsole
       @binding = binding
     end
 
-    # Extracts entire objects which can be called by the current session unless the objpath is present.
-    # Otherwise, it extracts methods and constants of the object specified by the objpath.
-    def extract(objpath)
-      if objpath.present?
-        local(objpath)
-      else
-        global
-      end
+    # Extracts entire objects which can be called by the current session unless
+    # the inputs is present.
+    #
+    # Otherwise, it extracts methods and constants of the object specified by
+    # the input.
+    def extract(input = nil)
+      input.present? ? local(input) : global
     end
 
     private
 
       GLOBAL_OBJECTS = [
-        'global_variables',
-        'local_variables',
         'instance_variables',
-        'instance_methods',
-        'class_variables',
+        'local_variables',
         'methods',
+        'class_variables',
         'Object.constants',
-        'Kernel.methods',
+        'global_variables'
       ]
 
       def global
-        SortedSet.new GLOBAL_OBJECTS.map { |cmd| eval(cmd) }.flatten
+        GLOBAL_OBJECTS.map { |cmd| eval(cmd) }
       end
 
-      def local(objpath)
-        SortedSet.new [
-          eval("#{objpath}.methods").map { |m| "#{objpath}.#{m}" },
-          eval("#{objpath}.constants").map { |c| "#{objpath}::#{c}" },
-        ].flatten
+      def local(input)
+        [
+          eval("#{input}.methods").map { |m| "#{input}.#{m}" },
+          eval("#{input}.constants").map { |c| "#{input}::#{c}" },
+        ]
       end
 
       def eval(cmd)
