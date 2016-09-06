@@ -185,7 +185,7 @@ end
 
 ### Why I'm getting an undefined method `web_console`?
 
-Make sure you configuration lives in `config/environments/development.rb`.
+Make sure your configuration lives in `config/environments/development.rb`.
 
 ## Credits
 
