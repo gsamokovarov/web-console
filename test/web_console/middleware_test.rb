@@ -4,7 +4,7 @@ module WebConsole
   class MiddlewareTest < ActionDispatch::IntegrationTest
     class Application
       def initialize(options = {})
-        @response_content_type = options[:response_content_type] || Mime[:html]
+        @response_content_type = options.fetch(:response_content_type, Mime[:html])
       end
 
       def call(env)
@@ -18,7 +18,11 @@ module WebConsole
         end
 
         def headers
-          { 'Content-Type' => "#{@response_content_type}; charset=utf-8" }
+          if @response_content_type
+            { 'Content-Type' => "#{@response_content_type}; charset=utf-8" }
+          else
+            {}
+          end
         end
 
         def body
@@ -76,6 +80,15 @@ module WebConsole
       get '/', params: nil
 
       assert_select '#console'
+    end
+
+    test 'does not render console if response format is empty' do
+      Thread.current[:__web_console_binding] = binding
+      @app = Middleware.new(Application.new(response_content_type: nil))
+
+      get '/', params: nil
+
+      assert_select '#console', 0
     end
 
     test 'does not render console if response format is not HTML' do

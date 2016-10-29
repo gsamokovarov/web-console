@@ -54,7 +54,7 @@ module WebConsole
     private
 
       def acceptable_content_type?(headers)
-        Mime::Type.parse(headers['Content-Type']).first == Mime[:html]
+        Mime::Type.parse(headers['Content-Type'].to_s).first == Mime[:html]
       end
 
       def json_response(opts = {})
