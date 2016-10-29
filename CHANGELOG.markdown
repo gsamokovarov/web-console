@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+## 3.4.0
+
+* [#205](https://github.com/rails/web-console/pull/205) Introduce autocompletion ([@sh19910711])
+
 ## 3.3.1
 
 Drop support for Rails `4.2.0`.
