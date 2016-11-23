@@ -23,7 +23,7 @@ module WebConsole
 
               gem 'web-console', group: :development
 
-          If you still want to run it the #{Rails.env} environment (and know
+          If you still want to run it in the #{Rails.env} environment (and know
           what you are doing), put this in your Rails application
           configuration:
 
