@@ -15,6 +15,8 @@ module WebConsole
 
     def include?(network)
       @networks.any? { |whitelist| whitelist.include?(network.to_s) }
+    rescue IPAddr::InvalidAddressError
+      false
     end
 
     def to_s
