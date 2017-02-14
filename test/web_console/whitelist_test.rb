@@ -31,6 +31,12 @@ module WebConsole
         assert_includes whitelisted_ips, "192.168.0.#{n}"
       end
     end
+    
+    test 'ignore an unix socket' do
+      whitelisted_ips = whitelist('8.8.8.8')
+
+      assert_not_includes whitelisted_ips, 'unix:'
+    end
 
     test 'can be represented in a human readable form' do
       assert_includes whitelist.to_s, '127.0.0.0/127.255.255.255, ::1'
