@@ -3,7 +3,7 @@ module Kernel
 
   # Instructs Web Console to render a console in the specified binding.
   #
-  # If +bidning+ isn't explicitly given it will default to the binding of the
+  # If +binding+ isn't explicitly given it will default to the binding of the
   # previous frame. E.g. the one that invoked +console+.
   #
   # Raises DoubleRenderError if a double +console+ invocation per request is
