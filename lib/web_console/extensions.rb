@@ -8,13 +8,7 @@ module Kernel
   #
   # Raises DoubleRenderError if a double +console+ invocation per request is
   # detected.
-  def console(binding = nil)
-    binding ||= begin
-      raise
-    rescue => exc
-      exc.bindings.second
-    end
-
+  def console(binding = Bindex.current_bindings.second)
     raise WebConsole::DoubleRenderError if Thread.current[:__web_console_binding]
 
     Thread.current[:__web_console_binding] = binding
