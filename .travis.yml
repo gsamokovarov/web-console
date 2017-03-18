@@ -1,11 +1,11 @@
 language: ruby
 
 rvm:
-  - 2.3.1
-  - 2.2.5
+  - 2.4.0
   - ruby-head
   - rbx-2
-  - jruby
+  - jruby-9.1.8.0
+  - jruby-head
 
 env:
   global:
@@ -19,8 +19,8 @@ matrix:
   allow_failures:
     - rvm: ruby-head
     - rvm: rbx-2
-    - rvm: jruby
+    - rvm: jruby-head
     - env: TEST_SUITE=templates:test
   include:
     - env: TEST_SUITE=templates:test
-      rvm: 2.2.5
+      rvm: 2.4.0
