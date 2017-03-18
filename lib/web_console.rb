@@ -1,5 +1,3 @@
-require 'bindex'
-
 require 'active_support/dependencies/autoload'
 require 'active_support/logger'
 
