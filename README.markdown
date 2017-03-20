@@ -10,10 +10,6 @@
 _Web Console_ is a debugging tool for your Ruby on Rails applications.
 
 - [Installation](#installation)
-- [Runtime](#runtime)
-  - [CRuby](#cruby)
-  - [JRuby](#jruby)
-  - [Rubinius](#rubinius)
 - [Configuration](#configuration)
 - [Usage](#usage)
 - [FAQ](#faq)
@@ -32,16 +28,6 @@ end
 
 After you save the `Gemfile` changes, make sure to run `bundle install` and
 restart your server for the _Web Console_ to kick in.
-
-## Runtime
-
-### CRuby
-
-CRuby 2.2 and above is required.
-
-### Rubinius
-
-Internal errors like `ZeroDevisionError` aren't caught.
 
 ## Usage
 
