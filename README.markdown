@@ -148,7 +148,7 @@ All of _Web Console_ sessions are stored in memory. If you happen to run on a
 multi-process server (like Unicorn) you may get unavailable session errors
 while the server is still running. This is because a request may hit a
 different worker (process) that doesn't have the desired session in memory.
-
+https://github.com/gsamokovarov/web-console/tree/bindex
 To avoid that, if you use such servers in development, configure them so they
 server requests only out of one process.
 
@@ -176,12 +176,13 @@ Make sure your configuration lives in `config/environments/development.rb`.
 ## Credits
 
 * Shoutout to [Charlie Somerville] for [better_errors].
-* Kudos to [John Mair] for [debug_inspector].
+* Kudos to [John Mair] for [binding_of_caller] and [debug_inspector].
 * Thanks to [Charles Oliver Nutter] for all the _JRuby_ feedback.
 * Hugs and kisses to all of our [contributors]!
 
 [better_errors]: https://github.com/charliesome/better_errors
 [debug_inspector]: https://github.com/banister/debug_inspector
+[binding_of_caller]: https://github.com/banister/binding_of_caller
 [Charlie Somerville]: https://github.com/charliesome
 [John Mair]: https://github.com/banister
 [Charles Oliver Nutter]: https://github.com/headius
