@@ -20,12 +20,12 @@ module Kernel
   end
 end
 
-module ActionDispatch
-  class DebugExceptions
-    def render_exception_with_web_console(request, exception)
-      render_exception_without_web_console(request, exception).tap do
+module WebConsole
+  module DebugExceptions
+    def render_exception(request, exception)
+      super(request, exception).tap do
         backtrace_cleaner = request.get_header('action_dispatch.backtrace_cleaner')
-        error = ExceptionWrapper.new(backtrace_cleaner, exception).exception
+        error = ActionDispatch::ExceptionWrapper.new(backtrace_cleaner, exception).exception
 
         # Get the original exception if ExceptionWrapper decides to follow it.
         Thread.current[:__web_console_exception] = error
@@ -38,8 +38,5 @@ module ActionDispatch
         end
       end
     end
-
-    alias_method :render_exception_without_web_console, :render_exception
-    alias_method :render_exception, :render_exception_with_web_console
   end
 end
