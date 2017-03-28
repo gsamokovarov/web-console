@@ -7,7 +7,9 @@ gem 'arel', github: 'rails/arel'
 gem 'rack', github: 'rack/rack'
 
 group :development do
-  gem 'byebug'
+  platform :ruby do
+    gem 'byebug'
+  end
   gem 'puma'
 end
 
