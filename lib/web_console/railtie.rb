@@ -66,5 +66,11 @@ module WebConsole
     initializer 'i18n.load_path' do
       config.i18n.load_path.concat(Dir[File.expand_path('../locales/*.yml', __FILE__)])
     end
+
+    initializer 'web_console.patch_debug_exception_middleware' do |app|
+      app.config.after_initialize do
+        ActionDispatch::DebugExceptions.prepend DebugExceptions
+      end
+    end
   end
 end
