@@ -2,6 +2,12 @@
 
 ## master (unreleased)
 
+## 3.5.0
+
+* [237](https://github.com/rails/web-console/pull/237) Bindex integration for JRuby 9k support ([@gsamokovarov])
+* [236](https://github.com/rails/web-console/pull/236) Remove unused Active Support lazy load hook ([@betesh])
+* [230](https://github.com/rails/web-console/pull/230) Handle invalid remote addresses ([@akirakoyasu])
+
 ## 3.4.0
 
 * [#205](https://github.com/rails/web-console/pull/205) Introduce autocompletion ([@sh19910711])
@@ -96,3 +102,5 @@ go to 3.1.0 instead.
 [@frenesim]: https://github.com/frenesim
 [@herminiotorres]: https://github.com/herminiotorres
 [@schneems]: https://github.com/schneems
+[@betesh]: https://github.com/betesh
+[@akirakoyasu]: https://github.com/akirakoyasu
