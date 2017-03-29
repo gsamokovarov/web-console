@@ -21,7 +21,7 @@ module Kernel
 end
 
 module WebConsole
-  module DebugExceptions
+  module DebugExceptionsExt
     def render_exception(request, exception)
       super(request, exception).tap do
         backtrace_cleaner = request.get_header('action_dispatch.backtrace_cleaner')
@@ -40,3 +40,5 @@ module WebConsole
     end
   end
 end
+
+ActionDispatch::DebugExceptions.prepend(WebConsole::DebugExceptionsExt)
