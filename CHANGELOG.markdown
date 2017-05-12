@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+## 3.5.1
+
+* [239](https://github.com/rails/web-console/pull/239) Fix the ActionDispatch::DebugExceptions integration ([@gsamokovarov])
+
 ## 3.5.0
 
 * [237](https://github.com/rails/web-console/pull/237) Bindex integration for JRuby 9k support ([@gsamokovarov])
