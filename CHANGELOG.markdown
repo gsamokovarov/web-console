@@ -4,13 +4,13 @@
 
 ## 3.5.1
 
-* [239](https://github.com/rails/web-console/pull/239) Fix the ActionDispatch::DebugExceptions integration ([@gsamokovarov])
+* [#239](https://github.com/rails/web-console/pull/239) Fix the ActionDispatch::DebugExceptions integration ([@gsamokovarov])
 
 ## 3.5.0
 
-* [237](https://github.com/rails/web-console/pull/237) Bindex integration for JRuby 9k support ([@gsamokovarov])
-* [236](https://github.com/rails/web-console/pull/236) Remove unused Active Support lazy load hook ([@betesh])
-* [230](https://github.com/rails/web-console/pull/230) Handle invalid remote addresses ([@akirakoyasu])
+* [#237](https://github.com/rails/web-console/pull/237) Bindex integration for JRuby 9k support ([@gsamokovarov])
+* [#236](https://github.com/rails/web-console/pull/236) Remove unused Active Support lazy load hook ([@betesh])
+* [#230](https://github.com/rails/web-console/pull/230) Handle invalid remote addresses ([@akirakoyasu])
 
 ## 3.4.0
 
@@ -22,7 +22,7 @@ Drop support for Rails `4.2.0`.
 
 ## 3.3.0
 
-* [203](https://github.com/rails/web-console/pull/203) Map bindings to traces based on the trace __FILE__ and __LINE__ ([@gsamokovarov])
+* [#203](https://github.com/rails/web-console/pull/203) Map bindings to traces based on the trace __FILE__ and __LINE__ ([@gsamokovarov])
 
 ## 3.2.1
 
