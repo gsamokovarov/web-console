@@ -2,7 +2,6 @@
   Documentation for:
   <a href=https://github.com/rails/web-console/tree/v1.0.4>v1.0.4</a>
   <a href=https://github.com/rails/web-console/tree/v2.2.1>v2.2.1</a>
-  <a href=https://github.com/rails/web-console/tree/v3.0.0>v3.0.0</a>
 </p>
 
 # Web Console [![Build Status](https://travis-ci.org/rails/web-console.svg?branch=master)](https://travis-ci.org/rails/web-console)
@@ -17,8 +16,7 @@ _Web Console_ is a debugging tool for your Ruby on Rails applications.
 
 ## Installation
 
-_Web Console_ is meant to work as a Rails plugin. To install it in your current
-application, add the following to your `Gemfile`.
+Add the following to your `Gemfile`.
 
 ```ruby
 group :development do
@@ -26,13 +24,10 @@ group :development do
 end
 ```
 
-After you save the `Gemfile` changes, make sure to run `bundle install` and
-restart your server for the _Web Console_ to kick in.
-
 ## Usage
 
 The web console allows you to create an interactive Ruby session in your
-browser. Those sessions are launched automatically in case on an error, but
+browser. Those sessions are launched automatically in case of an error, but
 they can also be launched manually in any page.
 
 For example, calling `console` in a view will display a console in the current
@@ -56,8 +51,8 @@ end
 
 The method is defined in `Kernel` and you can invoke it any application code.
 
-Only one `console` invocation is allowed once per request. If you happen to
-have multiple ones, a `WebConsole::DoubleRenderError` will be raised.
+Only one `console` invocation per request is allowed. If you happen to
+have multiple ones, `WebConsole::DoubleRenderError` will be raised.
 
 ## Configuration
 
