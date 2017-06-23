@@ -203,6 +203,25 @@ module WebConsole
       assert_raises(RuntimeError) { get '/' }
     end
 
+    test 'logs internal errors with Rails.logger' do
+      io = StringIO.new
+      logger = ActiveSupport::Logger.new(io)
+      old_logger, Rails.logger = Rails.logger, logger
+
+      begin
+        @app.stubs(:call_app).raises('whoops')
+
+        get '/'
+      rescue RuntimeError
+        output = io.rewind && io.read
+        lines = output.lines
+
+        assert_equal ["\n", "RuntimeError: whoops\n"], lines.slice!(0, 2)
+      ensure
+        Rails.logger = old_logger
+      end
+    end
+
     private
 
       # Override the put and post testing helper of ActionDispatch to customize http headers

@@ -21,8 +21,9 @@ module WebConsole
     autoload :DoubleRenderError
   end
 
-  mattr_accessor :logger
-  @@logger = ActiveSupport::Logger.new($stderr)
+  def self.logger
+    Rails.logger || (@logger ||= ActiveSupport::Logger.new($stderr))
+  end
 end
 
 require 'web_console/railtie'

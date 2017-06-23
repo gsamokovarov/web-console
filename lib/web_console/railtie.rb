@@ -8,10 +8,6 @@ module WebConsole
     initializer 'web_console.initialize' do
       require 'bindex'
       require 'web_console/extensions'
-
-      if logger = ::Rails.logger
-        WebConsole.logger = logger
-      end
     end
 
     initializer 'web_console.development_only' do
