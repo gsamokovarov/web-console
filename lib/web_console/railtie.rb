@@ -6,7 +6,7 @@ module WebConsole
     config.web_console.whitelisted_ips = %w( 127.0.0.1 ::1 )
 
     initializer 'web_console.initialize' do
-      require 'bindex'
+      require 'web_console/integration'
       require 'web_console/extensions'
 
       if logger = ::Rails.logger

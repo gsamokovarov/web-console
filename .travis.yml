@@ -5,13 +5,6 @@ rvm:
   - 2.3.1
   - 2.4.1
   - ruby-head
-  - rbx-2
-  - jruby-9.1.8.0
-  - jruby-head
-
-env:
-  global:
-    - JRUBY_OPTS=--dev
 
 script:
   - bundle exec rake ${TEST_SUITE:-test}
@@ -20,10 +13,7 @@ matrix:
   fast_finish: true
   allow_failures:
     - rvm: ruby-head
-    - rvm: rbx-2
-    - rvm: jruby-head
-    - rvm: jruby-9.1.8.0
     - env: TEST_SUITE=templates:test
   include:
     - env: TEST_SUITE=templates:test
-      rvm: 2.4.0
+      rvm: 2.4.1

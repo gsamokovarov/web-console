@@ -1,5 +1,4 @@
 require 'test_helper'
-require 'web_console/extensions'
 
 module ActionDispatch
   class DebugExceptionsTest < ActionDispatch::IntegrationTest
@@ -16,7 +15,7 @@ module ActionDispatch
     end
 
     test "follows ActionView::Template::Error original error in Thread.current[:__web_console_exception]" do
-      get "/", params: {}, headers: {
+      get "/", {}, {
         'action_dispatch.show_detailed_exceptions' => true,
         'action_dispatch.show_exceptions' => true,
         'action_dispatch.logger' => Logger.new(StringIO.new)
