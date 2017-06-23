@@ -52,7 +52,7 @@ module WebConsole
     test 'render console in an html application from web_console.binding' do
       Thread.current[:__web_console_binding] = binding
 
-      get '/', nil
+      get '/', params: nil
 
       assert_select '#console'
     end
@@ -60,7 +60,7 @@ module WebConsole
     test 'render console in an html application from web_console.exception' do
       Thread.current[:__web_console_exception] = raise_exception
 
-      get '/', nil
+      get '/', params: nil
 
       assert_select 'body > #console'
     end
@@ -68,7 +68,7 @@ module WebConsole
     test 'render error_page.js from web_console.exception' do
       Thread.current[:__web_console_exception] = raise_exception
 
-      get '/', nil
+      get '/', params: nil
 
       assert_select 'body > script[data-template=error_page]'
     end
@@ -77,7 +77,7 @@ module WebConsole
       Thread.current[:__web_console_binding] = binding
       @app = Middleware.new(Application.new(response_content_type: Mime[:html]))
 
-      get '/', nil
+      get '/', params: nil
 
       assert_select '#console'
     end
@@ -86,7 +86,7 @@ module WebConsole
       Thread.current[:__web_console_binding] = binding
       @app = Middleware.new(Application.new(response_content_type: nil))
 
-      get '/', nil
+      get '/', params: nil
 
       assert_select '#console', 0
     end
@@ -95,7 +95,7 @@ module WebConsole
       Thread.current[:__web_console_binding] = binding
       @app = Middleware.new(Application.new(response_content_type: Mime[:json]))
 
-      get '/', nil
+      get '/', params: nil
 
       assert_select '#console', 0
     end
@@ -103,7 +103,7 @@ module WebConsole
     test 'returns X-Web-Console-Session-Id as response header' do
       Thread.current[:__web_console_binding] = binding
 
-      get '/', nil
+      get '/', params: nil
 
       session_id = response.headers["X-Web-Console-Session-Id"]
 
@@ -114,7 +114,7 @@ module WebConsole
       Thread.current[:__web_console_binding] = binding
       @app = Middleware.new(Application.new(response_content_type: Mime[:json]))
 
-      get '/', nil
+      get '/', params: nil
 
       assert_select '#console', 0
     end
@@ -124,14 +124,14 @@ module WebConsole
       Request.stubs(:whitelisted_ips).returns(IPAddr.new('127.0.0.1'))
 
       silence(:stderr) do
-        get '/', nil, 'REMOTE_ADDR' => '1.1.1.1'
+        get '/', params: nil, headers: { 'REMOTE_ADDR' => '1.1.1.1' }
       end
 
       assert_select '#console', 0
     end
 
     test "doesn't render console without a web_console.binding or web_console.exception" do
-      get '/', nil
+      get '/', params: nil
 
       assert_select '#console', 0
     end
@@ -141,8 +141,8 @@ module WebConsole
 
       Session.stubs(:from).returns(session)
 
-      get '/', nil
-      put "/repl_sessions/#{session.id}", input: '__LINE__'
+      get '/', params: nil
+      put "/repl_sessions/#{session.id}", xhr: true, params: { input: '__LINE__' }
 
       assert_equal("=> #{line}\n", JSON.parse(response.body)["output"])
     end
@@ -152,8 +152,8 @@ module WebConsole
 
       Session.stubs(:from).returns(session)
 
-      get '/', nil
-      post "/repl_sessions/#{session.id}/trace", frame_id: 1
+      get '/', params: nil
+      post "/repl_sessions/#{session.id}/trace", xhr: true, params: { frame_id: 1 }
 
       assert_equal({ ok: true }.to_json, response.body)
     end
@@ -162,7 +162,7 @@ module WebConsole
       Middleware.mount_point = '/customized/path'
 
       session, line = Session.new([binding]), __LINE__
-      put "/customized/path/repl_sessions/#{session.id}", input: '__LINE__'
+      put "/customized/path/repl_sessions/#{session.id}", params: { input: '__LINE__' }, xhr: true
 
       assert_equal("=> #{line}\n", JSON.parse(response.body)["output"])
     end
@@ -173,26 +173,26 @@ module WebConsole
       Session.stubs(:from).returns(session)
 
       get '/'
-      put "/repl_sessions/#{session.id}", context: ''
+      put "/repl_sessions/#{session.id}", xhr: true, params: { context: '' }
 
       assert_includes(JSON.parse(response.body)["context"], local_variables.map(&:to_s))
     end
 
     test 'unavailable sessions respond to the user with a message' do
-      put '/repl_sessions/no_such_session', input: '__LINE__'
+      put '/repl_sessions/no_such_session', xhr: true, params: { input: '__LINE__' }
 
       assert_equal(404, response.status)
     end
 
     test 'unavailable sessions can occur on binding switch' do
-      post "/repl_sessions/no_such_session/trace", frame_id: 1
+      post "/repl_sessions/no_such_session/trace", xhr: true, params: { frame_id: 1 }
 
       assert_equal(404, response.status)
     end
 
     test "doesn't accept request for old version and return 406" do
-      put "/repl_sessions/no_such_session", { input: "__LINE__" },
-        { "HTTP_ACCEPT" => "application/vnd.web-console.v0" }
+      put "/repl_sessions/no_such_session", xhr: true, params: { input: "__LINE__" },
+        headers: {"HTTP_ACCEPT" => "application/vnd.web-console.v0"}
 
       assert_equal(406, response.status)
     end
@@ -206,18 +206,20 @@ module WebConsole
     private
 
       # Override the put and post testing helper of ActionDispatch to customize http headers
-      def put(path, params = {}, env = {})
-        update_env(env)
-        xhr :put, path, params, env
+      def put(http_method, path, *args)
+        update_path_args(path)
+        super
       end
 
-      def post(path, params = {}, env = {})
-        update_env(env)
-        xhr :post, path, params, env
+      def post(http_method, path, *args)
+        update_path_args(path)
+        super
       end
 
-      def update_env(env)
-        env['HTTP_ACCEPT'] = Mime[:web_console_v2] if env.empty?
+      def update_path_args(path)
+        unless path[:headers]
+          path.merge!(headers: { 'HTTP_ACCEPT' => Mime[:web_console_v2] })
+        end
       end
 
       def raise_exception
