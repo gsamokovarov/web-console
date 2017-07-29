@@ -732,7 +732,7 @@ REPLConsole.prototype.onKeyDown = function(ev) {
  */
 REPLConsole.prototype.onKeyPress = function(ev) {
   // Only write to the console if it's a single key press.
-  if (ev.ctrlKey || ev.metaKey) { return; }
+  if (ev.ctrlKey && !ev.altKey || ev.metaKey) { return; }
   var keyCode = ev.keyCode || ev.which;
   this.insertAtCurrent(String.fromCharCode(keyCode));
   ev.stopPropagation();
