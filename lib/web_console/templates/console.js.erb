@@ -494,7 +494,7 @@ REPLConsole.prototype.getSuggestion = function(keyword) {
     hint.className = 'console-hint';
     hint.dataset.keyword = found;
     hint.innerText = found.substr(self.suggestKeyword.length);
-    // clear hinting information after timeout in a few time 
+    // clear hinting information after timeout in a few time
     if (self.suggestTimeout) clearTimeout(self.suggestTimeout);
     self.suggestTimeout = setTimeout(function() { self.renderInput() }, self.suggestWait);
   }
@@ -710,9 +710,10 @@ REPLConsole.prototype.onKeyDown = function(ev) {
   }
 
   if (ev.ctrlKey || ev.metaKey) {
-    // Set focus to our clipboard in case they hit the "v" key
-    this.clipboard.focus();
     if (ev.keyCode == 86) {
+      // Set focus to our clipboard when they hit the "v" key
+      this.clipboard.focus();
+
       // Pasting to clipboard doesn't happen immediately,
       // so we have to wait for a while to get the pasted text.
       var _this = this;
