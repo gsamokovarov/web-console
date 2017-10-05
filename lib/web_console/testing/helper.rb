@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module WebConsole
   module Testing
     module Helper

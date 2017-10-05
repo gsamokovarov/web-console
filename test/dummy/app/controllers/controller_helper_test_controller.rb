@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ControllerHelperTestController < ApplicationController
   def index
     @instance_variable = "Helper Test"

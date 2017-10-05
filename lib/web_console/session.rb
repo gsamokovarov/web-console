@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module WebConsole
   # A session lets you persist an +Evaluator+ instance in memory associated
   # with multiple bindings.

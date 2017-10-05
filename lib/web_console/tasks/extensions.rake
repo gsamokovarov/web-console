@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :ext do
   rootdir = Pathname('extensions')
 

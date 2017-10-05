@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'web_console/testing/helper'
 require 'web_console/testing/fake_middleware'
 

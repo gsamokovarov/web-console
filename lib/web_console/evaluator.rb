@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module WebConsole
   # Simple Ruby code evaluator.
   #

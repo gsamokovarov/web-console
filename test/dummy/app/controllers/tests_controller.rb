@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TestsController < ApplicationController
   def render_console_ontop_of_text
     render text: '<h1 id="greeting">Hello World</h1>'

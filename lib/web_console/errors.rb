@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module WebConsole
   # The base class for every Web Console related error.
   Error = Class.new(StandardError)

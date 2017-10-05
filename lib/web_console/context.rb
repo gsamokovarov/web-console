@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module WebConsole
   # A context lets you get object names related to the current session binding.
   class Context

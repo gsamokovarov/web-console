@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ModelTestController < ApplicationController
   def index
     LocalModel.new.work
