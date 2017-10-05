@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'action_view'
 require 'web_console'
 require 'web_console/testing/helper'

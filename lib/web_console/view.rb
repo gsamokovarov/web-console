@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module WebConsole
   class View < ActionView::Base
     # Execute a block only on error pages.

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module WebConsole
   # Web Console tailored request object.
   class Request < ActionDispatch::Request

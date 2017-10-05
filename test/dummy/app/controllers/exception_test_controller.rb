@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ExceptionTestController < ApplicationController
   def index
     test = "Test"

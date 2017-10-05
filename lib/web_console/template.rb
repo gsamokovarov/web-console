@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module WebConsole
   # A facade that handles template rendering and composition.
   #

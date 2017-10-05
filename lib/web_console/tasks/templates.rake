@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :templates do
   desc 'Run tests for templates'
   task test: [ :daemonize, :npm, :rackup, :wait, :mocha, :kill, :exit ]
