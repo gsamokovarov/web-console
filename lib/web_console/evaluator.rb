@@ -25,7 +25,7 @@ module WebConsole
       def format_exception(exc)
         backtrace = cleaner.clean(Array(exc.backtrace) - caller)
 
-        format = "#{exc.class.name}: #{exc}\n"
+        format = "#{exc.class.name}: #{exc}\n".dup
         format << backtrace.map { |trace| "\tfrom #{trace}\n" }.join
         format
       end
