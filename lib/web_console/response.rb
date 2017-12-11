@@ -9,6 +9,9 @@ module WebConsole
     def write(content)
       raw_body = Array(body).first.to_s
 
+      # We're done with the original body object, so make sure to close it to comply with the Rack SPEC
+      body.close if body.respond_to?(:close)
+
       if position = raw_body.rindex('</body>')
         raw_body.insert(position, content)
       else

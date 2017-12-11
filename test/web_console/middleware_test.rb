@@ -13,6 +13,19 @@ module WebConsole
         [ status, headers, body ]
       end
 
+      def body
+        @body ||= StringIO.new(<<-HTML.strip_heredoc)
+          <html>
+            <head>
+              <title>Hello world</title>
+            </head>
+            <body>
+              <p id="hello-world">Hello world</p>
+            </body>
+          </html>
+        HTML
+      end
+
       private
 
         def status
@@ -25,19 +38,6 @@ module WebConsole
           else
             {}
           end
-        end
-
-        def body
-          Array(<<-HTML.strip_heredoc)
-            <html>
-              <head>
-                <title>Hello world</title>
-              </head>
-              <body>
-                <p id="hello-world">Hello world</p>
-              </body>
-            </html>
-          HTML
         end
     end
 
@@ -82,6 +82,16 @@ module WebConsole
       get '/', params: nil
 
       assert_select '#console'
+    end
+
+    test 'it closes original body if rendering console' do
+      Thread.current[:__web_console_binding] = binding
+      inner_app = Application.new(response_content_type: Mime[:html]);
+      @app = Middleware.new(inner_app)
+
+      get '/', params: nil
+
+      assert(inner_app.body.closed?, "body should be closed")
     end
 
     test 'does not render console if response format is empty' do
