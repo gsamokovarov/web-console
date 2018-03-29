@@ -12,6 +12,13 @@ module WebConsole
       assert_not req.from_whitelisted_ip?
     end
 
+    test '#from_whitelisted_ip? is falsy for spoofed IPs' do
+      WebConsole.logger.expects(:info)
+      req = request('http://example.com', 'HTTP_CLIENT_IP' => '127.0.0.1', 'HTTP_X_FORWARDED_FOR' => '127.0.0.0')
+
+      assert_not req.from_whitelisted_ip?
+    end
+
     private
 
       def request(*args)

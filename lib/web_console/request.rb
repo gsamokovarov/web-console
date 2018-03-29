@@ -21,6 +21,8 @@ module WebConsole
     # Determines the remote IP using our much stricter whitelist.
     def strict_remote_ip
       GetSecureIp.new(self, whitelisted_ips).to_s
+    rescue ActionDispatch::RemoteIp::IpSpoofAttackError
+      '[Spoofed]'
     end
 
     # Returns whether the request is acceptable.

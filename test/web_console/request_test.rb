@@ -44,6 +44,12 @@ module WebConsole
       assert_not req.from_whitelisted_ip?
     end
 
+    test '#from_whitelisted_ip? is falsy for spoofed IPs' do
+      req = request('http://example.com', 'HTTP_CLIENT_IP' => '127.0.0.1', 'HTTP_X_FORWARDED_FOR' => '127.0.0.0')
+
+      assert_not req.from_whitelisted_ip?
+    end
+
     test '#acceptable? is truthy for current version' do
       req = xhr('http://example.com', 'HTTP_ACCEPT' => "#{Mime[:web_console_v2]}")
 
