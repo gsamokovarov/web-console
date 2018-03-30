@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'test_helper'
+require "test_helper"
 
 module WebConsole
   class SessionTest < ActiveSupport::TestCase
@@ -23,24 +23,24 @@ module WebConsole
       @session = Session.new([binding])
     end
 
-    test 'returns nil when a session is not found' do
+    test "returns nil when a session is not found" do
       assert_nil Session.find("nonexistent session")
     end
 
-    test 'find returns a persisted object' do
+    test "find returns a persisted object" do
       assert_equal @session, Session.find(@session.id)
     end
 
-    test 'can evaluate code in the currently selected binding' do
-      assert_equal "=> 42\n", @session.eval('40 + 2')
+    test "can evaluate code in the currently selected binding" do
+      assert_equal "=> 42\n", @session.eval("40 + 2")
     end
 
-    test 'use first binding if no application bindings' do
+    test "use first binding if no application bindings" do
       binding = Object.new.instance_eval do
         def eval(string)
           case string
-          when '__FILE__' then framework
-          when 'called?' then 'yes'
+          when "__FILE__" then framework
+          when "called?" then "yes"
           end
         end
 
@@ -48,42 +48,42 @@ module WebConsole
       end
 
       session = Session.new([binding])
-      assert_equal session.eval('called?'), "=> \"yes\"\n"
+      assert_equal session.eval("called?"), "=> \"yes\"\n"
     end
 
-    test '#from can create session from a single binding' do
+    test "#from can create session from a single binding" do
       saved_line, saved_binding = __LINE__, binding
       Thread.current[:__web_console_binding] = saved_binding
 
       session = Session.from(__web_console_binding: saved_binding)
 
-      assert_equal "=> #{saved_line}\n", session.eval('__LINE__')
+      assert_equal "=> #{saved_line}\n", session.eval("__LINE__")
     end
 
-    test '#from can create session from an exception' do
+    test "#from can create session from an exception" do
       exc = LineAwareError.raise
 
       session = Session.from(__web_console_exception: exc)
 
-      assert_equal "=> #{exc.line}\n", session.eval('__LINE__')
+      assert_equal "=> #{exc.line}\n", session.eval("__LINE__")
     end
 
-    test '#from can switch to bindings' do
+    test "#from can switch to bindings" do
       exc, saved_line = LineAwareError.raise, __LINE__
 
       session = Session.from(__web_console_exception: exc)
       session.switch_binding_to(1)
 
-      assert_equal "=> #{saved_line}\n", session.eval('__LINE__')
+      assert_equal "=> #{saved_line}\n", session.eval("__LINE__")
     end
 
-    test '#from prioritizes exceptions over bindings' do
+    test "#from prioritizes exceptions over bindings" do
       exc, saved_line = LineAwareError.raise, __LINE__
 
       session = Session.from(__web_console_exception: exc, __web_console_binding: binding)
       session.switch_binding_to(1)
 
-      assert_equal "=> #{saved_line}\n", session.eval('__LINE__')
+      assert_equal "=> #{saved_line}\n", session.eval("__LINE__")
     end
   end
 end

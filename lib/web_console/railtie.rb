@@ -1,18 +1,18 @@
 # frozen_string_literal: true
 
-require 'rails/railtie'
+require "rails/railtie"
 
 module WebConsole
   class Railtie < ::Rails::Railtie
     config.web_console = ActiveSupport::OrderedOptions.new
     config.web_console.whitelisted_ips = %w( 127.0.0.1 ::1 )
 
-    initializer 'web_console.initialize' do
-      require 'bindex'
-      require 'web_console/extensions'
+    initializer "web_console.initialize" do
+      require "bindex"
+      require "web_console/extensions"
     end
 
-    initializer 'web_console.development_only' do
+    initializer "web_console.development_only" do
       unless (config.web_console.development_only == false) || Rails.env.development?
         abort <<-END.strip_heredoc
           Web Console is activated in the #{Rails.env} environment. This is
@@ -30,13 +30,13 @@ module WebConsole
       end
     end
 
-    initializer 'web_console.insert_middleware' do |app|
+    initializer "web_console.insert_middleware" do |app|
       app.middleware.insert_before ActionDispatch::DebugExceptions, Middleware
     end
 
-    initializer 'web_console.mount_point' do
+    initializer "web_console.mount_point" do
       if mount_point = config.web_console.mount_point
-        Middleware.mount_point = mount_point.chomp('/')
+        Middleware.mount_point = mount_point.chomp("/")
       end
 
       if root = Rails.application.config.relative_url_root
@@ -44,26 +44,26 @@ module WebConsole
       end
     end
 
-    initializer 'web_console.template_paths' do
+    initializer "web_console.template_paths" do
       if template_paths = config.web_console.template_paths
         Template.template_paths.unshift(*Array(template_paths))
       end
     end
 
-    initializer 'web_console.whitelisted_ips' do
+    initializer "web_console.whitelisted_ips" do
       if whitelisted_ips = config.web_console.whitelisted_ips
         Request.whitelisted_ips = Whitelist.new(whitelisted_ips)
       end
     end
 
-    initializer 'web_console.whiny_requests' do
+    initializer "web_console.whiny_requests" do
       if config.web_console.key?(:whiny_requests)
         Middleware.whiny_requests = config.web_console.whiny_requests
       end
     end
 
-    initializer 'i18n.load_path' do
-      config.i18n.load_path.concat(Dir[File.expand_path('../locales/*.yml', __FILE__)])
+    initializer "i18n.load_path" do
+      config.i18n.load_path.concat(Dir[File.expand_path("../locales/*.yml", __FILE__)])
     end
   end
 end

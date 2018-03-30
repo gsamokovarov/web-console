@@ -13,7 +13,7 @@ module WebConsole
       body.close if body.respond_to?(:close)
 
       self.body =
-        if position = raw_body.rindex('</body>')
+        if position = raw_body.rindex("</body>")
           raw_body.dup.insert(position, content)
         else
           raw_body.dup << content

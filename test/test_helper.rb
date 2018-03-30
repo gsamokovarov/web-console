@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 case RUBY_ENGINE
-when 'ruby', 'rbx'
-  require 'simplecov'
-  SimpleCov.start 'rails'
+when "ruby", "rbx"
+  require "simplecov"
+  SimpleCov.start "rails"
 end
 
 # Configure Rails Environment
@@ -63,7 +63,7 @@ def capture(stream)
   yield
 
   stream_io.rewind
-  return captured_stream.read
+  captured_stream.read
 ensure
   captured_stream.close
   captured_stream.unlink
@@ -77,7 +77,7 @@ if ActiveSupport::TestCase.method_defined?(:fixture_path=)
   ActiveSupport::TestCase.fixture_path = File.expand_path("../fixtures", __FILE__)
 end
 
-require 'mocha/mini_test'
+require "mocha/mini_test"
 
 module External
   def self.exception

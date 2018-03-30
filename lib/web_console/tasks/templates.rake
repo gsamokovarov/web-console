@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
 namespace :templates do
-  desc 'Run tests for templates'
+  desc "Run tests for templates"
   task test: [ :daemonize, :npm, :rackup, :wait, :mocha, :kill, :exit ]
   task serve: [ :npm, :rackup ]
 
-  workdir = Pathname(EXPANDED_CWD).join('test/templates')
+  workdir = Pathname(EXPANDED_CWD).join("test/templates")
   pid     = Pathname(Dir.tmpdir).join("web_console_test.pid")
   runner  = URI.parse("http://#{ENV['IP'] || '127.0.0.1'}:#{ENV['PORT'] || 29292}/html/test_runner.html")
   rackup  = "rackup --host #{runner.host} --port #{runner.port}"
   result  = nil
-  browser = 'phantomjs'
+  browser = "phantomjs"
 
   def need_to_wait?(uri)
     Net::HTTP.start(uri.host, uri.port) { |http| http.get(uri.path) }
@@ -22,13 +22,13 @@ namespace :templates do
     rackup += " -D --pid #{pid}"
   end
 
-  task :npm => [ :phantomjs ] do
-    Dir.chdir(workdir) { system 'npm install --silent' }
+  task npm: [ :phantomjs ] do
+    Dir.chdir(workdir) { system "npm install --silent" }
   end
 
   task :phantomjs do
     unless system("which #{browser} >/dev/null")
-      browser = './node_modules/.bin/phantomjs'
+      browser = "./node_modules/.bin/phantomjs"
       Dir.chdir(workdir) { system("test -f #{browser} || npm install --silent phantomjs-prebuilt") }
     end
   end

@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-require 'test_helper'
+require "test_helper"
 
 module WebConsole
   class RailtieTest < ActiveSupport::TestCase
     setup do
       Railtie.any_instance.stubs(:abort)
-      Middleware.mount_point = '/__web_console'
+      Middleware.mount_point = "/__web_console"
     end
 
-    test 'config.whitelisted_ips sets whitelisted networks' do
+    test "config.whitelisted_ips sets whitelisted networks" do
       new_uninitialized_app do |app|
         app.config.web_console.whitelisted_ips = %w( 172.16.0.0/12 192.168.0.0/16 )
         app.initialize!
@@ -21,20 +21,20 @@ module WebConsole
       end
     end
 
-    test 'config.whitelisted_ips always includes localhost' do
+    test "config.whitelisted_ips always includes localhost" do
       new_uninitialized_app do |app|
-        app.config.web_console.whitelisted_ips = '8.8.8.8'
+        app.config.web_console.whitelisted_ips = "8.8.8.8"
         app.initialize!
 
-        assert_includes Request.whitelisted_ips, '127.0.0.1'
-        assert_includes Request.whitelisted_ips, '::1'
-        assert_includes Request.whitelisted_ips, '8.8.8.8'
+        assert_includes Request.whitelisted_ips, "127.0.0.1"
+        assert_includes Request.whitelisted_ips, "::1"
+        assert_includes Request.whitelisted_ips, "8.8.8.8"
       end
     end
 
-    test 'config.template_paths prepend paths if it exists' do
+    test "config.template_paths prepend paths if it exists" do
       new_uninitialized_app do |app|
-        dirname = File.expand_path('..', __FILE__)
+        dirname = File.expand_path("..", __FILE__)
 
         app.config.web_console.template_paths = dirname
         app.initialize!
@@ -43,35 +43,35 @@ module WebConsole
       end
     end
 
-    test 'config.mount_point changes the mount point of Middleware' do
+    test "config.mount_point changes the mount point of Middleware" do
       new_uninitialized_app do |app|
-        app.config.web_console.mount_point = '/customized/path'
+        app.config.web_console.mount_point = "/customized/path"
         app.initialize!
 
-        assert_equal '/customized/path', Middleware.mount_point
+        assert_equal "/customized/path", Middleware.mount_point
       end
     end
 
-    test 'config.mount_point supports the relative url root' do
+    test "config.mount_point supports the relative url root" do
       new_uninitialized_app do |app|
-        app.config.relative_url_root = '/relative/path'
+        app.config.relative_url_root = "/relative/path"
         app.initialize!
 
-        assert_equal '/relative/path/__web_console', Middleware.mount_point
+        assert_equal "/relative/path/__web_console", Middleware.mount_point
       end
     end
 
-    test 'config.mount_point inserts after the relative url root' do
+    test "config.mount_point inserts after the relative url root" do
       new_uninitialized_app do |app|
-        app.config.web_console.mount_point = '/customized/path'
-        app.config.relative_url_root = '/relative/path'
+        app.config.web_console.mount_point = "/customized/path"
+        app.config.relative_url_root = "/relative/path"
         app.initialize!
 
-        assert_equal '/relative/path/customized/path', Middleware.mount_point
+        assert_equal "/relative/path/customized/path", Middleware.mount_point
       end
     end
 
-    test 'config.whiny_request removes extra logging' do
+    test "config.whiny_request removes extra logging" do
       new_uninitialized_app do |app|
         app.config.web_console.whiny_requests = false
         app.initialize!
@@ -80,7 +80,7 @@ module WebConsole
       end
     end
 
-    test 'config.development_only prevents usage outside of development' do
+    test "config.development_only prevents usage outside of development" do
       Railtie.any_instance.expects(:abort)
 
       new_uninitialized_app do |app|
@@ -90,7 +90,7 @@ module WebConsole
       end
     end
 
-    test 'config.development_only can be used to allow non-development usage' do
+    test "config.development_only can be used to allow non-development usage" do
       Rails.env.stubs(:development?).returns(true)
 
       new_uninitialized_app do |app|
@@ -102,7 +102,7 @@ module WebConsole
 
     private
 
-      def new_uninitialized_app(root = File.expand_path('../../dummy', __FILE__))
+      def new_uninitialized_app(root = File.expand_path("../../dummy", __FILE__))
         old_app = Rails.application
 
         FileUtils.mkdir_p(root)
@@ -112,7 +112,7 @@ module WebConsole
           app = Class.new(Rails::Application)
           app.config.web_console = ActiveSupport::OrderedOptions.new
           app.config.eager_load = false
-          app.config.time_zone = 'UTC'
+          app.config.time_zone = "UTC"
           app.config.middleware ||= Rails::Configuration::MiddlewareStackProxy.new
           app.config.active_support.deprecation = :notify
 

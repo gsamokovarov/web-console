@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'active_support/dependencies/autoload'
-require 'active_support/logger'
+require "active_support/dependencies/autoload"
+require "active_support/logger"
 
 module WebConsole
   extend ActiveSupport::Autoload
@@ -18,7 +18,7 @@ module WebConsole
   autoload :Middleware
   autoload :Context
 
-  autoload_at 'web_console/errors' do
+  autoload_at "web_console/errors" do
     autoload :Error
     autoload :DoubleRenderError
   end
@@ -28,4 +28,4 @@ module WebConsole
   end
 end
 
-require 'web_console/railtie'
+require "web_console/railtie"

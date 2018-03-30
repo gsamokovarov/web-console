@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'ipaddr'
+require "ipaddr"
 
 module WebConsole
   # Whitelist of allowed networks that can access Web Console.
@@ -22,7 +22,7 @@ module WebConsole
     end
 
     def to_s
-      @networks.map(&method(:human_readable_ipaddr)).join(', ')
+      @networks.map(&method(:human_readable_ipaddr)).join(", ")
     end
 
     private
@@ -40,7 +40,7 @@ module WebConsole
       end
 
       def human_readable_ipaddr(ipaddr)
-        ipaddr.to_range.to_s.split('..').uniq.join('/')
+        ipaddr.to_range.to_s.split("..").uniq.join("/")
       end
   end
 end

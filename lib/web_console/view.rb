@@ -17,7 +17,7 @@ module WebConsole
     # leaking globals, unless you explicitly want to.
     def render_javascript(template)
       assign(template: template)
-      render(template: template, layout: 'layouts/javascript')
+      render(template: template, layout: "layouts/javascript")
     end
 
     # Render inlined string to be used inside of JavaScript code.
@@ -25,7 +25,7 @@ module WebConsole
     # The inlined string is returned as an actual JavaScript string. You
     # don't need to wrap the result yourself.
     def render_inlined_string(template)
-      render(template: template, layout: 'layouts/inlined_string')
+      render(template: template, layout: "layouts/inlined_string")
     end
 
     # Custom ActionView::Base#render wrapper which silences all the log
@@ -33,7 +33,7 @@ module WebConsole
     #
     # Helps to keep the Rails logs clean during errors.
     def render(*)
-      if logger = WebConsole.logger and logger.respond_to?(:silence)
+      if (logger = WebConsole.logger) && logger.respond_to?(:silence)
         WebConsole.logger.silence { super }
       else
         super

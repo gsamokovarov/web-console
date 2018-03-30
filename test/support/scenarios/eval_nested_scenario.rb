@@ -10,8 +10,8 @@ module WebConsole
 
     private
 
-    def raise_an_error_in_eval
-      eval 'raise', binding, __FILE__, __LINE__
-    end
+      def raise_an_error_in_eval
+        eval "raise", binding, __FILE__, __LINE__
+      end
   end
 end

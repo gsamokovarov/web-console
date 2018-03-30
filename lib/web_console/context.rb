@@ -19,12 +19,12 @@ module WebConsole
     private
 
       GLOBAL_OBJECTS = [
-        'instance_variables',
-        'local_variables',
-        'methods',
-        'class_variables',
-        'Object.constants',
-        'global_variables'
+        "instance_variables",
+        "local_variables",
+        "methods",
+        "class_variables",
+        "Object.constants",
+        "global_variables"
       ]
 
       def global

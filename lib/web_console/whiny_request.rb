@@ -23,7 +23,7 @@ module WebConsole
       end
 
       def logger
-        env['action_dispatch.logger'] || WebConsole.logger
+        env["action_dispatch.logger"] || WebConsole.logger
       end
 
       def request

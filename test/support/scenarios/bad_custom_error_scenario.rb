@@ -16,4 +16,3 @@ module WebConsole
     end
   end
 end
-

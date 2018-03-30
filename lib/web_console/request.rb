@@ -8,7 +8,7 @@ module WebConsole
     @@whitelisted_ips = Whitelist.new
 
     # Define a vendor MIME type. We can call it using Mime[:web_console_v2].
-    Mime::Type.register 'application/vnd.web-console.v2', :web_console_v2
+    Mime::Type.register "application/vnd.web-console.v2", :web_console_v2
 
     # Returns whether a request came from a whitelisted IP.
     #
@@ -22,7 +22,7 @@ module WebConsole
     def strict_remote_ip
       GetSecureIp.new(self, whitelisted_ips).to_s
     rescue ActionDispatch::RemoteIp::IpSpoofAttackError
-      '[Spoofed]'
+      "[Spoofed]"
     end
 
     # Returns whether the request is acceptable.

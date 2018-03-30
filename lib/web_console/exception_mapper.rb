@@ -17,19 +17,19 @@ module WebConsole
 
     private
 
-    def guess_binding_for_index(index)
-      file, line = @backtrace[index].to_s.split(':')
-      line = line.to_i
+      def guess_binding_for_index(index)
+        file, line = @backtrace[index].to_s.split(":")
+        line = line.to_i
 
-      @bindings.find do |binding|
-        binding.eval('__FILE__') == file && binding.eval('__LINE__') == line
+        @bindings.find do |binding|
+          binding.eval("__FILE__") == file && binding.eval("__LINE__") == line
+        end
       end
-    end
 
-    def guess_the_first_application_binding
-      @bindings.find do |binding|
-        binding.eval('__FILE__').to_s.start_with?(Rails.root.to_s)
+      def guess_the_first_application_binding
+        @bindings.find do |binding|
+          binding.eval("__FILE__").to_s.start_with?(Rails.root.to_s)
+        end
       end
-    end
   end
 end

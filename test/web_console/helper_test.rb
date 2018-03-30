@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require 'test_helper'
+require "test_helper"
 
 module WebConsole
   class HelperTest < ActionDispatch::IntegrationTest
     class BaseApplication
       def call(env)
-        [ status, headers, body ] 
+        [ status, headers, body ]
       end
 
       private
@@ -20,7 +20,7 @@ module WebConsole
         end
 
         def headers
-          { 'Content-Type' => "#{Mime[:html]}; charset=utf-8" }
+          { "Content-Type" => "#{Mime[:html]}; charset=utf-8" }
         end
 
         def body
@@ -62,30 +62,30 @@ module WebConsole
       Thread.current[:__web_console_exception] = nil
       Thread.current[:__web_console_binding] = nil
 
-      Request.stubs(:whitelisted_ips).returns(IPAddr.new('0.0.0.0/0'))
+      Request.stubs(:whitelisted_ips).returns(IPAddr.new("0.0.0.0/0"))
 
       @app = Middleware.new(SingleConsoleApplication.new)
     end
 
-    test 'renders a console into a view' do
-      get '/', params: nil, headers: { 'CONTENT_TYPE' => 'text/html' }
+    test "renders a console into a view" do
+      get "/", params: nil, headers: { "CONTENT_TYPE" => "text/html" }
 
-      assert_select '#console'
+      assert_select "#console"
     end
 
-    test 'raises an error when trying to spawn a console more than once' do
+    test "raises an error when trying to spawn a console more than once" do
       @app = Middleware.new(MultipleConsolesApplication.new)
 
       assert_raises(DoubleRenderError) do
-        get '/', params: nil, headers: { 'CONTENT_TYPE' => 'text/html' }
+        get "/", params: nil, headers: { "CONTENT_TYPE" => "text/html" }
       end
     end
 
     test "doesn't hijack current view" do
-      get '/', params: nil, headers: { 'CONTENT_TYPE' => 'text/html' }
+      get "/", params: nil, headers: { "CONTENT_TYPE" => "text/html" }
 
-      assert_select '#hello-world'
-      assert_select '#console'
+      assert_select "#hello-world"
+      assert_select "#console"
     end
   end
 end

@@ -1,3 +1,3 @@
 # frozen_string_literal: true
 
-require 'web_console'
+require "web_console"

@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-require 'action_view'
-require 'web_console'
-require 'web_console/testing/helper'
-Mime = { web_console_v2: 'fake' }
+require "action_view"
+require "web_console"
+require "web_console/testing/helper"
+Mime = { web_console_v2: "fake" }
 
 module WebConsole
   module Testing
     class FakeMiddleware
-      I18n.load_path.concat(Dir[Helper.gem_root.join('lib/web_console/locales/*.yml')])
+      I18n.load_path.concat(Dir[Helper.gem_root.join("lib/web_console/locales/*.yml")])
 
       DEFAULT_HEADERS = { "Content-Type" => "application/javascript" }
 

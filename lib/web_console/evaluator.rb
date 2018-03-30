@@ -10,7 +10,7 @@ module WebConsole
     # Cleanses exceptions raised inside #eval.
     cattr_reader :cleaner
     @@cleaner = ActiveSupport::BacktraceCleaner.new
-    @@cleaner.add_silencer { |line| line.start_with?(File.expand_path('..', __FILE__)) }
+    @@cleaner.add_silencer { |line| line.start_with?(File.expand_path("..", __FILE__)) }
 
     def initialize(binding = TOPLEVEL_BINDING)
       @binding = binding

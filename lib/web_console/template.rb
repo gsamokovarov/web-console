@@ -8,7 +8,7 @@ module WebConsole
   class Template
     # Lets you customize the default templates folder location.
     cattr_accessor :template_paths
-    @@template_paths = [ File.expand_path('../templates', __FILE__) ]
+    @@template_paths = [ File.expand_path("../templates", __FILE__) ]
 
     def initialize(env, session)
       @env = env

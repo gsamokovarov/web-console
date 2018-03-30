@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'web_console/testing/helper'
-require 'web_console/testing/fake_middleware'
+require "web_console/testing/helper"
+require "web_console/testing/fake_middleware"
 
 module WebConsole
   module Testing
@@ -10,7 +10,7 @@ module WebConsole
       def initialize(path)
         @erb  = ERB.new(File.read(path))
         @view = FakeMiddleware.new(
-          view_path: Helper.gem_root.join('lib/web_console/templates'),
+          view_path: Helper.gem_root.join("lib/web_console/templates"),
         ).view
       end
 

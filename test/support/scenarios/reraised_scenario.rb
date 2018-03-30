@@ -10,14 +10,14 @@ module WebConsole
 
     private
 
-    def raise_an_error_in_eval
-      method_that_raises
-    rescue => exc
-      raise exc
-    end
+      def raise_an_error_in_eval
+        method_that_raises
+      rescue => exc
+        raise exc
+      end
 
-    def method_that_raises
-      raise
-    end
+      def method_that_raises
+        raise
+      end
   end
 end

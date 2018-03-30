@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require 'active_support/core_ext/string/strip'
+require "active_support/core_ext/string/strip"
 
 module WebConsole
   class Middleware
-    TEMPLATES_PATH = File.expand_path('../templates', __FILE__)
+    TEMPLATES_PATH = File.expand_path("../templates", __FILE__)
 
     cattr_accessor :mount_point
-    @@mount_point = '/__web_console'
+    @@mount_point = "/__web_console"
 
     cattr_accessor :whiny_requests
     @@whiny_requests = true
@@ -29,13 +29,13 @@ module WebConsole
 
         status, headers, body = call_app(env)
 
-        if session = Session.from(Thread.current) and acceptable_content_type?(headers)
+        if (session = Session.from(Thread.current)) && acceptable_content_type?(headers)
           response = Response.new(body, status, headers)
           template = Template.new(env, session)
 
           response.headers["X-Web-Console-Session-Id"] = session.id
           response.headers["X-Web-Console-Mount-Point"] = mount_point
-          response.write(template.render('index'))
+          response.write(template.render("index"))
           response.finish
         else
           [ status, headers, body ]
@@ -56,12 +56,12 @@ module WebConsole
     private
 
       def acceptable_content_type?(headers)
-        Mime::Type.parse(headers['Content-Type'].to_s).first == Mime[:html]
+        Mime::Type.parse(headers["Content-Type"].to_s).first == Mime[:html]
       end
 
       def json_response(opts = {})
         status  = opts.fetch(:status, 200)
-        headers = { 'Content-Type' => 'application/json; charset = utf-8' }
+        headers = { "Content-Type" => "application/json; charset = utf-8" }
         body    = yield.to_json
 
         Rack::Response.new(body, status, headers).finish
@@ -123,13 +123,13 @@ module WebConsole
 
       def respond_with_unavailable_session(id)
         json_response(status: 404) do
-          { output: format(I18n.t('errors.unavailable_session'), id: id)}
+          { output: format(I18n.t("errors.unavailable_session"), id: id) }
         end
       end
 
       def respond_with_unacceptable_request
         json_response(status: 406) do
-          { output: I18n.t('errors.unacceptable_request') }
+          { output: I18n.t("errors.unacceptable_request") }
         end
       end
 
