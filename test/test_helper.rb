@@ -9,7 +9,12 @@ end
 # Configure Rails Environment
 ENV["RAILS_ENV"] = "test"
 
-require File.expand_path("../dummy/config/environment.rb",  __FILE__)
+require "active_support/core_ext/kernel/reporting.rb"
+# The warnings in the dummy app are intentional and are used to manually test
+# the introspection abilities of the console.
+silence_warnings do
+  require File.expand_path("../dummy/config/environment.rb",  __FILE__)
+end
 require "rails/test_help"
 
 Rails.backtrace_cleaner.remove_silencers!
