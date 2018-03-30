@@ -1,10 +1,8 @@
 language: ruby
 
 rvm:
-  - 2.2.9
-  - 2.3.6
-  - 2.4.3
-  - 2.5.0
+  - 2.4.4
+  - 2.5.1
   - ruby-head
   - rbx-2
   - jruby-9.1.8.0
@@ -30,4 +28,4 @@ matrix:
     - env: TEST_SUITE=templates:test
   include:
     - env: TEST_SUITE=templates:test
-      rvm: 2.5.0
+      rvm: 2.5.1
