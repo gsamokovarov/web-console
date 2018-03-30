@@ -180,7 +180,7 @@ module WebConsole
     end
 
     test "can return context information by passing a context param" do
-      hello = "world"
+      hello = hello = "world"
       session = Session.new([binding])
       Session.stubs(:from).returns(session)
 

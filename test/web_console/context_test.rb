@@ -5,7 +5,7 @@ require "test_helper"
 module WebConsole
   class ContextTest < ActiveSupport::TestCase
     test "#extract(empty) includes local variables" do
-      local_var = "local"
+      local_var = local_var = "local"
       assert context(binding).include?(:local_var)
     end
 
