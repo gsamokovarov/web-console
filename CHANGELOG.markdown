@@ -2,6 +2,15 @@
 
 ## master (unreleased)
 
+## 3.6.0
+
+* [#254](https://github.com/rails/web-console/pull/254) Rescue ActionDispatch::RemoteIp::IpSpoofAttackError ([@wjordan])
+* [#250](https://github.com/rails/web-console/pull/250) Close original body to comply with Rack SPEC ([@wagenet])
+* [#249](https://github.com/rails/web-console/pull/249) Update for frozen-string-literal friendliness ([@pat])
+* [#248](https://github.com/rails/web-console/pull/248) Fix copy on Safari ([@ybart])
+* [#246](https://github.com/rails/web-console/pull/246) International keyboard special character input fixes ([@fl0l0u])
+* [#244](https://github.com/rails/web-console/pull/244) Let WebConsole.logger respect Rails.logger ([@gsamokovarov])
+
 ## 3.5.1
 
 * [#239](https://github.com/rails/web-console/pull/239) Fix the ActionDispatch::DebugExceptions integration ([@gsamokovarov])
@@ -55,8 +64,8 @@ Drop support for Rails `4.2.0`.
 This is mainly a Rails 5 compatibility release. If you have the chance, please
 go to 3.1.0 instead.
 
-* [#181](https://github.com/rails/web-console/pull/181) Log internal Web Console errors (@schneems)
-* [#150](https://github.com/rails/web-console/pull/150) Revert #150. (@gsamokovarov)
+* [#181](https://github.com/rails/web-console/pull/181) Log internal Web Console errors ([@schneems])
+* [#150](https://github.com/rails/web-console/pull/150) Revert #150. ([@gsamokovarov])
 
 ## 2.2.1
 
@@ -108,3 +117,8 @@ go to 3.1.0 instead.
 [@schneems]: https://github.com/schneems
 [@betesh]: https://github.com/betesh
 [@akirakoyasu]: https://github.com/akirakoyasu
+[@wagenet]: https://github.com/wagenet
+[@wjordan]: https://github.com/wjordan
+[@pat]: https://github.com/pat
+[@ybart]: https://github.com/ybart
+[@fl0l0u]: https://github.com/fl0l0u
