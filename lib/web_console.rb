@@ -10,7 +10,7 @@ module WebConsole
   autoload :Evaluator
   autoload :ExceptionMapper
   autoload :Session
-  autoload :Response
+  autoload :Injector
   autoload :Request
   autoload :WhinyRequest
   autoload :Whitelist

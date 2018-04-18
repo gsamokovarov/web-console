@@ -30,16 +30,14 @@ module WebConsole
         status, headers, body = call_app(env)
 
         if (session = Session.from(Thread.current)) && acceptable_content_type?(headers)
-          response = Response.new(body, status, headers)
-          template = Template.new(env, session)
+          headers["X-Web-Console-Session-Id"] = session.id
+          headers["X-Web-Console-Mount-Point"] = mount_point
 
-          response.headers["X-Web-Console-Session-Id"] = session.id
-          response.headers["X-Web-Console-Mount-Point"] = mount_point
-          response.write(template.render("index"))
-          response.finish
-        else
-          [ status, headers, body ]
+          template = Template.new(env, session)
+          body = Injector.new(body).inject(template.render("index"))
         end
+
+        [ status, headers, body ]
       end
     rescue => e
       WebConsole.logger.error("\n#{e.class}: #{e}\n\tfrom #{e.backtrace.join("\n\tfrom ")}")
@@ -64,7 +62,7 @@ module WebConsole
         headers = { "Content-Type" => "application/json; charset = utf-8" }
         body    = yield.to_json
 
-        Rack::Response.new(body, status, headers).finish
+        [ status, headers, [ body ] ]
       end
 
       def json_response_with_session(id, request, opts = {})
