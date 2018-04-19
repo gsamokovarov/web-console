@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+## 3.6.1
+
+* [#252](https://github.com/rails/web-console/pull/252) Fix improper injection in Rack bodies like ActionDispatch::Response::RackBody ([@gsamokovarov])
+
 ## 3.6.0
 
 * [#254](https://github.com/rails/web-console/pull/254) Rescue ActionDispatch::RemoteIp::IpSpoofAttackError ([@wjordan])
