@@ -7,6 +7,7 @@ module WebConsole
     class Application
       def initialize(options = {})
         @response_content_type = options.fetch(:response_content_type, Mime[:html])
+        @response_content_length = options.fetch(:response_content_length, nil)
       end
 
       def call(env)
@@ -33,10 +34,9 @@ module WebConsole
         end
 
         def headers
-          if @response_content_type
-            { "Content-Type" => "#{@response_content_type}; charset=utf-8" }
-          else
-            {}
+          Hash.new.tap do |header_hash|
+            header_hash['Content-Type'] = "#{@response_content_type}; charset=utf-8" unless @response_content_type.nil?
+            header_hash['Content-Length'] = @response_content_length unless @response_content_length.nil?
           end
         end
     end
@@ -82,6 +82,14 @@ module WebConsole
       get "/", params: nil
 
       assert_select "#console"
+    end
+
+    test "sets correct Content-Length header" do
+      Thread.current[:__web_console_binding] = binding
+      @app = Middleware.new(Application.new(response_content_length: 7))
+
+      get "/", params: nil
+      assert_equal(response.body.size, response.headers['Content-Length'].to_i)
     end
 
     test "it closes original body if rendering console" do
