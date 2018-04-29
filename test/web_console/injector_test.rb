@@ -10,7 +10,7 @@ module WebConsole
       body = [ "foo" ]
       body.define_singleton_method(:close) { closed = true }
 
-      assert_equal [ "foobar" ], Injector.new(body).inject("bar")
+      assert_equal [ [ "foobar" ], {} ], Injector.new(body, {}).inject("bar")
       assert closed
     end
 
@@ -18,14 +18,21 @@ module WebConsole
       closed = false
       body = Rack::BodyProxy.new([ "foo" ]) { closed = true }
 
-      assert_equal [ "foobar" ], Injector.new(body).inject("bar")
+      assert_equal [ [ "foobar" ], {} ], Injector.new(body, {}).inject("bar")
       assert closed
     end
 
     test "support fancy bodies like ActionDispatch::Response::RackBody" do
       body = ActionDispatch::Response.create(200, {}, [ "foo" ]).to_a.last
 
-      assert_equal [ "foobar" ], Injector.new(body).inject("bar")
+      assert_equal [ [ "foobar" ], {} ], Injector.new(body, {}).inject("bar")
+    end
+
+    test "deletes the Content-Length header" do
+      body = [ "foo" ]
+      headers = { "Content-Length" => 3 }
+
+      assert_equal [ [ "foobar" ], {} ], Injector.new(body, headers).inject("bar")
     end
   end
 end

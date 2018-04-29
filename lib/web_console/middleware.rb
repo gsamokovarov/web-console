@@ -33,13 +33,8 @@ module WebConsole
           headers["X-Web-Console-Session-Id"] = session.id
           headers["X-Web-Console-Mount-Point"] = mount_point
 
-          # Remove any previously set Content-Length header because we modify
-          # the body. Otherwise the response will be truncated.
-          # Someone will calculate it again, at least the application server.
-          headers.delete("Content-Length")
-
           template = Template.new(env, session)
-          body = Injector.new(body).inject(template.render("index"))
+          body, headers = Injector.new(body, headers).inject(template.render("index"))
         end
 
         [ status, headers, body ]
