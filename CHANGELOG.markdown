@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+## 3.6.2
+
+* [#255](https://github.com/rails/web-console/pull/255) Fix the truncated HTML body, because of wrong Content-Length header ([@timomeh])
+
 ## 3.6.1
 
 * [#252](https://github.com/rails/web-console/pull/252) Fix improper injection in Rack bodies like ActionDispatch::Response::RackBody ([@gsamokovarov])
@@ -126,3 +130,4 @@ go to 3.1.0 instead.
 [@pat]: https://github.com/pat
 [@ybart]: https://github.com/ybart
 [@fl0l0u]: https://github.com/fl0l0u
+[@timomeh]: https://github.com/timomeh
