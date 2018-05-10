@@ -654,57 +654,85 @@ REPLConsole.prototype.onKeyDown = function(ev) {
   }
 
   switch (ev.keyCode) {
-    case 69:
-      // Ctrl-E
+    case 65: // Ctrl-A
+      if (ev.ctrlKey) {
+        this.setInput(this._input, 0);
+        ev.preventDefault();
+      }
+      break;
+
+    case 69: // Ctrl-E
       if (ev.ctrlKey) {
         this.onTabKey();
         ev.preventDefault();
       }
       break;
-    case 9:
-      // Tab
+
+    case 87: // Ctrl-W
+      if (ev.ctrlKey) {
+        this.deleteWord();
+        ev.preventDefault();
+      }
+      break;
+
+    case 85: // Ctrl-U
+      if (ev.ctrlKey) {
+        this.deleteLine();
+        ev.preventDefault();
+      }
+      break;
+
+    case 69: // Ctrl-E
+      if (ev.ctrlKey) {
+        this.onTabKey();
+        ev.preventDefault();
+      }
+      break;
+
+    case 80: // Ctrl-P
+      if (! ev.ctrlKey) break;
+
+    case 78: // Ctrl-N
+      if (! ev.ctrlKey) break;
+
+    case 9: // Tab
       this.onTabKey();
       ev.preventDefault();
       break;
-    case 13:
-      // Enter key
+
+    case 13: // Enter key
       this.onEnterKey();
       ev.preventDefault();
       break;
-    case 80:
-      // Ctrl-P
-      if (! ev.ctrlKey) break;
-    case 38:
-      // Up arrow
+
+    case 38: // Up arrow
       this.onNavigateHistory(-1);
       ev.preventDefault();
       break;
-    case 78:
-      // Ctrl-N
-      if (! ev.ctrlKey) break;
-    case 40:
-      // Down arrow
+
+    case 40: // Down arrow
       this.onNavigateHistory(1);
       ev.preventDefault();
       break;
-    case 37:
-      // Left arrow
+
+    case 37: // Left arrow
       var caretPos = this._caretPos > 0 ? this._caretPos - 1 : this._caretPos;
       this.setInput(this._input, caretPos);
       ev.preventDefault();
       break;
-    case 39:
-      // Right arrow
+
+    case 39: // Right arrow
       var length = this._input.length;
       var caretPos = this._caretPos < length ? this._caretPos + 1 : this._caretPos;
       this.setInput(this._input, caretPos);
       ev.preventDefault();
       break;
-    case 8:
-      // Delete
+
+    case 8: // Delete
       this.deleteAtCurrent();
       ev.preventDefault();
       break;
+
     default:
       break;
   }
@@ -749,6 +777,47 @@ REPLConsole.prototype.deleteAtCurrent = function() {
     var before = this._input.substring(0, caretPos);
     var after = this._input.substring(this._caretPos, this._input.length);
     this.setInput(before + after, caretPos);
+
+    if (!this._input) {
+      this.autocomplete && this.autocomplete.cancel();
+      this.autocomplete = false;
+    }
+  }
+};
+
+/**
+ * Deletes the current line.
+ */
+REPLConsole.prototype.deleteLine = function() {
+  if (this._caretPos > 0) {
+    this.setInput("", 0);
+
+    if (!this._input) {
+      this.autocomplete && this.autocomplete.cancel();
+      this.autocomplete = false;
+    }
+  }
+};
+
+/**
+ * Deletes the current word.
+ */
+REPLConsole.prototype.deleteWord = function() {
+  if (this._caretPos > 0) {
+    var i = 1, current = this._caretPos;
+    while (this._input[current - i++] == " ");
+
+    var deleteIndex = 0;
+    for (; current - i > 0; i++) {
+      if (this._input[current - i] == " ") {
+        deleteIndex = current - i;
+        break;
+      }
+    }
+
+    var before = this._input.substring(0, deleteIndex);
+    var after = this._input.substring(current, this._input.length);
+    this.setInput(before + after, deleteIndex);
 
     if (!this._input) {
       this.autocomplete && this.autocomplete.cancel();
