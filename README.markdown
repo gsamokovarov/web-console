@@ -94,7 +94,7 @@ messages like the following is printed in the server logs:
 > Cannot render console from 192.168.1.133! Allowed networks:
 > 127.0.0.0/127.255.255.255, ::1
 
-If you don't wanna see this message anymore, set this option to `false`:
+If you don't want to see this message anymore, set this option to `false`:
 
 ```ruby
 Rails.application.configure do
@@ -104,7 +104,7 @@ end
 
 ### config.web_console.template_paths
 
-If you wanna style the console yourself, you can place `style.css` at a
+If you want to style the console yourself, you can place `style.css` at a
 directory pointed by `config.web_console.template_paths`:
 
 ```ruby
@@ -113,13 +113,13 @@ Rails.application.configure do
 end
 ```
 
-You may wanna check the [templates] folder at the source tree for the files you
+You may want to check the [templates] folder at the source tree for the files you
 may override.
 
 ### config.web_console.mount_point
 
 Usually the middleware of _Web Console_ is mounted at `/__web_console`.
-If you wanna change the path for some reasons, you can specify it
+If you want to change the path for some reasons, you can specify it
 by `config.web_console.mount_point`:
 
 ```ruby
@@ -137,7 +137,7 @@ bundled with _Web Console_.
 
 If you miss this feature, check out [rvt].
 
-### Why I constantly get unavailable session errors?
+### Why do I constantly get unavailable session errors?
 
 All of _Web Console_ sessions are stored in memory. If you happen to run on a
 multi-process server (like Unicorn) you may get unavailable session errors
@@ -151,7 +151,7 @@ server requests only out of one process.
 The interactive console executes Ruby code. Invoking `instance_variables` and
 `local_variables` will give you what you want.
 
-### Why does console only appear on error pages but not when I call it?
+### Why does the console only appear on error pages but not when I call it?
 
 This can be happening if you are using `Rack::Deflater`. Be sure that
 `WebConsole::Middleware` is used after `Rack::Deflater`. The easiest way to do
@@ -163,7 +163,7 @@ Rails.application.configure do
 end
 ```
 
-### Why I'm getting an undefined method `web_console`?
+### Why am I getting an undefined method `web_console`?
 
 Make sure your configuration lives in `config/environments/development.rb`.
 

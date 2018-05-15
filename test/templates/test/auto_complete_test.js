@@ -192,7 +192,7 @@ suite('Autocomplete', function() {
 
   function assertClass(ac, left, right, className) {
     for (var i = left; i < right; ++i) {
-      assert.ok(hasClass(ac.elements[i], className), i + '-th element shuold have ' + className);
+      assert.ok(hasClass(ac.elements[i], className), i + '-th element should have ' + className);
     }
   }
 
