@@ -10,6 +10,11 @@ module WebConsole
       yield if Thread.current[:__web_console_exception].present?
     end
 
+    # Execute a block only on regular, non-error, pages.
+    def only_on_regular_page(*args)
+      yield if Thread.current[:__web_console_binding].present?
+    end
+
     # Render JavaScript inside a script tag and a closure.
     #
     # This one lets write JavaScript that will automatically get wrapped in a

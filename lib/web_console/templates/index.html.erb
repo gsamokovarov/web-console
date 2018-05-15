@@ -6,3 +6,7 @@
 <% only_on_error_page do %>
   <%= render_javascript 'error_page' %>
 <% end %>
+
+<% only_on_regular_page do %>
+  <%= render_javascript 'regular_page' %>
+<% end %>
