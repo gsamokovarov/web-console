@@ -35,8 +35,8 @@ module WebConsole
 
         def headers
           Hash.new.tap do |header_hash|
-            header_hash['Content-Type'] = "#{@response_content_type}; charset=utf-8" unless @response_content_type.nil?
-            header_hash['Content-Length'] = @response_content_length unless @response_content_length.nil?
+            header_hash["Content-Type"] = "#{@response_content_type}; charset=utf-8" unless @response_content_type.nil?
+            header_hash["Content-Length"] = @response_content_length unless @response_content_length.nil?
           end
         end
     end
@@ -89,7 +89,7 @@ module WebConsole
       @app = Middleware.new(Application.new(response_content_length: 7))
 
       get "/", params: nil
-      assert_equal(response.body.size, response.headers['Content-Length'].to_i)
+      assert_equal(response.body.size, response.headers["Content-Length"].to_i)
     end
 
     test "it closes original body if rendering console" do
