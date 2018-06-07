@@ -146,6 +146,11 @@ different worker (process) that doesn't have the desired session in memory.
 To avoid that, if you use such servers in development, configure them so they
 server requests only out of one process.
 
+#### Passenger
+
+Enable sticky sessions for [Passenger on Nginx] or [Passenger on Apache] to
+prevent unavailable session errors.
+
 ### How to inspect local and instance variables?
 
 The interactive console executes Ruby code. Invoking `instance_variables` and
@@ -183,3 +188,5 @@ Make sure your configuration lives in `config/environments/development.rb`.
 [templates]: https://github.com/rails/web-console/tree/master/lib/web_console/templates
 [rvt]: https://github.com/gsamokovarov/rvt
 [contributors]: https://github.com/rails/web-console/graphs/contributors
+[Passenger on Nginx]: https://www.phusionpassenger.com/library/config/nginx/reference/#passengerstickysessions
+[Passenger on Apache]: https://www.phusionpassenger.com/library/config/apache/reference/#passengerstickysessions
