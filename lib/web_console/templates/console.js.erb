@@ -603,6 +603,12 @@ REPLConsole.prototype.writeError = function(output) {
   return consoleMessage;
 };
 
+REPLConsole.prototype.writeNotification = function(output) {
+  var consoleMessage = this.writeOutput(output);
+  addClass(consoleMessage, "notification-message");
+  return consoleMessage;
+};
+
 REPLConsole.prototype.onEnterKey = function() {
   var input = this._input;
 
@@ -864,11 +870,16 @@ REPLConsole.prototype.scrollToBottom = function() {
   this.outer.scrollTop = this.outer.scrollHeight;
 };
 
-// Change the binding of the console
+// Change the binding of the console.
 REPLConsole.prototype.switchBindingTo = function(frameId, callback) {
   var url = this.getSessionUrl('trace');
   var params = "frame_id=" + encodeURIComponent(frameId);
-  postRequest(url, params, callback);
+
+  var _this = this;
+  postRequest(url, params, function() {
+    var text = "Context has changed to: " + callback();
+    _this.writeNotification(text);
+  });
 };
 
 /**
