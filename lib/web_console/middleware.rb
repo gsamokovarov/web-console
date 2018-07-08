@@ -110,7 +110,7 @@ module WebConsole
 
       def change_stack_trace(id, request)
         json_response_with_session(id, request) do |session|
-          session.switch_binding_to(request.params[:frame_id])
+          session.switch_binding_to(request.params[:frame_id], request.params[:exception_object_id])
 
           { ok: true }
         end

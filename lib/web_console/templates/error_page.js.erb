@@ -8,9 +8,10 @@ for (var i = 0; i < traceFrames.length; i++) {
     e.preventDefault();
     var target = e.target;
     var frameId = target.dataset.frameId;
+    var exceptionObjectId = target.dataset.exceptionObjectId;
 
     // Change the binding of the console.
-    changeBinding(frameId, function() {
+    changeBinding(frameId, exceptionObjectId, function() {
       // Rails already handles toggling the select class
       selectedFrame = target;
       return target.innerHTML;
@@ -22,8 +23,8 @@ for (var i = 0; i < traceFrames.length; i++) {
 }
 
 // Change the binding of the current session and prompt the user.
-function changeBinding(frameId, callback) {
-  REPLConsole.currentSession.switchBindingTo(frameId, callback);
+function changeBinding(frameId, exceptionObjectId, callback) {
+  REPLConsole.currentSession.switchBindingTo(frameId, exceptionObjectId, callback);
 }
 
 function changeSourceExtract(frameId) {
