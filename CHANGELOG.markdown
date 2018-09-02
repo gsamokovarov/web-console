@@ -2,6 +2,12 @@
 
 ## master (unreleased)
 
+## 3.7.0
+
+* [#263](https://github.com/rails/web-console/pull/263) Show binding changes ([@causztic])
+* [#258](https://github.com/rails/web-console/pull/258) Support Ctrl-A, Ctrl-W and Ctrl-U ([@gsamokovarov])
+* [#257](https://github.com/rails/web-console/pull/257) Always try to keep the console underneath the website content ([@gsamokovarov])
+
 ## 3.6.2
 
 * [#255](https://github.com/rails/web-console/pull/255) Fix the truncated HTML body, because of wrong Content-Length header ([@timomeh])
@@ -131,3 +137,4 @@ go to 3.1.0 instead.
 [@ybart]: https://github.com/ybart
 [@fl0l0u]: https://github.com/fl0l0u
 [@timomeh]: https://github.com/timomeh
+[@causztic]: https://github.com/causztic
