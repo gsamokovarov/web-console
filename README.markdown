@@ -16,7 +16,7 @@ _Web Console_ is a debugging tool for your Ruby on Rails applications.
 
 ## Installation
 
-Add the following to your `Gemfile`.
+Add the following to your `Gemfile`:
 
 ```ruby
 group :development do
@@ -27,8 +27,8 @@ end
 ## Usage
 
 The web console allows you to create an interactive Ruby session in your
-browser. Those sessions are launched automatically in case of an error, but
-they can also be launched manually in any page.
+browser. Those sessions are launched automatically in case of an error and can
+also be launched manually in any page.
 
 For example, calling `console` in a view will display a console in the current
 page in the context of the view binding.
@@ -56,8 +56,8 @@ have multiple ones, `WebConsole::DoubleRenderError` will be raised.
 
 ## Configuration
 
-_Web Console_ allows you to execute arbitrary code on the server, so you
-should be very careful, who you give access to.
+_Web Console_ allows you to execute arbitrary code on the server. Therefore, be
+very careful who you give access to.
 
 ### config.web_console.whitelisted_ips
 
@@ -67,7 +67,7 @@ By default, only requests coming from IPv4 and IPv6 localhosts are allowed.
 the console.
 
 You can whitelist single IP's or whole networks. Say you want to share your
-console with `192.168.0.100`. You can do this:
+console with `192.168.0.100`:
 
 ```ruby
 class Application < Rails::Application
@@ -75,7 +75,7 @@ class Application < Rails::Application
 end
 ```
 
-If you want to whitelist the whole private network, you can do:
+If you want to whitelist the whole private network:
 
 ```ruby
 Rails.application.configure do
@@ -88,8 +88,8 @@ case in 2.0.
 
 ### config.web_console.whiny_requests
 
-When a console cannot be shown for a given IP address or content type, a
-messages like the following is printed in the server logs:
+When a console cannot be shown for a given IP address or content type,
+messages such as the following is printed in the server logs:
 
 > Cannot render console from 192.168.1.133! Allowed networks:
 > 127.0.0.0/127.255.255.255, ::1
@@ -104,7 +104,7 @@ end
 
 ### config.web_console.template_paths
 
-If you want to style the console yourself, you can place `style.css` at a
+If you want to style the console yourself, then you can place `style.css` at a
 directory pointed by `config.web_console.template_paths`:
 
 ```ruby
@@ -119,8 +119,8 @@ may override.
 ### config.web_console.mount_point
 
 Usually the middleware of _Web Console_ is mounted at `/__web_console`.
-If you want to change the path for some reasons, you can specify it
-by `config.web_console.mount_point`:
+If there is a need to change the path, then you can specify it by
+`config.web_console.mount_point`:
 
 ```ruby
 Rails.application.configure do
@@ -132,7 +132,7 @@ end
 
 ### Where did /console go?
 
-The remote terminal emulator was extracted in its own gem that is no longer
+The remote terminal emulator was extracted in its own gem which is no longer
 bundled with _Web Console_.
 
 If you miss this feature, check out [rvt].
@@ -140,7 +140,7 @@ If you miss this feature, check out [rvt].
 ### Why do I constantly get unavailable session errors?
 
 All of _Web Console_ sessions are stored in memory. If you happen to run on a
-multi-process server (like Unicorn) you may get unavailable session errors
+multi-process server (like Unicorn), you may encounter unavailable session errors
 while the server is still running. This is because a request may hit a
 different worker (process) that doesn't have the desired session in memory.
 To avoid that, if you use such servers in development, configure them so they
