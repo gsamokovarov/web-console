@@ -144,7 +144,7 @@ multi-process server (like Unicorn), you may encounter unavailable session error
 while the server is still running. This is because a request may hit a
 different worker (process) that doesn't have the desired session in memory.
 To avoid that, if you use such servers in development, configure them so they
-server requests only out of one process.
+serve requests only out of one process.
 
 #### Passenger
 
