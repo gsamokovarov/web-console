@@ -162,7 +162,7 @@ module WebConsole
       Session.stubs(:from).returns(session)
 
       get "/", params: nil
-      put "/repl_sessions/#{session.id}", xhr: true, params: { input: "__LINE__" }
+      put "/repl_sessions/#{session.id}", xhr: true, params: { input: "line" }
 
       assert_equal("=> #{line}\n", JSON.parse(response.body)["output"])
     end
@@ -181,10 +181,10 @@ module WebConsole
     test "can be changed mount point" do
       Middleware.mount_point = "/customized/path"
 
-      session, line = Session.new([binding]), __LINE__
-      put "/customized/path/repl_sessions/#{session.id}", params: { input: "__LINE__" }, xhr: true
+      session, value = Session.new([binding]), __LINE__
+      put "/customized/path/repl_sessions/#{session.id}", params: { input: "value" }, xhr: true
 
-      assert_equal("=> #{line}\n", JSON.parse(response.body)["output"])
+      assert_equal("=> #{value}\n", JSON.parse(response.body)["output"])
     end
 
     test "can return context information by passing a context param" do

@@ -22,13 +22,15 @@ module WebConsole
         line = line.to_i
 
         @bindings.find do |binding|
-          binding.eval("__FILE__") == file && binding.eval("__LINE__") == line
+          source_location = SourceLocation.new(binding)
+          source_location.path == file && source_location.lineno == line
         end
       end
 
       def guess_the_first_application_binding
         @bindings.find do |binding|
-          binding.eval("__FILE__").to_s.start_with?(Rails.root.to_s)
+          source_location = SourceLocation.new(binding)
+          source_location.path.to_s.start_with?(Rails.root.to_s)
         end
       end
   end

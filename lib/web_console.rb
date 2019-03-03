@@ -17,6 +17,7 @@ module WebConsole
   autoload :Template
   autoload :Middleware
   autoload :Context
+  autoload :SourceLocation
 
   autoload_at "web_console/errors" do
     autoload :Error

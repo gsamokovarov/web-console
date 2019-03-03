@@ -9,7 +9,7 @@ module WebConsole
 
       mapper = ExceptionMapper.new(External.exception)
 
-      assert_equal __FILE__, mapper.first.eval("__FILE__")
+      assert_equal __FILE__, SourceLocation.new(mapper.first).path
     end
 
     test ".[] tries match the binding for trace index" do
@@ -19,8 +19,8 @@ module WebConsole
       last_index = exception.backtrace.count - 1
       file, line = exception.backtrace.last.split(":")
 
-      assert_equal file, mapper[last_index].eval("__FILE__")
-      assert_equal line.to_i, mapper[last_index].eval("__LINE__")
+      assert_equal file, SourceLocation.new(mapper[last_index]).path
+      assert_equal line.to_i, SourceLocation.new(mapper[last_index]).lineno
     end
 
     test ".[] fall backs to index if no trace can be found" do
