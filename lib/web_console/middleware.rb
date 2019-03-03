@@ -6,11 +6,8 @@ module WebConsole
   class Middleware
     TEMPLATES_PATH = File.expand_path("../templates", __FILE__)
 
-    cattr_accessor :mount_point
-    @@mount_point = "/__web_console"
-
-    cattr_accessor :whiny_requests
-    @@whiny_requests = true
+    cattr_accessor :mount_point, default: "/__web_console"
+    cattr_accessor :whiny_requests, default: true
 
     def initialize(app)
       @app = app

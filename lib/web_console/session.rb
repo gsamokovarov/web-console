@@ -11,8 +11,7 @@ module WebConsole
   # error pages only, as currently, this is the only client that needs to do
   # that.
   class Session
-    cattr_reader :inmemory_storage
-    @@inmemory_storage = {}
+    cattr_reader :inmemory_storage, default: {}
 
     class << self
       # Finds a persisted session in memory by its id.

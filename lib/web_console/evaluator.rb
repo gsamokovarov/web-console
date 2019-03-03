@@ -8,9 +8,11 @@ module WebConsole
   # return a string and will format exception output.
   class Evaluator
     # Cleanses exceptions raised inside #eval.
-    cattr_reader :cleaner
-    @@cleaner = ActiveSupport::BacktraceCleaner.new
-    @@cleaner.add_silencer { |line| line.start_with?(File.expand_path("..", __FILE__)) }
+    cattr_reader :cleaner, default: begin
+      cleaner = ActiveSupport::BacktraceCleaner.new
+      cleaner.add_silencer { |line| line.start_with?(File.expand_path("..", __FILE__)) }
+      cleaner
+    end
 
     def initialize(binding = TOPLEVEL_BINDING)
       @binding = binding

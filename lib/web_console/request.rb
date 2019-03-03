@@ -4,8 +4,7 @@ module WebConsole
   # Web Console tailored request object.
   class Request < ActionDispatch::Request
     # Configurable set of whitelisted networks.
-    cattr_accessor :whitelisted_ips
-    @@whitelisted_ips = Whitelist.new
+    cattr_accessor :whitelisted_ips, default: Whitelist.new
 
     # Define a vendor MIME type. We can call it using Mime[:web_console_v2].
     Mime::Type.register "application/vnd.web-console.v2", :web_console_v2
