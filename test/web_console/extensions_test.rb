@@ -7,7 +7,11 @@ module ActionDispatch
   class DebugExceptionsTest < ActionDispatch::IntegrationTest
     class Application
       def call(env)
-        ActionView::Base.new.render(inline: "<% @ivar = 42 %> <%= nil.raise %></h1")
+        WebConsole::View.new(ActionView::LookupContext.new([])).render(inline: <<~ERB)
+          <% @ivar = 42 %>
+          <%= nil.raise %>
+          </h1
+        ERB
       end
     end
 
