@@ -50,18 +50,6 @@ module WebConsole
       assert_not req.from_whitelisted_ip?
     end
 
-    test "#acceptable? is truthy for current version" do
-      req = xhr("http://example.com", "HTTP_ACCEPT" => "#{Mime[:web_console_v2]}")
-
-      assert req.acceptable?
-    end
-
-    test "#acceptable? is falsy for request without vendor mime type" do
-      req = xhr("http://example.com", "HTTP_ACCEPT" => "text/plain; charset=utf-8")
-
-      assert_not req.acceptable?
-    end
-
     private
 
       def request(*args)

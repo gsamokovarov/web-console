@@ -6,9 +6,6 @@ module WebConsole
     # Configurable set of whitelisted networks.
     cattr_accessor :whitelisted_ips, default: Whitelist.new
 
-    # Define a vendor MIME type. We can call it using Mime[:web_console_v2].
-    Mime::Type.register "application/vnd.web-console.v2", :web_console_v2
-
     # Returns whether a request came from a whitelisted IP.
     #
     # For a request to hit Web Console features, it needs to come from a white
@@ -22,11 +19,6 @@ module WebConsole
       GetSecureIp.new(self, whitelisted_ips).to_s
     rescue ActionDispatch::RemoteIp::IpSpoofAttackError
       "[Spoofed]"
-    end
-
-    # Returns whether the request is acceptable.
-    def acceptable?
-      xhr? && accepts.any? { |mime| Mime[:web_console_v2] == mime }
     end
 
     private

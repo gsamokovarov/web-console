@@ -24,6 +24,7 @@ module WebConsole
           return change_stack_trace(id, request)
         end
 
+
         status, headers, body = call_app(env)
 
         if (session = Session.from(Thread.current)) && acceptable_content_type?(headers)
@@ -51,7 +52,7 @@ module WebConsole
     private
 
       def acceptable_content_type?(headers)
-        Mime::Type.parse(headers["Content-Type"].to_s).first == Mime[:html]
+        headers["Content-Type"].to_s.include?("html")
       end
 
       def json_response(opts = {})
@@ -63,7 +64,6 @@ module WebConsole
       end
 
       def json_response_with_session(id, request, opts = {})
-        return respond_with_unacceptable_request unless request.acceptable?
         return respond_with_unavailable_session(id) unless session = Session.find(id)
 
         json_response(opts) { yield session }

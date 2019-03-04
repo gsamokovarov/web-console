@@ -3,7 +3,6 @@
 require "action_view"
 require "web_console"
 require "web_console/testing/helper"
-Mime = { web_console_v2: "fake" }
 
 module WebConsole
   module Testing
