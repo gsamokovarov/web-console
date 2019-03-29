@@ -9,7 +9,7 @@ module WebConsole
     def permitted?
       whine_unless request.permitted? do
         "Cannot render console from #{request.strict_remote_ip}! " \
-          "Allowed networks: #{request.whitelisted_ips}"
+          "Allowed networks: #{request.permissions}"
       end
     end
 

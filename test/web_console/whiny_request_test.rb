@@ -5,7 +5,7 @@ require "test_helper"
 module WebConsole
   class WhinyRequestTest < ActiveSupport::TestCase
     test "#permitted? logs out to stderr" do
-      Request.stubs(:whitelisted_ips).returns(IPAddr.new("127.0.0.1"))
+      Request.stubs(:permissions).returns(IPAddr.new("127.0.0.1"))
       WebConsole.logger.expects(:info)
 
       req = request("http://example.com", "REMOTE_ADDR" => "0.0.0.0")

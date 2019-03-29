@@ -5,7 +5,7 @@ require "test_helper"
 module WebConsole
   class RequestTest < ActiveSupport::TestCase
     setup do
-      Request.stubs(:whitelisted_ips).returns(IPAddr.new("127.0.0.1"))
+      Request.stubs(:permissions).returns(IPAddr.new("127.0.0.1"))
     end
 
     test "#permitted? is falsy for blacklisted IPs" do

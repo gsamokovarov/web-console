@@ -62,7 +62,7 @@ module WebConsole
       Thread.current[:__web_console_exception] = nil
       Thread.current[:__web_console_binding] = nil
 
-      Request.stubs(:whitelisted_ips).returns(IPAddr.new("0.0.0.0/0"))
+      Request.stubs(:permissions).returns(IPAddr.new("0.0.0.0/0"))
 
       @app = Middleware.new(SingleConsoleApplication.new)
     end

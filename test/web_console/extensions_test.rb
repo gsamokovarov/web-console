@@ -16,7 +16,7 @@ module ActionDispatch
     end
 
     setup do
-      Request.stubs(:whitelisted_ips).returns(IPAddr.new("0.0.0.0/0"))
+      Request.stubs(:permissions).returns(IPAddr.new("0.0.0.0/0"))
 
       @app = DebugExceptions.new(Application.new)
     end
