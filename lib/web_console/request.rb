@@ -1,22 +1,15 @@
 # frozen_string_literal: true
 
 module WebConsole
-  # Web Console tailored request object.
   class Request < ActionDispatch::Request
-    # Configurable set of whitelisted networks.
-    cattr_accessor :whitelisted_ips, default: Whitelist.new
+    cattr_accessor :permissions, default: Permissions.new
 
-    # Returns whether a request came from a whitelisted IP.
-    #
-    # For a request to hit Web Console features, it needs to come from a white
-    # listed IP.
-    def from_whitelisted_ip?
-      whitelisted_ips.include?(strict_remote_ip)
+    def permitted?
+      permissions.include?(strict_remote_ip)
     end
 
-    # Determines the remote IP using our much stricter whitelist.
     def strict_remote_ip
-      GetSecureIp.new(self, whitelisted_ips).to_s
+      GetSecureIp.new(self, permissions).to_s
     rescue ActionDispatch::RemoteIp::IpSpoofAttackError
       "[Spoofed]"
     end

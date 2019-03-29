@@ -3,11 +3,11 @@
 module WebConsole
   # Noisy wrapper around +Request+.
   #
-  # If any calls to +from_whitelisted_ip?+ and +acceptable_content_type?+
+  # If any calls to +permitted?+ and +acceptable_content_type?+
   # return false, an info log message will be displayed in users' logs.
   class WhinyRequest < SimpleDelegator
-    def from_whitelisted_ip?
-      whine_unless request.from_whitelisted_ip? do
+    def permitted?
+      whine_unless request.permitted? do
         "Cannot render console from #{request.strict_remote_ip}! " \
           "Allowed networks: #{request.whitelisted_ips}"
       end

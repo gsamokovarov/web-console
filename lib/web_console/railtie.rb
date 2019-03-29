@@ -50,9 +50,9 @@ module WebConsole
       end
     end
 
-    initializer "web_console.whitelisted_ips" do
+    initializer "web_console.permissions" do
       if whitelisted_ips = config.web_console.whitelisted_ips
-        Request.whitelisted_ips = Whitelist.new(whitelisted_ips)
+        Request.permissions = Permissions.new(whitelisted_ips)
       end
     end
 

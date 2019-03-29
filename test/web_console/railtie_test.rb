@@ -15,8 +15,8 @@ module WebConsole
         app.initialize!
 
         1.upto(255).each do |n|
-          assert_includes Request.whitelisted_ips, "172.16.0.#{n}"
-          assert_includes Request.whitelisted_ips, "192.168.0.#{n}"
+          assert_includes Request.permissions, "172.16.0.#{n}"
+          assert_includes Request.permissions, "192.168.0.#{n}"
         end
       end
     end
@@ -26,9 +26,9 @@ module WebConsole
         app.config.web_console.whitelisted_ips = "8.8.8.8"
         app.initialize!
 
-        assert_includes Request.whitelisted_ips, "127.0.0.1"
-        assert_includes Request.whitelisted_ips, "::1"
-        assert_includes Request.whitelisted_ips, "8.8.8.8"
+        assert_includes Request.permissions, "127.0.0.1"
+        assert_includes Request.permissions, "::1"
+        assert_includes Request.permissions, "8.8.8.8"
       end
     end
 

@@ -16,7 +16,7 @@ module WebConsole
     def call(env)
       app_exception = catch :app_exception do
         request = create_regular_or_whiny_request(env)
-        return call_app(env) unless request.from_whitelisted_ip?
+        return call_app(env) unless request.permitted?
 
         if id = id_for_repl_session_update(request)
           return update_repl_session(id, request)
