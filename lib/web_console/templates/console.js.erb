@@ -871,9 +871,13 @@ REPLConsole.prototype.scrollToBottom = function() {
 };
 
 // Change the binding of the console.
-REPLConsole.prototype.switchBindingTo = function(frameId, callback) {
+REPLConsole.prototype.switchBindingTo = function(frameId, exceptionObjectId, callback) {
   var url = this.getSessionUrl('trace');
   var params = "frame_id=" + encodeURIComponent(frameId);
+
+  if (exceptionObjectId) {
+    params = params + "&exception_object_id=" + encodeURIComponent(exceptionObjectId);
+  }
 
   var _this = this;
   postRequest(url, params, function() {

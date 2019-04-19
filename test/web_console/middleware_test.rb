@@ -157,7 +157,7 @@ module WebConsole
     end
 
     test "can evaluate code and return it as a JSON" do
-      session, line = Session.new([binding]), __LINE__
+      session, line = Session.new([[binding]]), __LINE__
 
       Session.stubs(:from).returns(session)
 
@@ -168,7 +168,7 @@ module WebConsole
     end
 
     test "can switch bindings on error pages" do
-      session = Session.new(raise_exception.bindings)
+      session = Session.new([WebConsole::ExceptionMapper.new(raise_exception)])
 
       Session.stubs(:from).returns(session)
 
@@ -178,10 +178,27 @@ module WebConsole
       assert_equal({ ok: true }.to_json, response.body)
     end
 
+    test "can switch to the cause on error pages" do
+      nested_error = begin
+                       raise "First error"
+                     rescue
+                       raise "Second Error" rescue $!
+                     end
+
+      session = Session.new(WebConsole::ExceptionMapper.follow(nested_error))
+
+      Session.stubs(:from).returns(session)
+
+      get "/", params: nil
+      post "/repl_sessions/#{session.id}/trace", xhr: true, params: { frame_id: 1, exception_object_id: nested_error.cause.object_id }
+
+      assert_equal({ ok: true }.to_json, response.body)
+    end
+
     test "can be changed mount point" do
       Middleware.mount_point = "/customized/path"
 
-      session, value = Session.new([binding]), __LINE__
+      session, value = Session.new([[binding]]), __LINE__
       put "/customized/path/repl_sessions/#{session.id}", params: { input: "value" }, xhr: true
 
       assert_equal("=> #{value}\n", JSON.parse(response.body)["output"])
@@ -189,7 +206,7 @@ module WebConsole
 
     test "can return context information by passing a context param" do
       hello = hello = "world"
-      session = Session.new([binding])
+      session = Session.new([[binding]])
       Session.stubs(:from).returns(session)
 
       get "/"

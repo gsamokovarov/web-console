@@ -2,9 +2,28 @@
 
 module WebConsole
   class ExceptionMapper
+    attr_reader :exc
+
+    def self.follow(exc)
+      mappers = [new(exc)]
+
+      while cause = (cause || exc).cause
+        mappers << new(cause)
+      end
+
+      mappers
+    end
+
+    def self.find_binding(mappers, exception_object_id)
+      mappers.detect do |exception_mapper|
+        exception_mapper.exc.object_id == exception_object_id.to_i
+      end || mappers.first
+    end
+
     def initialize(exception)
       @backtrace = exception.backtrace
       @bindings = exception.bindings
+      @exc = exception
     end
 
     def first

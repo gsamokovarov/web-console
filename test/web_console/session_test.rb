@@ -11,6 +11,13 @@ module WebConsole
         exc
       end
 
+      def self.raise_nested_error(value)
+        ::Kernel.raise self, value
+      rescue
+        value = 1 # Override value so we can target the binding here
+        ::Kernel.raise "Second Error" rescue $!
+      end
+
       attr_reader :value
 
       def initialize(value)
@@ -20,7 +27,7 @@ module WebConsole
 
     setup do
       Session.inmemory_storage.clear
-      @session = Session.new([binding])
+      @session = Session.new([[binding]])
     end
 
     test "returns nil when a session is not found" do
@@ -47,7 +54,7 @@ module WebConsole
         self
       end
 
-      session = Session.new([binding])
+      session = Session.new([[binding]])
       assert_equal session.eval("called?"), "=> \"yes\"\n"
     end
 
@@ -74,7 +81,17 @@ module WebConsole
       exc = ValueAwareError.raise(value)
 
       session = Session.from(__web_console_exception: exc)
-      session.switch_binding_to(1)
+      session.switch_binding_to(1, exc.object_id)
+
+      assert_equal "=> #{value}\n", session.eval("value")
+    end
+
+    test "#from can switch to the cause" do
+      value = __LINE__
+      exc = ValueAwareError.raise_nested_error(value)
+
+      session = Session.from(__web_console_exception: exc)
+      session.switch_binding_to(1, exc.cause.object_id)
 
       assert_equal "=> #{value}\n", session.eval("value")
     end
