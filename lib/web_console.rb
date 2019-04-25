@@ -11,6 +11,7 @@ module WebConsole
   autoload :ExceptionMapper
   autoload :Session
   autoload :Injector
+  autoload :Interceptor
   autoload :Request
   autoload :WhinyRequest
   autoload :Permissions

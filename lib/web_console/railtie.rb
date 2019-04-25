@@ -10,6 +10,8 @@ module WebConsole
     initializer "web_console.initialize" do
       require "bindex"
       require "web_console/extensions"
+
+      ActionDispatch::DebugExceptions.register_interceptor(Interceptor)
     end
 
     initializer "web_console.development_only" do
