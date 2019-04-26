@@ -2,6 +2,15 @@
 
 ## master (unreleased)
 
+## 4.0.0 (unreleased)
+
+* [|961](https://github.com/rails/web-console/commit/96127aac143e1e653fffdc4bb65e1ce0b5ff342d) Introduce Binding#console as an alternative interface ([@gsamokovarov])
+* [|d6d](https://github.com/rails/web-console/commit/d6deacd9d5fcaabf3e3051d6985b53f924f86956) Drop Rails 5 support ([@gsamokovarov])
+* [|90f](https://github.com/rails/web-console/commit/90fda8789d402f05647c18f8cdf8e5c3d01692dd) Drop Ruby 2.4 support ([@gsamokovarov])
+* [|d45](https://github.com/rails/web-console/commit/d4591ca5396ed15a08818f3da11134852a485b27) Fix Rails 6 warnings ([@gsamokovarov])
+* [|f97](https://github.com/rails/web-console/commit/f97d8a889a38366485e5c5e8985995c19bf61d13) Fix Ruby 2.6 warnings ([@gsamokovarov])
+* [#265](https://github.com/rails/web-console/pull/265) Add support for nested exceptions ([@yuki24])
+
 ## 3.7.0
 
 * [#263](https://github.com/rails/web-console/pull/263) Show binding changes ([@causztic])
@@ -138,3 +147,4 @@ go to 3.1.0 instead.
 [@fl0l0u]: https://github.com/fl0l0u
 [@timomeh]: https://github.com/timomeh
 [@causztic]: https://github.com/causztic
+[@yuki24]: https://github.com/yuki24
