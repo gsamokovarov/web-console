@@ -2,13 +2,14 @@
 
 ## master (unreleased)
 
-## 4.0.0 (unreleased)
+## 4.0.0
 
+* [|61c](https://github.com/rails/web-console/commit/61ce65b599f56809de1bd8da6590a80acbd92017) Move to config.web_console.permissions ([@gsamokovarov])
 * [|961](https://github.com/rails/web-console/commit/96127aac143e1e653fffdc4bb65e1ce0b5ff342d) Introduce Binding#console as an alternative interface ([@gsamokovarov])
+* [|d45](https://github.com/rails/web-console/commit/d4591ca5396ed15a08818f3da11134852a485b27) Introduce Rails 6 support ([@gsamokovarov])
+* [|f97](https://github.com/rails/web-console/commit/f97d8a889a38366485e5c5e8985995c19bf61d13) Introduce Ruby 2.6 support ([@gsamokovarov])
 * [|d6d](https://github.com/rails/web-console/commit/d6deacd9d5fcaabf3e3051d6985b53f924f86956) Drop Rails 5 support ([@gsamokovarov])
 * [|90f](https://github.com/rails/web-console/commit/90fda8789d402f05647c18f8cdf8e5c3d01692dd) Drop Ruby 2.4 support ([@gsamokovarov])
-* [|d45](https://github.com/rails/web-console/commit/d4591ca5396ed15a08818f3da11134852a485b27) Fix Rails 6 warnings ([@gsamokovarov])
-* [|f97](https://github.com/rails/web-console/commit/f97d8a889a38366485e5c5e8985995c19bf61d13) Fix Ruby 2.6 warnings ([@gsamokovarov])
 * [#265](https://github.com/rails/web-console/pull/265) Add support for nested exceptions ([@yuki24])
 
 ## 3.7.0
