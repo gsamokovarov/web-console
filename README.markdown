@@ -59,11 +59,11 @@ have multiple ones, `WebConsole::DoubleRenderError` will be raised.
 _Web Console_ allows you to execute arbitrary code on the server. Therefore, be
 very careful who you give access to.
 
-### config.web_console.whitelisted_ips
+### config.web_console.permissions
 
 By default, only requests coming from IPv4 and IPv6 localhosts are allowed.
 
-`config.web_console.whitelisted_ips` lets you control which IP's have access to
+`config.web_console.permissions` lets you control which IP's have access to
 the console.
 
 You can whitelist single IP's or whole networks. Say you want to share your
@@ -71,7 +71,7 @@ console with `192.168.0.100`:
 
 ```ruby
 class Application < Rails::Application
-  config.web_console.whitelisted_ips = '192.168.0.100'
+  config.web_console.permissions = '192.168.0.100'
 end
 ```
 
@@ -79,7 +79,7 @@ If you want to whitelist the whole private network:
 
 ```ruby
 Rails.application.configure do
-  config.web_console.whitelisted_ips = '192.168.0.0/16'
+  config.web_console.permissions = '192.168.0.0/16'
 end
 ```
 

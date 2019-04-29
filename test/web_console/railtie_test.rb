@@ -9,9 +9,9 @@ module WebConsole
       Middleware.mount_point = "/__web_console"
     end
 
-    test "config.whitelisted_ips sets whitelisted networks" do
+    test "config.permissions sets whitelisted networks" do
       new_uninitialized_app do |app|
-        app.config.web_console.whitelisted_ips = %w( 172.16.0.0/12 192.168.0.0/16 )
+        app.config.web_console.permissions = %w( 172.16.0.0/12 192.168.0.0/16 )
         app.initialize!
 
         1.upto(255).each do |n|
@@ -21,9 +21,9 @@ module WebConsole
       end
     end
 
-    test "config.whitelisted_ips always includes localhost" do
+    test "config.permissions always includes localhost" do
       new_uninitialized_app do |app|
-        app.config.web_console.whitelisted_ips = "8.8.8.8"
+        app.config.web_console.permissions = "8.8.8.8"
         app.initialize!
 
         assert_includes Request.permissions, "127.0.0.1"

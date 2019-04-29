@@ -5,7 +5,7 @@ require "rails/railtie"
 module WebConsole
   class Railtie < ::Rails::Railtie
     config.web_console = ActiveSupport::OrderedOptions.new
-    config.web_console.whitelisted_ips = %w( 127.0.0.1 ::1 )
+    config.web_console.permissions = %w( 127.0.0.1 ::1 )
 
     initializer "web_console.initialize" do
       require "bindex"
@@ -53,8 +53,8 @@ module WebConsole
     end
 
     initializer "web_console.permissions" do
-      if whitelisted_ips = config.web_console.whitelisted_ips
-        Request.permissions = Permissions.new(whitelisted_ips)
+      if permissions = config.web_console.permissions || config.web_console.whitelisted_ips
+        Request.permissions = Permissions.new(permissions)
       end
     end
 
