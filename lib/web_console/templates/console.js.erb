@@ -380,8 +380,13 @@ REPLConsole.prototype.install = function(container) {
     var clientHeightStart   = consoleOuter.clientHeight;
 
     var doDrag = function(e) {
-      container.style.height = (startHeight + startY - e.clientY) + 'px';
+      var height = startHeight + startY - e.clientY;
       consoleOuter.scrollTop = scrollTopStart + (clientHeightStart - consoleOuter.clientHeight);
+      if (height > document.documentElement.clientHeight) {
+        container.style.height = document.documentElement.clientHeight;
+      } else {
+        container.style.height = height + 'px';
+      }
       shiftConsoleActions();
     };
 
