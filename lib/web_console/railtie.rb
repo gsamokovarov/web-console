@@ -53,7 +53,7 @@ module WebConsole
     end
 
     initializer "web_console.permissions" do
-      if permissions = config.web_console.permissions || config.web_console.whitelisted_ips
+      if permissions = config.web_console.whitelisted_ips || config.web_console.permissions
         Request.permissions = Permissions.new(permissions)
       end
     end
