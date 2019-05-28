@@ -21,6 +21,18 @@ module WebConsole
       end
     end
 
+    test "config.permissions sets whitelisted networks by whitelisted_ips" do
+      new_uninitialized_app do |app|
+        app.config.web_console.whitelisted_ips = %w( 172.16.0.0/12 192.168.0.0/16 )
+        app.initialize!
+
+        1.upto(255).each do |n|
+          assert_includes Request.permissions, "172.16.0.#{n}"
+          assert_includes Request.permissions, "192.168.0.#{n}"
+        end
+      end
+    end
+
     test "config.permissions always includes localhost" do
       new_uninitialized_app do |app|
         app.config.web_console.permissions = "8.8.8.8"
