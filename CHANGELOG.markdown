@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+## 4.0.1
+
+* [#279](https://github.com/rails/web-console/pull/279) Fix initial config.web_console.permissions value ([@patorash])
+
 ## 4.0.0
 
 * [|61c](https://github.com/rails/web-console/commit/61ce65b599f56809de1bd8da6590a80acbd92017) Move to config.web_console.permissions ([@gsamokovarov])
@@ -149,3 +153,4 @@ go to 3.1.0 instead.
 [@timomeh]: https://github.com/timomeh
 [@causztic]: https://github.com/causztic
 [@yuki24]: https://github.com/yuki24
+[@patorash]: https://github.com/patorash
