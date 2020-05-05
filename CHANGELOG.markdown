@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+## 4.0.2
+
+* [#285](https://github.com/rails/web-console/pull/285) Increase timeout on paste ([@celvro])
+
 ## 4.0.1
 
 * [#279](https://github.com/rails/web-console/pull/279) Fix initial config.web_console.permissions value ([@patorash])
@@ -154,3 +158,4 @@ go to 3.1.0 instead.
 [@causztic]: https://github.com/causztic
 [@yuki24]: https://github.com/yuki24
 [@patorash]: https://github.com/patorash
+[@celvro]: https://github.com/celvro
