@@ -89,6 +89,7 @@ module WebConsole
       @app = Middleware.new(Application.new(response_content_length: 7))
 
       get "/", params: nil
+
       assert_equal(response.body.size, response.headers["Content-Length"].to_i)
     end
 

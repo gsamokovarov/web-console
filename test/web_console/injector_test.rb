@@ -28,11 +28,11 @@ module WebConsole
       assert_equal [ [ "foobar" ], {} ], Injector.new(body, {}).inject("bar")
     end
 
-    test "deletes the Content-Length header" do
+    test "updates the Content-Length header" do
       body = [ "foo" ]
       headers = { "Content-Length" => 3 }
 
-      assert_equal [ [ "foobar" ], {} ], Injector.new(body, headers).inject("bar")
+      assert_equal [ [ "foobar" ], { "Content-Length" => 6 } ], Injector.new(body, headers).inject("bar")
     end
   end
 end
