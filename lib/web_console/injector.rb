@@ -13,9 +13,11 @@ module WebConsole
     end
 
     def inject(content)
-      # Remove any previously set Content-Length header because we modify
-      # the body. Otherwise the response will be truncated.
-      @headers.delete("Content-Length")
+      # Set Content-Length header to the size of the current body
+      # + the extra content. Otherwise the response will be truncated.
+      if @headers["Content-Length"]
+        @headers["Content-Length"] = @body.bytesize + content.bytesize
+      end
 
       [
         if position = @body.rindex("</body>")
