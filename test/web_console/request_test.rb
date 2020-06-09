@@ -8,37 +8,37 @@ module WebConsole
       Request.stubs(:permissions).returns(IPAddr.new("127.0.0.1"))
     end
 
-    test "#permitted? is falsy for blacklisted IPs" do
+    test "#permitted? is falsy for not allowed IPs" do
       req = request("http://example.com", "REMOTE_ADDR" => "0.0.0.0")
 
       assert_not req.permitted?
     end
 
-    test "#permitted? is truthy for whitelisted IPs" do
+    test "#permitted? is truthy for allowed IPs" do
       req = request("http://example.com", "REMOTE_ADDR" => "127.0.0.1")
 
       assert req.permitted?
     end
 
-    test "#permitted? is truthy for whitelisted IPs via whitelisted proxies" do
+    test "#permitted? is truthy for allowed IPs via allowed proxies" do
       req = request("http://example.com", "REMOTE_ADDR" => "127.0.0.1", "HTTP_X_FORWARDED_FOR" => "127.0.0.0")
 
       assert req.permitted?
     end
 
-    test "#permitted? is falsy for blacklisted IPs via whitelisted proxies" do
+    test "#permitted? is falsy for not allowed IPs via allowed proxies" do
       req = request("http://example.com", "REMOTE_ADDR" => "127.0.0.1", "HTTP_X_FORWARDED_FOR" => "0.0.0.0")
 
       assert_not req.permitted?
     end
 
-    test "#permitted? is falsy for lying blacklisted IPs via whitelisted proxies" do
+    test "#permitted? is falsy for lying not allowed IPs via allowed proxies" do
       req = request("http://example.com", "REMOTE_ADDR" => "127.0.0.1", "HTTP_X_FORWARDED_FOR" => "10.0.0.0, 127.0.0.0")
 
       assert_not req.permitted?
     end
 
-    test "#permitted? is falsy for whitelisted IPs via blacklisted proxies" do
+    test "#permitted? is falsy for allowed IPs via not allowed proxies" do
       req = request("http://example.com", "REMOTE_ADDR" => "10.0.0.0", "HTTP_X_FORWARDED_FOR" => "127.0.0.0")
 
       assert_not req.permitted?

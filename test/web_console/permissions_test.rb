@@ -4,7 +4,7 @@ require "test_helper"
 
 module WebConsole
   class PermissionsTest < ActiveSupport::TestCase
-    test "localhost is always whitelisted" do
+    test "localhost is always allowed" do
       permissions = permit("8.8.8.8")
 
       assert_includes permissions, "127.0.0.1"
