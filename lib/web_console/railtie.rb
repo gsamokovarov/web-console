@@ -52,8 +52,23 @@ module WebConsole
     end
 
     initializer "web_console.permissions" do
-      permissions = config.web_console.permissions || config.web_console.whitelisted_ips
+      permissions = web_console_permissions
       Request.permissions = Permissions.new(permissions)
+    end
+
+    def web_console_permissions
+      case
+      when config.web_console.permissions
+        config.web_console.permissions
+      when config.web_console.allowed_ips
+        config.web_console.allowed_ips
+      when config.web_console.whitelisted_ips
+        ActiveSupport::Deprecation.warn(<<-MSG.squish)
+          The config.web_console.whitelisted_ips is deprecated and will be ignored in future release of web_console.
+          Please use config.web_console.allowed_ips instead.
+        MSG
+        config.web_console.whitelisted_ips
+      end
     end
 
     initializer "web_console.whiny_requests" do

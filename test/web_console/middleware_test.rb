@@ -140,7 +140,7 @@ module WebConsole
       assert_select "#console", 0
     end
 
-    test "doesn't render console from non whitelisted IP" do
+    test "doesn't render console from not allowed IP" do
       Thread.current[:__web_console_binding] = binding
       Request.stubs(:permissions).returns(IPAddr.new("127.0.0.1"))
 
