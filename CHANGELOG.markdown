@@ -2,6 +2,11 @@
 
 ## master (unreleased)
 
+## 4.0.3
+
+* [#291](https://github.com/rails/web-console/pull/291) Deprecate config.web_console.whitelisted_ips ([@JuanitoFatas])
+* [#290](https://github.com/rails/web-console/pull/290) Fix Content-Length for rack >= 2.1.0 ([@p8])
+
 ## 4.0.2
 
 * [#285](https://github.com/rails/web-console/pull/285) Increase timeout on paste ([@celvro])
@@ -159,3 +164,5 @@ go to 3.1.0 instead.
 [@yuki24]: https://github.com/yuki24
 [@patorash]: https://github.com/patorash
 [@celvro]: https://github.com/celvro
+[@JuanitoFatas]: https://github.com/JuanitoFatas
+[@p8]: https://github.com/p8
