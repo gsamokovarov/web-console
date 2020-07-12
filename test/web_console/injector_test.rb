@@ -32,7 +32,7 @@ module WebConsole
       body = [ "foo" ]
       headers = { "Content-Length" => 3 }
 
-      assert_equal [ [ "foobar" ], { "Content-Length" => 6 } ], Injector.new(body, headers).inject("bar")
+      assert_equal [ [ "foobar" ], { "Content-Length" => "6" } ], Injector.new(body, headers).inject("bar")
     end
   end
 end

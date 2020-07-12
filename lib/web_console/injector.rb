@@ -16,7 +16,7 @@ module WebConsole
       # Set Content-Length header to the size of the current body
       # + the extra content. Otherwise the response will be truncated.
       if @headers["Content-Length"]
-        @headers["Content-Length"] = @body.bytesize + content.bytesize
+        @headers["Content-Length"] = (@body.bytesize + content.bytesize).to_s
       end
 
       [
