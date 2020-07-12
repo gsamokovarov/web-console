@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+## 4.0.4
+
+* [fb483743](https://github.com/rails/web-console/commit/fb483743a6a2a4168cdc0b2e03f48fc393991b73) Fix a crash on webrick with Rack 2.2.3 ([@gsamokovarov])
+
 ## 4.0.3
 
 * [#291](https://github.com/rails/web-console/pull/291) Deprecate config.web_console.whitelisted_ips ([@JuanitoFatas])
