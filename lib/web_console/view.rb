@@ -22,6 +22,7 @@ module WebConsole
     # leaking globals, unless you explicitly want to.
     def render_javascript(template)
       assign(template: template)
+      assign(nonce: @env["action_dispatch.content_security_policy_nonce"])
       render(template: template, layout: "layouts/javascript")
     end
 

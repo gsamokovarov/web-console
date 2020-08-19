@@ -257,6 +257,8 @@ var promptBoxHtml = <%= render_inlined_string '_prompt_box_markup.html' %>;
 var consoleStyleCss = <%= render_inlined_string 'style.css' %>;
 // Insert a style element with the unique ID
 var styleElementId = 'sr02459pvbvrmhco';
+// Nonce to use for CSP
+var styleElementNonce = '<%= @nonce %>';
 
 // REPLConsole Constructor
 function REPLConsole(config) {
@@ -441,6 +443,9 @@ REPLConsole.prototype.insertCss = function() {
   style.type = 'text/css';
   style.innerHTML = consoleStyleCss;
   style.id = styleElementId;
+  if (styleElementNonce.length > 0) {
+    style.nonce = styleElementNonce;
+  }
   document.getElementsByTagName('head')[0].appendChild(style);
 };
 
