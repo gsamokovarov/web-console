@@ -251,10 +251,10 @@ Autocomplete.prototype.removeView = function() {
 }
 
 // HTML strings for dynamic elements.
-var consoleInnerHtml = <%= render_inlined_string '_inner_console_markup.html' %>;
-var promptBoxHtml = <%= render_inlined_string '_prompt_box_markup.html' %>;
+var consoleInnerHtml = <%= render_inlined_string '_inner_console_markup' %>;
+var promptBoxHtml = <%= render_inlined_string '_prompt_box_markup' %>;
 // CSS
-var consoleStyleCss = <%= render_inlined_string 'style.css' %>;
+var consoleStyleCss = <%= render_inlined_string 'style' %>;
 // Insert a style element with the unique ID
 var styleElementId = 'sr02459pvbvrmhco';
 
