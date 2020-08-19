@@ -418,6 +418,14 @@ REPLConsole.prototype.install = function(container) {
     }
   }
 
+  var observer = new MutationObserver(function(mutationsList) {
+    for (let mutation of mutationsList) {
+      if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+        shiftConsoleActions();
+      }
+    }
+  });
+
   // Initialize
   this.container = container;
   this.outer = consoleOuter;
@@ -429,7 +437,7 @@ REPLConsole.prototype.install = function(container) {
 
   findChild(container, 'resizer').addEventListener('mousedown', resizeContainer);
   findChild(consoleActions, 'close-button').addEventListener('click', closeContainer);
-  consoleOuter.addEventListener('DOMNodeInserted', shiftConsoleActions);
+  observer.observe(consoleOuter, { childList: true, subtree: true });
 
   REPLConsole.currentSession = this;
 };
