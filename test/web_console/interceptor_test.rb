@@ -14,7 +14,8 @@ module WebConsole
     end
 
     def generate_template_error
-      WebConsole::View.new(ActionView::LookupContext.new([])).render(inline: <<~ERB)
+      lookup_context = ActionView::LookupContext.new([])
+      WebConsole::View.with_empty_template_cache.with_context(lookup_context).render(inline: <<~ERB)
         <% @ivar = 42 %>
         <%= nil.raise %>
         </h1

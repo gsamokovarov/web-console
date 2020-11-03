@@ -17,7 +17,7 @@ module WebConsole
 
     # Render a template (inferred from +template_paths+) as a plain string.
     def render(template)
-      view = View.new(ActionView::LookupContext.new(template_paths), instance_values)
+      view = View.with_empty_template_cache.with_view_paths(template_paths, instance_values)
       view.render(template: template, layout: false)
     end
   end
