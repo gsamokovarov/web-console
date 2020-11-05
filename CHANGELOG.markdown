@@ -2,6 +2,13 @@
 
 ## master (unreleased)
 
+## 4.1.0
+
+* [#304](https://github.com/rails/web-console/pull/304) Add support for Rails 6.1 ([@stephannv])
+* [#298](https://github.com/rails/web-console/pull/298) Prevent deprecation warnings by removing template formats ([@mikelkew])
+* [#297](https://github.com/rails/web-console/pull/297) Use MutationObserver instead of Mutation Events ([@mikelkew])
+* [#296](https://github.com/rails/web-console/pull/296) Add CSP nonce to injected scripts and styles ([@mikelkew])
+
 ## 4.0.4
 
 * [fb483743](https://github.com/rails/web-console/commit/fb483743a6a2a4168cdc0b2e03f48fc393991b73) Fix a crash on webrick with Rack 2.2.3 ([@gsamokovarov])
@@ -145,6 +152,8 @@ go to 3.1.0 instead.
 * [#84](https://github.com/rails/web-console/pull/84) Allow Rails 5 as dependency in gemspec ([@jonatack])
 * [#69](https://github.com/rails/web-console/pull/69) Introduce middleware for request dispatch and console rendering ([@gsamokovarov])
 
+[@stephannv]: https://github.com/stephannv
+[@mikelkew]: https://github.com/mikelkew
 [@jonatack]: https://github.com/jonatack
 [@ryandao]: https://github.com/ryandao
 [@jeffnv]: https://github.com/jeffnv
